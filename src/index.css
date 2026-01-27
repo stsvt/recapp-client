@@ -1,1 +1,61 @@
 @import 'tailwindcss';
+
+* {
+  margin: 0;
+  padding: 0;
+}
+
+.full-screen {
+  background-color: #000;
+  width: auto;
+  height: 1086px;
+  padding-top: 1.2%;
+
+  font-size: 20px;
+  font-family: Verdana;
+  color: #fffffff4;
+  font-weight: 500;
+}
+
+.dashboard {
+  display: flex;
+  justify-content: space-between;
+}
+
+.text-logo li:nth-child(2) {
+  color: #fe0004;
+}
+
+.text-logo {
+  display: flex;
+  justify-self: start;
+  margin-left: 2%;
+}
+
+.section {
+  display: flex;
+  justify-self: center;
+  list-style-type: none;
+}
+
+.section li {
+  margin-right: 2.2rem;
+}
+
+.section li:last-child {
+  margin-right: 0;
+}
+
+.icons {
+  display: flex;
+  justify-self: end;
+  margin-right: 2%;
+}
+
+.icon {
+  margin-right: 2.2rem;
+}
+
+.last-icon {
+  margin: 0;
+}

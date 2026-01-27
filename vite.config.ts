@@ -8,6 +8,9 @@ export default defineConfig({
   plugins: [
     react(),
     tailwindcss(),
-    checker({ eslint: { lintCommand: 'eslint "./src/**/*.{ts,tsx}"' } }),
+    checker({
+      typescript: true,
+      eslint: false
+    }),
   ],
 });
