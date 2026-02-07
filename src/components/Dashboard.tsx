@@ -1,6 +1,13 @@
 import { BellIcon, MagnifyingGlassIcon, UserIcon } from '@phosphor-icons/react';
+import { useNavigate } from 'react-router-dom';
 
 function Dashboard() {
+  const navigate = useNavigate();
+
+  const handleUserClick = () => {
+    navigate('../register');
+  };
+
   return (
     <div className='dashboard'>
       <ul className='text-logo'>
@@ -18,7 +25,11 @@ function Dashboard() {
       <div className='icons'>
         <MagnifyingGlassIcon className='icon' size={32} />
         <BellIcon className='icon' size={32} />
-        <UserIcon className='icon last-icon' size={32} />
+        <UserIcon
+          className='icon last-icon'
+          size={32}
+          onClick={handleUserClick}
+        />
       </div>
     </div>
   );
