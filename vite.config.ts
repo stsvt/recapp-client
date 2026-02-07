@@ -8,6 +8,11 @@ export default defineConfig({
   plugins: [
     react(),
     tailwindcss(),
-    checker({ eslint: { lintCommand: 'eslint "./src/**/*.{ts,tsx}"' } }),
+    checker({
+      eslint: {
+        lintCommand: 'eslint .',
+        useFlatConfig: true,
+      },
+    }),
   ],
 });
