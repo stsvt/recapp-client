@@ -1,3 +1,5 @@
+import genresData from '../../data/genres.json';
+
 interface FilterModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -7,17 +9,7 @@ function FilterModal({ isOpen, onClose }: FilterModalProps) {
   if (!isOpen) return null;
 
   const filters = {
-    genres: [
-      'Драма',
-      'Комедія',
-      'Трилер',
-      'Екшн',
-      'Фентезі',
-      'Детектив',
-      'Історичний',
-      'Документальний',
-      'Біографічний',
-    ],
+    genres: genresData,
     studios: ['Netflix', 'Warner Bros', 'SONY', 'Legendary Pictures'],
     years: [
       'До 1930',
@@ -37,12 +29,14 @@ function FilterModal({ isOpen, onClose }: FilterModalProps) {
         <div className='filter-grid'>
           <div className='filter-column'>
             <h3>Жанри</h3>
-            {filters.genres.map((item) => (
-              <label key={item}>
-                <input type='checkbox' />
-                {item}
-              </label>
-            ))}
+            <div className='genres-list'>
+              {filters.genres.map((genre) => (
+                <label key={genre.id}>
+                  <input type='checkbox' value={genre.id} />
+                  {genre.name}
+                </label>
+              ))}
+            </div>
           </div>
           <div className='filter-column'>
             <h3>Студії</h3>

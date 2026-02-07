@@ -32,13 +32,15 @@ function Dashboard() {
       </ul>
       <FilterModal isOpen={showFilters} onClose={() => setShowFilters(false)} />
       <div className='icons'>
-        <MagnifyingGlassIcon className='icon' size={24} />
-        <BellIcon className='icon' size={24} />
-        <UserIcon
-          className='icon last-icon'
-          size={24}
-          onClick={handleUserClick}
-        />
+        <button>
+          <MagnifyingGlassIcon className='icon' size={24} />{' '}
+        </button>
+        <button>
+          <BellIcon className='icon' size={24} />{' '}
+        </button>
+        <button onClick={handleUserClick}>
+          <UserIcon className='icon last-icon' size={24} />
+        </button>
       </div>
     </div>
   );
