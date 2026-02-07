@@ -11,7 +11,7 @@
   height: 1086px;
   padding-top: 1.2%;
 
-  font-size: 20px;
+  font-size: 16px;
   font-family: Verdana;
   color: #fffffff4;
   font-weight: 500;
@@ -146,4 +146,109 @@
 .link {
   color: #e50914;
   cursor: pointer;
+}
+
+/* FILTER MODAL */
+.filter-overlay {
+  position: absolute;
+  top: 60px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1000;
+}
+
+.filter-container {
+  background-color: rgba(16, 16, 16, 0.9);
+  padding: 30px;
+  width: 670px;
+  color: #fff;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.9);
+  display: flex;
+  flex-direction: column;
+}
+
+.filter-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr); 
+  gap: 20px;
+  width: 100%;
+}
+
+.filter-column {
+  display: flex;
+  flex-direction: column;
+  min-width: max-content; 
+}
+
+.filter-column:last-child {
+  padding-left: 10px; 
+}
+
+.filter-column h3 {
+  color: #f30606;
+  font-size: 14px;
+  margin-bottom: 15px;
+}
+
+.filter-column label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 14px;
+  margin-bottom: 8px;
+  cursor: pointer;
+  color: #ccc;
+  transition: 0, 2s;
+}
+
+.filter-column label:hover {
+  color: #fff;
+}
+
+.filter-column input[type='checkbox'] {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 15px;
+  height: 15px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 2px;
+  cursor: pointer;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+
+.filter-column input[type='checkbox']:checked {
+  background-color: #f30606;
+  border-color: #f30606;
+}
+
+.filter-column input[type='checkbox']:checked::after {
+  content: '✔';
+  font-size: 10px;
+  color: white;
+}
+
+.mt-20 {
+  margin-top: 20px;
+}
+
+.apply-btn {
+  align-self: center;
+  background-color: #f30606db;
+  color: #fff;
+  border: none;
+  padding: 8px 30px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: bold;
+  white-space: nowrap;
+}
+
+.apply-btn:hover {
+  background-color: #be0202;
 }

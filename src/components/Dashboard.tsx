@@ -1,7 +1,10 @@
 import { BellIcon, MagnifyingGlassIcon, UserIcon } from '@phosphor-icons/react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import FilterModal from './FilterModal';
 
 function Dashboard() {
+  const [showFilters, setShowFilters] = useState(false);
   const navigate = useNavigate();
 
   const handleUserClick = () => {
@@ -16,18 +19,24 @@ function Dashboard() {
         <li>AP</li>
       </ul>
       <ul className='section'>
-        <li>ФІЛЬМИ</li>
+        <li
+          onClick={() => setShowFilters(!showFilters)}
+          style={{ cursor: 'pointer' }}
+        >
+          ФІЛЬМИ
+        </li>
         <li>СЕРІАЛИ</li>
         <li>МУЛЬТФІЛЬМИ</li>
         <li>ПІДБІРКИ</li>
         <li>МОЇ СПИСКИ</li>
       </ul>
+      <FilterModal isOpen={showFilters} onClose={() => setShowFilters(false)} />
       <div className='icons'>
-        <MagnifyingGlassIcon className='icon' size={32} />
-        <BellIcon className='icon' size={32} />
+        <MagnifyingGlassIcon className='icon' size={24} />
+        <BellIcon className='icon' size={24} />
         <UserIcon
           className='icon last-icon'
-          size={32}
+          size={24}
           onClick={handleUserClick}
         />
       </div>
