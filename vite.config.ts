@@ -9,8 +9,10 @@ export default defineConfig({
     react(),
     tailwindcss(),
     checker({
-      typescript: true,
-      eslint: false
+      eslint: {
+        lintCommand: 'eslint .',
+        useFlatConfig: true,
+      },
     }),
   ],
 });
