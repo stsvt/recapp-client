@@ -84,4 +84,5 @@ function FilterModal({ isOpen, onClose }: FilterModalProps) {
     </div>
   );
 }
+
 export default FilterModal;
