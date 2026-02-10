@@ -1,5 +1,7 @@
+import React from 'react';
 import { useState } from 'react';
 import Dashboard from '../components/Dashboard';
+import PasswordField from '../components/PasswordField';
 import { useNavigate } from 'react-router-dom';
 
 function Register() {
@@ -11,11 +13,11 @@ function Register() {
     confirmPassword: '',
   });
 
-  const handleChange = (e) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     console.log('Дані для реєстрації:', formData);
   };
@@ -51,29 +53,19 @@ function Register() {
             />
           </div>
 
-          <div className='input-group'>
-            <label>Пароль</label>
-            <input
-              type='password'
-              name='password'
-              placeholder='*******'
-              value={formData.password}
-              onChange={handleChange}
-              required
-            />
-          </div>
+          <PasswordField
+            label='Пароль'
+            name='password'
+            value={formData.password}
+            onChange={handleChange}
+          />
 
-          <div className='input-group'>
-            <label>Підтвердіть пароль</label>
-            <input
-              type='password'
-              name='confirmPassword'
-              placeholder='*******'
-              value={formData.confirmPassword}
-              onChange={handleChange}
-              required
-            />
-          </div>
+          <PasswordField
+            label='Підтвердіть пароль'
+            name='confirmPassword'
+            value={formData.confirmPassword}
+            onChange={handleChange}
+          />
 
           <button type='submit' className='submit-btn'>
             Зареєструватись
