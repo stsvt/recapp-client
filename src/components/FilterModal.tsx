@@ -10,7 +10,7 @@ function FilterModal({ isOpen, onClose }: FilterModalProps) {
 
   const filters = {
     genres: genresData,
-    studios: ['Netflix', 'Warner Bros', 'SONY', 'Legendary Pictures'],
+    studios: ['Netflix', 'Warner Bros.', 'Disney', 'Universal', 'Sony (Columbia)', 'Paramount', '20th Century', 'Marvel', 'Lucasfilm', 'Pixar', 'A24' ],
     years: [
       'До 1930',
       '1931 - 1959',
@@ -46,18 +46,19 @@ function FilterModal({ isOpen, onClose }: FilterModalProps) {
                 {item}
               </label>
             ))}
-            <h3 className='mt-20'>Хронометраж</h3>
-            {filters.duration.map((item) => (
-              <label key={item}>
-                <input type='checkbox' />
-                {item}
-              </label>
-            ))}
           </div>
 
           <div className='filter-column'>
             <h3>Роки виробництва</h3>
             {filters.years.map((item) => (
+              <label key={item}>
+                <input type='checkbox' />
+                {item}
+              </label>
+            ))}
+
+            <h3 className='mt-20'>Хронометраж</h3>
+            {filters.duration.map((item) => (
               <label key={item}>
                 <input type='checkbox' />
                 {item}

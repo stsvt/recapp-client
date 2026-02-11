@@ -1,6 +1,6 @@
 import { BellIcon, MagnifyingGlassIcon, UserIcon } from '@phosphor-icons/react';
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import FilterModal from './FilterModal';
 
 function Dashboard() {
@@ -13,11 +13,13 @@ function Dashboard() {
 
   return (
     <div className='dashboard'>
-      <ul className='text-logo'>
-        <li>RE</li>
-        <li>CC</li>
-        <li>AP</li>
-      </ul>
+      <Link to='/' className='logo-link'>
+        <ul className='text-logo'>
+          <li>RE</li>
+          <li>CC</li>
+          <li>AP</li>
+        </ul>
+      </Link>
       <ul className='section'>
         <li
           onClick={() => setShowFilters(!showFilters)}

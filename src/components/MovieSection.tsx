@@ -1,3 +1,5 @@
+import { useNavigate } from 'react-router-dom';
+
 interface Movie {
   id: number;
   backdrop_path: string;
@@ -12,6 +14,11 @@ interface MovieSectionProps {
 
 function MovieSection({ title, movies, loading }: MovieSectionProps) {
   const POSTER_URL = 'https://image.tmdb.org/t/p/w500';
+  const navigate = useNavigate();
+
+  const handleMovieClick = (id: number) => {
+    navigate(`/movie/${id}`);
+  };
 
   return (
     <div className='recomendation-section'>
@@ -21,12 +28,21 @@ function MovieSection({ title, movies, loading }: MovieSectionProps) {
           <p className='status-text'>Завантаження...</p>
         ) : movies.length > 0 ? (
           movies.map((movie) => (
-            <div key={movie.id} className='movie-card'>
-              <img
-                src={`${POSTER_URL}${movie.backdrop_path}`}
-                alt={movie.title}
-                className='movie-poster'
-              />
+            <div
+              key={movie.id}
+              className='movie-card'
+              onClick={() => handleMovieClick(movie.id)}
+            >
+              <div className='image-container'>
+                <img
+                  src={`${POSTER_URL}${movie.backdrop_path}`}
+                  alt={movie.title}
+                  className='movie-poster'
+                />
+                <div className='movie-overlay'>
+                  <p className='movie-title-text'>{movie.title}</p>{' '}
+                </div>
+              </div>
             </div>
           ))
         ) : (

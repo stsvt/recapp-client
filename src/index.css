@@ -10,14 +10,14 @@
   background-color: #000;
   min-height: 100vh;
   padding-top: 20px;
-  font-family: "Verdana", sans-serif;
+  font-family: 'Verdana', sans-serif;
   color: #fff;
 }
 
 /* DASHBOARD */
 .dashboard {
   display: flex;
-  justify-content: space-between;
+  justify-content: space-between;  
 }
 
 .text-logo li:nth-child(2) {
@@ -27,7 +27,8 @@
 .text-logo {
   display: flex;
   justify-self: start;
-  margin-left: 2%;
+  margin-left: 1.8rem;
+  cursor: pointer;
 }
 
 .section {
@@ -121,7 +122,7 @@
   letter-spacing: 0.05em;
 }
 
-.password-wrapper input[type="password"]{
+.password-wrapper input[type='password'] {
   font-size: 18px;
   font-family: Verdana, sans-serif;
 }
@@ -136,12 +137,14 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: color 0.2s ease, transform 0.1s active;
+  transition:
+    color 0.2s ease,
+    transform 0.1s active;
   outline: none;
 }
 
 .eye-button:hover {
-  color: #e50914; 
+  color: #e50914;
 }
 
 .eye-button:active {
@@ -279,6 +282,7 @@
   color: #fff;
   border: none;
   padding: 8px 30px;
+  margin-top: 10px;
   border-radius: 4px;
   cursor: pointer;
   font-size: 14px;
@@ -314,8 +318,8 @@
 }
 
 .movies-slider {
-  -ms-overflow-style: none;  /* IE and Edge */
-  scrollbar-width: none;  /* Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
 }
 
 .movie-card {
@@ -325,18 +329,186 @@
   transition: transform 0.3s ease;
 }
 
-.movie-poster {
+.image-container {
+  position: relative;
   width: 100%;
   height: 150px;
+  overflow: hidden;
+  border-radius: 8px;
+}
+
+.movie-poster {
+  width: 100%;
+  height: 100%;
   object-fit: cover;
-  border-radius: 4px;
+  transition: transform 0.5s ease;
+}
+
+.movie-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.9), transparent);
+  padding: 20px 10px 10px;
+  display: flex;
+  align-items: flex-end;
+}
+
+.movie-title-text {
+  color: #fff;
+  font-size: 14px;
+  font-weight: 500;
+  margin: 0;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.movie-card:hover .movie-poster {
+  transform: scale(1.1);
+}
+
+.movie-card:hover .movie-title-text {
+  color: #e50914;
 }
 
 .movie-card:hover {
-  transform: scale(1.05);
+  transform: translateY(-5px);
 }
 
 .status-text {
   color: #555;
   font-style: italic;
+}
+
+/* MOVIE PAGE */
+.movie-page-content {
+  width: 100%;
+  padding-bottom: 50px;
+}
+
+.content-wrapper {
+  position: relative;
+  z-index: 1;
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.movie-header {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.movie-header h1 {
+  font-size: 28px;
+  margin-bottom: 5px;
+  margin-top: 30px;
+}
+
+.original-title {
+  color: #888;
+  font-size: 16px;
+}
+
+.main-info-grid {
+  display: grid;
+  grid-template-columns: 240px 1fr;
+  gap: 40px;
+  background: rgba(20, 20, 20, 0.6);
+  padding: 30px;
+  border-radius: 12px;
+  backdrop-filter: blur(10px);
+  align-items: start;
+}
+
+.poster-column img {
+  width: 100%;
+  border-radius: 4px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+.stats-row {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 20px;
+  font-size: 16px;
+}
+
+.imdb-tag {
+  background: #f5c518;
+  color: #000;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-weight: bold;
+}
+
+.genres-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 25px;
+}
+
+.genre-pill {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 6px 16px;
+  border-radius: 20px;
+  font-size: 14px;
+}
+
+.cast-info {
+  margin-top: 20px;
+}
+
+.cast-row {
+  display: flex;
+  align-items: flex-start;
+  margin: 12px 0 !important;
+  line-height: 1.6;
+}
+
+.cast-label {
+  color: #888;
+  font-weight: 500;
+  min-width: 100px;
+  flex-shrink: 0;
+  font-size: 15px;
+}
+
+.cast-value {
+  color: #fff;
+  font-size: 15px;
+  flex: 1;
+}
+
+.description-section {
+  margin: 40px 0;
+  line-height: 1.8;
+  font-size: 16px;
+  max-width: 900px;
+  color: #fbf9f9c9;
+}
+
+.similar-movies-full-width {
+  width: 100%;
+  margin-top: 60px;
+  padding: 20px 0;
+}
+
+.similar-title-container {
+  max-width: 1000px;
+  margin: 0 auto 20px auto;
+  padding: 0 20px;
+}
+
+.similar-title-container h2 {
+  font-size: 22px;
+  font-weight: 500;
+  color: white;
+  text-align: left;
 }
