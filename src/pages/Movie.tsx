@@ -45,7 +45,7 @@ interface Movie {
   };
 }
 
-function Movie() {
+function MoviePage() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const [movie, setMovie] = useState<Movie | null>(null);
