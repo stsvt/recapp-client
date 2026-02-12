@@ -4,7 +4,7 @@ import Dashboard from '../components/Dashboard';
 import PasswordField from '../components/PasswordField';
 import { useNavigate } from 'react-router-dom';
 
-function Register() {
+function RegisterPage() {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     username: '',
@@ -82,4 +82,4 @@ function Register() {
   );
 }
 
-export default Register;
+export default RegisterPage;

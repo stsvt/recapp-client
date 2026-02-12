@@ -7,7 +7,7 @@ import {
   fetchNowPlayingMovies,
 } from '../services/apiMovies';
 
-function Main() {
+function MainPage() {
   const [sections, setSections] = useState({
     upcoming: [],
     nowPlaying: [],
@@ -55,4 +55,4 @@ function Main() {
   );
 }
 
-export default Main;
+export default MainPage;

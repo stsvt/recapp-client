@@ -1,19 +1,13 @@
 import { useNavigate } from 'react-router-dom';
-
-interface Movie {
-  id: number;
-  backdrop_path: string;
-  title: string;
-}
+import type { MovieSummary } from '../types/index';
 
 interface MovieSectionProps {
   title: string;
-  movies: Movie[];
+  movies: MovieSummary[];
   loading: boolean;
 }
 
 function MovieSection({ title, movies, loading }: MovieSectionProps) {
-  const POSTER_URL = 'https://image.tmdb.org/t/p/w500';
   const navigate = useNavigate();
 
   const handleMovieClick = (id: number) => {
@@ -35,7 +29,7 @@ function MovieSection({ title, movies, loading }: MovieSectionProps) {
             >
               <div className='image-container'>
                 <img
-                  src={`${POSTER_URL}${movie.backdrop_path}`}
+                  src={`${import.meta.env.VITE_POSTER_URL}${movie.backdrop_path}`}
                   alt={movie.title}
                   className='movie-poster'
                 />

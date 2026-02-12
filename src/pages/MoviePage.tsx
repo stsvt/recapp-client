@@ -3,55 +3,17 @@ import { fetchMovieDetails } from '../services/apiMovies';
 import { useNavigate, useParams } from 'react-router-dom';
 import MovieSection from '../components/MovieSection';
 import Dashboard from '../components/Dashboard';
-
-interface CastMember {
-  id: number;
-  name: string;
-}
-
-interface CrewMember {
-  job: string;
-  name: string;
-}
-
-interface MovieSummary {
-  id: number;
-  title: string;
-  backdrop_path: string;
-}
-
-interface Genre {
-  id: number;
-  name: string;
-}
-
-interface Movie {
-  id: number;
-  title: string;
-  original_title: string;
-  backdrop_path: string;
-  poster_path: string;
-  release_date: string;
-  runtime: number;
-  vote_average: number;
-  overview: string;
-  genres: Genre[];
-  credits: {
-    cast: CastMember[];
-    crew: CrewMember[];
-  };
-  recommendations: {
-    results: MovieSummary[];
-  };
-}
+import MovieStatusButton from '../components/MovieStatusButton';
+import type { Movie, CrewMember, CastMember, Genre } from '../types/index';
+import { HeartIcon, BookmarkSimpleIcon } from '@phosphor-icons/react';
 
 function MoviePage() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const [movie, setMovie] = useState<Movie | null>(null);
   const [loading, setLoading] = useState(true);
-
-  const IMAGE_URL = 'https://image.tmdb.org/t/p/original';
+  const [isFavorite, setIsFavorite] = useState(false);
+  const [isWatched, setIsWatched] = useState(false);
 
   useEffect(() => {
     let isMounted = true;
@@ -96,6 +58,9 @@ function MoviePage() {
     .map((a: CastMember) => a.name)
     .join(', ');
 
+  const toggleFavorite = () => setIsFavorite(!isFavorite);
+  const toggleWatched = () => setIsWatched(!isWatched);
+
   return (
     <div className='full-screen'>
       <Dashboard />
@@ -109,7 +74,7 @@ function MoviePage() {
           <section className='main-info-grid'>
             <div className='poster-column'>
               <img
-                src={`${IMAGE_URL}${movie.poster_path || movie.backdrop_path}`}
+                src={`${import.meta.env.VITE_IMAGE_URL}${movie.poster_path || movie.backdrop_path}`}
                 alt={movie.title}
               />
             </div>
@@ -153,11 +118,26 @@ function MoviePage() {
               </div>
             </div>
           </section>
-
           <article className='description-section'>
             <p>{movie.overview}</p>
           </article>
+          <div className='check-buttons'>
+            <MovieStatusButton
+              label='Хочу переглянути'
+              isActive={isFavorite}
+              onClick={toggleFavorite}
+              Icon={HeartIcon}
+            />
+            <MovieStatusButton
+              label='Переглянуто'
+              isActive={isWatched}
+              onClick={toggleWatched}
+              Icon={BookmarkSimpleIcon}
+              activeColor='#fff'
+            />
+          </div>
         </div>
+
         {movie.recommendations?.results?.length > 0 && (
           <section className='similar-movies-full-width'>
             <div className='similar-title-container'>
@@ -175,4 +155,4 @@ function MoviePage() {
   );
 }
 
-export default Movie;
+export default MoviePage;
