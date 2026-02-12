@@ -1,52 +1,43 @@
 import genres from '../../data/genres.json';
 
-async function fetchMovies() {
+const BASE_URL = import.meta.env.VITE_API_URL;
+
+export async function fetchMovies() {
   const genresString = genres.map((genre) => genre.id).join(',');
 
-  const response = await fetch(
-    `${import.meta.env.VITE_API_URL}tmdb?with-genres=${genresString}`
-  );
+  const response = await fetch(`${BASE_URL}tmdb?with-genres=${genresString}`);
   if (!response.ok) {
     throw new Error('Failed to fetch movies');
   }
-
-  console.log(await response.json());
-  return await response.json();
+  const result = await response.json();
+  return result;
 }
 
-async function fetchTopRatedMovies() {
-  const response = await fetch(`${import.meta.env.VITE_API_URL}tmdb/top-rated`);
-
+const getMoviesData = async (url: string) => {
+  const response = await fetch(url);
   if (!response.ok) {
-    throw new Error('Failed to fetch top rated movies');
+    throw new Error(`Failed to fetch movies data. Status: ${response.status}`);
   }
+  const result = await response.json();
+  return result?.data?.movies?.results || [];
+};
 
-  const res = await response.json();
-  return res.data?.movies?.results || [];
-}
-
-async function fetchUpcomingMovies() {
-  const response = await fetch(`${import.meta.env.VITE_API_URL}tmdb/upcoming`);
-
+export const fetchMovieDetails = async (id: string) => {
+  const response = await fetch(`${BASE_URL}tmdb/${id}`);
+  
   if (!response.ok) {
-    throw new Error('Failed to fetch upcoming movies');
+    throw new Error(`Failed to fetch movie details. Status: ${response.status}`);
   }
+  
+  const result = await response.json();
+  return result?.data?.movie || null;
+};
 
-  const res = await response.json();
-  return res.data?.movies?.results || [];
-}
+export const fetchTopRatedMovies = () =>
+  getMoviesData(`${BASE_URL}tmdb/top-rated`);
 
-async function fetchNowPlayingMovies() {
-  const response = await fetch(
-    `${import.meta.env.VITE_API_URL}tmdb/now_playing`
-  );
+export const fetchUpcomingMovies = () =>
+  getMoviesData(`${BASE_URL}tmdb/upcoming`);
 
-  if (!response.ok) {
-    throw new Error('Failed to fetch now playing movies');
-  }
-
-  const res = await response.json();
-  return res.data?.movies?.results || [];
-}
-
-export { fetchMovies, fetchTopRatedMovies, fetchUpcomingMovies, fetchNowPlayingMovies };
+export const fetchNowPlayingMovies = () =>
+  getMoviesData(`${BASE_URL}tmdb/now_playing`);
