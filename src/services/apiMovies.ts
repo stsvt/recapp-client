@@ -24,11 +24,13 @@ const getMoviesData = async (url: string) => {
 
 export const fetchMovieDetails = async (id: string) => {
   const response = await fetch(`${BASE_URL}tmdb/${id}`);
-  
+
   if (!response.ok) {
-    throw new Error(`Failed to fetch movie details. Status: ${response.status}`);
+    throw new Error(
+      `Failed to fetch movie details. Status: ${response.status}`
+    );
   }
-  
+
   const result = await response.json();
   return result?.data?.movie || null;
 };
@@ -41,3 +43,17 @@ export const fetchUpcomingMovies = () =>
 
 export const fetchNowPlayingMovies = () =>
   getMoviesData(`${BASE_URL}tmdb/now_playing`);
+
+export const searchMovies = async (query: string, page: number = 1) => {
+  try {
+    const response = await fetch(
+      `${BASE_URL}tmdb/search?query=${encodeURIComponent(query)}&page=${page}`
+    );
+
+    const result = await response.json();
+    return result?.data?.movies?.results || [];
+  } catch (error) {
+    console.error('Search error:', error);
+    return [];
+  }
+};
