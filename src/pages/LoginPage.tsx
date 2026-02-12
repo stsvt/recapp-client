@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import Dashboard from '../components/Dashboard';
 import PasswordField from '../components/PasswordField';
 
-function Login() {
+function LoginPage() {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({ email: '', password: '' });
 
@@ -52,4 +52,4 @@ function Login() {
   );
 }
 
-export default Login;
+export default LoginPage;

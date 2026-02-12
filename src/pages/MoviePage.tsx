@@ -3,55 +3,16 @@ import { fetchMovieDetails } from '../services/apiMovies';
 import { useNavigate, useParams } from 'react-router-dom';
 import MovieSection from '../components/MovieSection';
 import Dashboard from '../components/Dashboard';
+import type { Movie } from '../types/movie';
+import type { CrewMember } from '../types/crewMember';
+import type { CastMember } from '../types/castMember';
+import type { Genre } from '../types/genre';
 
-interface CastMember {
-  id: number;
-  name: string;
-}
-
-interface CrewMember {
-  job: string;
-  name: string;
-}
-
-interface MovieSummary {
-  id: number;
-  title: string;
-  backdrop_path: string;
-}
-
-interface Genre {
-  id: number;
-  name: string;
-}
-
-interface Movie {
-  id: number;
-  title: string;
-  original_title: string;
-  backdrop_path: string;
-  poster_path: string;
-  release_date: string;
-  runtime: number;
-  vote_average: number;
-  overview: string;
-  genres: Genre[];
-  credits: {
-    cast: CastMember[];
-    crew: CrewMember[];
-  };
-  recommendations: {
-    results: MovieSummary[];
-  };
-}
-
-function Movie() {
+function MoviePage() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const [movie, setMovie] = useState<Movie | null>(null);
   const [loading, setLoading] = useState(true);
-
-  const IMAGE_URL = 'https://image.tmdb.org/t/p/original';
 
   useEffect(() => {
     let isMounted = true;
@@ -109,7 +70,7 @@ function Movie() {
           <section className='main-info-grid'>
             <div className='poster-column'>
               <img
-                src={`${IMAGE_URL}${movie.poster_path || movie.backdrop_path}`}
+                src={`${import.meta.env.VITE_IMAGE_URL}${movie.poster_path || movie.backdrop_path}`}
                 alt={movie.title}
               />
             </div>
@@ -175,4 +136,4 @@ function Movie() {
   );
 }
 
-export default Movie;
+export default MoviePage;
