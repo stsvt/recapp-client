@@ -3,13 +3,17 @@ import { fetchMovieDetails } from '../services/apiMovies';
 import { useNavigate, useParams } from 'react-router-dom';
 import MovieSection from '../components/MovieSection';
 import Dashboard from '../components/Dashboard';
+import MovieStatusButton from '../components/MovieStatusButton';
 import type { Movie, CrewMember, CastMember, Genre } from '../types/index';
+import { HeartIcon, BookmarkSimpleIcon } from '@phosphor-icons/react';
 
 function MoviePage() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const [movie, setMovie] = useState<Movie | null>(null);
   const [loading, setLoading] = useState(true);
+  const [isFavorite, setIsFavorite] = useState(false);
+  const [isWatched, setIsWatched] = useState(false);
 
   useEffect(() => {
     let isMounted = true;
@@ -53,6 +57,9 @@ function MoviePage() {
     ?.slice(0, 10)
     .map((a: CastMember) => a.name)
     .join(', ');
+
+  const toggleFavorite = () => setIsFavorite(!isFavorite);
+  const toggleWatched = () => setIsWatched(!isWatched);
 
   return (
     <div className='full-screen'>
@@ -111,11 +118,26 @@ function MoviePage() {
               </div>
             </div>
           </section>
-
           <article className='description-section'>
             <p>{movie.overview}</p>
           </article>
+          <div className='check-buttons'>
+            <MovieStatusButton
+              label='Хочу переглянути'
+              isActive={isFavorite}
+              onClick={toggleFavorite}
+              Icon={HeartIcon}
+            />
+            <MovieStatusButton
+              label='Переглянуто'
+              isActive={isWatched}
+              onClick={toggleWatched}
+              Icon={BookmarkSimpleIcon}
+              activeColor='#fff'
+            />
+          </div>
         </div>
+
         {movie.recommendations?.results?.length > 0 && (
           <section className='similar-movies-full-width'>
             <div className='similar-title-container'>

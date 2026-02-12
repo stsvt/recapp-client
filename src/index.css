@@ -17,7 +17,7 @@
 /* DASHBOARD */
 .dashboard {
   display: flex;
-  justify-content: space-between;  
+  justify-content: space-between;
 }
 
 .text-logo li:nth-child(2) {
@@ -511,4 +511,62 @@
   font-weight: 500;
   color: white;
   text-align: left;
+}
+
+/* CHECK-BUTTONS */
+.check-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 60px;
+  margin: 50px 0;
+  padding-top: 20px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.check-btn {
+  background: none;
+  border: none;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+  transition:
+    opacity 0.2s ease,
+    filter 0.2s ease;
+}
+
+.icon-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0);
+  transition:
+    background 0.3s ease,
+    box-shadow 0.3s ease;
+  margin-bottom: 8px;
+}
+
+.check-btn:hover .icon-wrapper {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.check-btn.active {
+  transform: scale(0.95);
+}
+
+.label {
+  font-size: 14px;
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.6);
+  letter-spacing: 0.5px;
+  transition: color 0.3s ease;
+}
+
+.check-btn.active .label {
+  color: #fff;
+  font-weight: 500;
 }
