@@ -3,10 +3,7 @@ import { fetchMovieDetails } from '../services/apiMovies';
 import { useNavigate, useParams } from 'react-router-dom';
 import MovieSection from '../components/MovieSection';
 import Dashboard from '../components/Dashboard';
-import type { Movie } from '../types/movie';
-import type { CrewMember } from '../types/crewMember';
-import type { CastMember } from '../types/castMember';
-import type { Genre } from '../types/genre';
+import type { Movie, CrewMember, CastMember, Genre } from '../types/index';
 
 function MoviePage() {
   const { id } = useParams<{ id: string }>();

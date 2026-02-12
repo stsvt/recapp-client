@@ -1,8 +1,3 @@
-import type { Genre } from "./genre";
-import type { CastMember } from "./castMember";
-import type { CrewMember } from "./crewMember";
-import type { MovieSummary } from "./movieSummary";
-
 export interface Movie {
   id: number;
   title: string;
@@ -21,4 +16,25 @@ export interface Movie {
   recommendations: {
     results: MovieSummary[];
   };
+}
+
+export interface MovieSummary {
+  id: number;
+  title: string;
+  backdrop_path: string;
+}
+
+export interface Genre {
+  id: number;
+  name: string;
+}
+
+export interface CrewMember {
+  job: string;
+  name: string;
+}
+
+export interface CastMember {
+  id: number;
+  name: string;
 }

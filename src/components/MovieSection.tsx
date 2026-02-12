@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import type { MovieSummary } from '../types/movieSummary';
+import type { MovieSummary } from '../types/index';
 
 interface MovieSectionProps {
   title: string;
