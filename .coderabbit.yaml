@@ -1,0 +1,99 @@
+# CodeRabbit Configuration for recapp-client
+# Documentation: https://docs.coderabbit.ai/guides/configure-coderabbit
+
+# Language used for all reviews (options: en, ja, zh-cn, zh-tw, es, pt, ru, de, fr, ko)
+language: en
+
+# Tone of reviews (options: assertive, light, professional)
+tone: professional
+
+# Review rules
+reviews:
+  # High-level summary of the PR
+  high_level_summary: true
+  
+  # Generate sequence diagrams for complex code changes
+  sequence_diagrams: true
+  
+  # Review poem at the end of each review
+  poem: false
+  
+  # Specific check settings
+  path_filters:
+    # Exclude files from reviews
+    excluded:
+      - "dist/**"
+      - "node_modules/**"
+      - "build/**"
+      - "*.min.js"
+      - "*.min.css"
+      - "package-lock.json"
+      - "*.lock"
+  
+  # Auto review settings
+  auto_review:
+    enabled: true
+    drafts: false  # Don't review draft PRs
+    base_branches:
+      - main
+      - master
+      - develop
+  
+  # Request changes workflow
+  request_changes_workflow: false
+
+# Chat settings  
+chat:
+  # Auto-reply to users
+  auto_reply: true
+
+# Code review focus areas
+knowledge_base:
+  # Focus on React, TypeScript, and Vite best practices
+  learnings:
+    scope: global
+
+# Early access features
+early_access: false
+
+# Enable/disable specific review types
+enable_free_tier: true
+
+# Review guidelines
+guidelines:
+  # React best practices
+  - "Ensure React hooks (useState, useEffect, etc.) are used correctly and follow React hooks rules"
+  - "Check for proper component structure and naming conventions (PascalCase for components)"
+  - "Verify proper use of TypeScript types and interfaces"
+  - "Ensure proper error handling and loading states"
+  - "Check for accessibility issues (a11y) in JSX components"
+  - "Verify that useState and useEffect dependencies are correctly specified"
+  
+  # TypeScript guidelines
+  - "Prefer explicit types over 'any' type"
+  - "Use interfaces for object shapes and types for unions/aliases"
+  - "Ensure proper typing for component props"
+  
+  # Code quality
+  - "Follow the existing ESLint and Prettier configuration"
+  - "Ensure code is DRY (Don't Repeat Yourself)"
+  - "Check for potential memory leaks in useEffect hooks"
+  - "Verify proper cleanup in useEffect return functions"
+  
+  # Security
+  - "Check for potential XSS vulnerabilities in JSX"
+  - "Ensure sensitive data is not exposed in client-side code"
+  - "Verify proper input validation and sanitization"
+  
+  # Performance
+  - "Look for unnecessary re-renders and suggest React.memo or useMemo where appropriate"
+  - "Check for proper code splitting and lazy loading opportunities"
+  - "Ensure efficient state management"
+
+# Tools and commands
+commands:
+  enabled: true
+
+# Learning from feedback
+learning:
+  enabled: true
