@@ -1,4 +1,5 @@
 import MovieCard from './MovieCard';
+import SkeletonCard from './SkeletonCard';
 import type { MovieSummary } from '../types/index';
 
 interface MovieSectionProps {
@@ -13,8 +14,8 @@ function MovieSection({ title, movies, loading }: MovieSectionProps) {
       <h2 className='section-title'>{title}</h2>
       <div className='movies-slider'>
         {loading ? (
-          <p className='status-text'>Завантаження...</p>
-        ) : movies.length > 0 ? (
+          [...Array(8)].map((_, i) => <SkeletonCard key={i} />)
+        ) : movies && movies.length > 0 ? (
           movies.map((movie) => <MovieCard key={movie.id} movie={movie} />)
         ) : (
           <p className='status-text'>Фільмів не знайдено</p>
