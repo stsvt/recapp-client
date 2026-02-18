@@ -1,16 +1,23 @@
 import { BellIcon, MagnifyingGlassIcon, UserIcon } from '@phosphor-icons/react';
 import { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate, Link, useSearchParams } from 'react-router-dom';
 import FilterModal from './FilterModal';
 import SearchModal from './SearchModal';
 
 function Dashboard() {
   const [showFilters, setShowFilters] = useState(false);
-  const [showSearch, setShowSearch] = useState(false);
+  const [searchParams, setSearchParams] = useSearchParams()
+  const showSearch = searchParams.get('search') === 'true';
   const navigate = useNavigate();
 
   const handleUserClick = () => {
     navigate('../register');
+  };
+
+  const openSearch = () => setSearchParams({search: 'true'});
+  const closeSearch = () => {
+    searchParams.delete('search');
+    setSearchParams(searchParams);
   };
 
   return (
@@ -36,7 +43,7 @@ function Dashboard() {
           <li>МОЇ СПИСКИ</li>
         </ul>
         <div className='icons'>
-          <button onClick={() => setShowSearch(true)}>
+          <button onClick={openSearch}>
             <MagnifyingGlassIcon className='icon' size={24} />{' '}
           </button>
           <button>
@@ -48,7 +55,7 @@ function Dashboard() {
         </div>
       </div>
       <FilterModal isOpen={showFilters} onClose={() => setShowFilters(false)} />
-      <SearchModal isOpen={showSearch} onClose={() => setShowSearch(false)} />
+      <SearchModal isOpen={showSearch} onClose={closeSearch} />
     </>
   );
 }

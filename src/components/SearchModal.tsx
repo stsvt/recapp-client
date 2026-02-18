@@ -1,5 +1,9 @@
-import { useEffect, useState } from 'react';
-import { MagnifyingGlassIcon, XIcon } from '@phosphor-icons/react';
+import { useEffect, useState, useCallback } from 'react';
+import {
+  CaretLeftIcon,
+  MagnifyingGlassIcon,
+  XIcon,
+} from '@phosphor-icons/react';
 import type { MovieSummary } from '../types';
 import { searchMovies } from '../services/apiMovies';
 import MovieCard from './MovieCard';
@@ -13,6 +17,12 @@ function SearchModal({ isOpen, onClose }: SearchModalProps) {
   const [query, setQuery] = useState('');
   const [results, setResults] = useState<MovieSummary[]>([]);
   const [loading, setLoading] = useState(false);
+
+  const handleClose = useCallback(() => {
+    setQuery('');
+    setResults([]);
+    onClose();
+  }, [onClose]);
 
   useEffect(() => {
     let isMounted = true;
@@ -42,14 +52,33 @@ function SearchModal({ isOpen, onClose }: SearchModalProps) {
     };
   }, [query]);
 
+  useEffect(() => {
+    if (!isOpen) return;
+
+    const handleKeyDown = (e: window.KeyboardEvent) => {
+      if (e.key === 'Escape') handleClose();
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    document.body.style.overflow = 'hidden';
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+      document.body.style.overflow = 'unset';
+    };
+  }, [isOpen, handleClose]);
+
   if (!isOpen) return null;
 
   return (
     <div className='search-overlay'>
       <div className='search-container'>
         <header className='search-header'>
+          <button className='back-button' onClick={handleClose}>
+            <CaretLeftIcon size={28} />
+          </button>
           <div className='search-input-wrapper'>
-            <MagnifyingGlassIcon size={30} className='search-icon-inner' />
+            <MagnifyingGlassIcon size={24} className='search-icon-inner' />
             <input
               autoFocus
               type='text'
@@ -59,7 +88,7 @@ function SearchModal({ isOpen, onClose }: SearchModalProps) {
             />
           </div>
           <button className='close-search' onClick={onClose}>
-            <XIcon size={30} />
+            <XIcon size={28} />
           </button>
         </header>
 
@@ -80,9 +109,11 @@ function SearchModal({ isOpen, onClose }: SearchModalProps) {
             <div className='popular-tags'>
               <h3>Популярні запити</h3>
               <div className='tags-row'>
-                <span>Служниця</span>
-                <span>Інтерстеллар</span>
-                <span>Месники</span>
+                {['Служниця', 'Інтерстеллар', 'Месники'].map((tag) => (
+                  <span key={tag} onClick={() => setQuery(tag)}>
+                    {tag}
+                  </span>
+                ))}
               </div>
             </div>
           )}
