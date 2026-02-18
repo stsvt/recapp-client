@@ -56,7 +56,7 @@ function SearchModal({ isOpen, onClose }: SearchModalProps) {
   useEffect(() => {
     if (!isOpen) return;
 
-    const handleKeyDown = (e: window.KeyboardEvent) => {
+    const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape') handleClose();
     };
 
