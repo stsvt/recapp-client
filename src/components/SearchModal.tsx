@@ -7,6 +7,7 @@ import {
 import type { MovieSummary } from '../types';
 import { searchMovies } from '../services/apiMovies';
 import MovieCard from './MovieCard';
+import SkeletonCard from './SkeletonCard';
 
 interface SearchModalProps {
   isOpen: boolean;
@@ -93,29 +94,38 @@ function SearchModal({ isOpen, onClose }: SearchModalProps) {
         </header>
 
         <div className='search-results-area'>
-          {loading && <div className='loader'>Пошук...</div>}
-
-          {results.length > 0 ? (
+          
+          {loading && results.length === 0 && (
             <div className='search-results-grid'>
+              {[...Array(12)].map((_, i) => <SkeletonCard key={i} />)}
+            </div>
+          )}
+
+          {results.length > 0 && (
+            <div className={`search-results-grid ${loading ? 'results-updating' : ''}`}>
               {results.map((movie) => (
-                <MovieCard key={movie.id} movie={movie} />
+                <div key={movie.id} className='movie-card-animated'>
+                  <MovieCard movie={movie} />
+                </div>
               ))}
             </div>
-          ) : query && !loading ? (
-            <p className='no-results'>
-              За запитом "{query}" нічого не знайдено
-            </p>
-          ) : (
-            <div className='popular-tags'>
-              <h3>Популярні запити</h3>
-              <div className='tags-row'>
-                {['Служниця', 'Інтерстеллар', 'Месники'].map((tag) => (
-                  <span key={tag} onClick={() => setQuery(tag)}>
-                    {tag}
-                  </span>
-                ))}
-              </div>
-            </div>
+          )}
+
+          {!loading && results.length === 0 && (
+            <>
+              {query.trim() ? (
+                <p className='no-results'>За запитом "{query}" нічого не знайдено</p>
+              ) : (
+                <div className='popular-tags'>
+                  <h3>Популярні запити</h3>
+                  <div className='tags-row'>
+                    {['Служниця', 'Інтерстеллар', 'Месники'].map((tag) => (
+                      <span key={tag} onClick={() => setQuery(tag)}>{tag}</span>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </>
           )}
         </div>
       </div>
