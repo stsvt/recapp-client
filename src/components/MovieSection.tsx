@@ -1,4 +1,4 @@
-import { useNavigate } from 'react-router-dom';
+import MovieCard from './MovieCard';
 import type { MovieSummary } from '../types/index';
 
 interface MovieSectionProps {
@@ -8,12 +8,6 @@ interface MovieSectionProps {
 }
 
 function MovieSection({ title, movies, loading }: MovieSectionProps) {
-  const navigate = useNavigate();
-
-  const handleMovieClick = (id: number) => {
-    navigate(`/movie/${id}`);
-  };
-
   return (
     <div className='recomendation-section'>
       <h2 className='section-title'>{title}</h2>
@@ -21,24 +15,7 @@ function MovieSection({ title, movies, loading }: MovieSectionProps) {
         {loading ? (
           <p className='status-text'>Завантаження...</p>
         ) : movies.length > 0 ? (
-          movies.map((movie) => (
-            <div
-              key={movie.id}
-              className='movie-card'
-              onClick={() => handleMovieClick(movie.id)}
-            >
-              <div className='image-container'>
-                <img
-                  src={`${import.meta.env.VITE_POSTER_URL}${movie.backdrop_path}`}
-                  alt={movie.title}
-                  className='movie-poster'
-                />
-                <div className='movie-overlay'>
-                  <p className='movie-title-text'>{movie.title}</p>{' '}
-                </div>
-              </div>
-            </div>
-          ))
+          movies.map((movie) => <MovieCard key={movie.id} movie={movie} />)
         ) : (
           <p className='status-text'>Фільмів не знайдено</p>
         )}
