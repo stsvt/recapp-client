@@ -36,13 +36,13 @@ export const fetchMovieDetails = async (id: string) => {
 };
 
 export const fetchTopRatedMovies = () =>
-  getMoviesData(`${BASE_URL}tmdb/top-rated`);
+  getMoviesData(`${BASE_URL}tmdb/topRated`);
 
 export const fetchUpcomingMovies = () =>
   getMoviesData(`${BASE_URL}tmdb/upcoming`);
 
 export const fetchNowPlayingMovies = () =>
-  getMoviesData(`${BASE_URL}tmdb/now_playing`);
+  getMoviesData(`${BASE_URL}tmdb/nowPlaying`);
 
 export const searchMovies = async (query: string, page: number = 1) => {
   try {
