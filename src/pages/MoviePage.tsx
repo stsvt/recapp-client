@@ -4,8 +4,13 @@ import { useNavigate, useParams } from 'react-router-dom';
 import MovieSection from '../components/MovieSection';
 import Dashboard from '../components/Dashboard';
 import MovieStatusButton from '../components/MovieStatusButton';
+import Spinner from '../components/Spinner';
 import type { Movie, CrewMember, CastMember, Genre } from '../types/index';
-import { HeartIcon, BookmarkSimpleIcon } from '@phosphor-icons/react';
+import {
+  HeartIcon,
+  BookmarkSimpleIcon,
+  CaretLeftIcon,
+} from '@phosphor-icons/react';
 
 function MoviePage() {
   const { id } = useParams<{ id: string }>();
@@ -14,10 +19,12 @@ function MoviePage() {
   const [loading, setLoading] = useState(true);
   const [isFavorite, setIsFavorite] = useState(false);
   const [isWatched, setIsWatched] = useState(false);
+  const [isImageLoading, setIsImageLoading] = useState(true);
 
   useEffect(() => {
     let isMounted = true;
     window.scrollTo(0, 0);
+    setIsImageLoading(true);
 
     const loadData = async () => {
       if (!id) return;
@@ -47,7 +54,8 @@ function MoviePage() {
     };
   }, [id, navigate]);
 
-  if (loading) return <div className='loader'>Завантаження...</div>;
+  if (loading) return <Spinner />;
+
   if (!movie) return null;
 
   const director =
@@ -65,6 +73,13 @@ function MoviePage() {
     <div className='full-screen'>
       <Dashboard />
       <div className='movie-page-content'>
+        <button
+          className='back-button'
+          onClick={() => navigate(-1)}
+          title='Назад'
+        >
+          <CaretLeftIcon size={28} />
+        </button>
         <div className='content-wrapper'>
           <header className='movie-header'>
             <h1>{movie.title}</h1>
@@ -72,10 +87,31 @@ function MoviePage() {
           </header>
 
           <section className='main-info-grid'>
-            <div className='poster-column'>
+            <div
+              className='poster-column'
+              style={{
+                position: 'relative',
+                width: '240px',
+                minHeight: '360px',
+                backgroundColor: '#1a1a1a',
+                borderRadius: '4px',
+                overflow: 'hidden',
+              }}
+            >
+              {isImageLoading && (
+                <div className='image-loader-overlay shimmer-wave'>
+                </div>
+              )}
               <img
                 src={`${import.meta.env.VITE_IMAGE_URL}${movie.poster_path || movie.backdrop_path}`}
                 alt={movie.title}
+                onLoad={() => setIsImageLoading(false)}
+                style={{
+                  display: isImageLoading ? 'none' : 'block',
+                  width: '100%',
+                  height: '100%',
+                  objectFit: 'cover',
+                }}
               />
             </div>
 
