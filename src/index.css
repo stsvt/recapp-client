@@ -51,6 +51,10 @@
   margin-right: 2%;
 }
 
+.icon:hover {
+  cursor: pointer;
+}
+
 .icon {
   margin-right: 2.2rem;
 }
@@ -616,7 +620,7 @@
 
 .movie-page-content .back-button {
   margin: 0 15px;
-  position:absolute;
+  position: absolute;
 }
 
 .back-button:hover {
@@ -735,13 +739,15 @@
   width: 50px;
   height: 50px;
   border: 4px solid rgba(243, 6, 6, 0.1);
-  border-left-color: #f30606; 
+  border-left-color: #f30606;
   border-radius: 50%;
   animation: spin 1s linear infinite;
 }
 
 @keyframes spin {
-  to { transform: rotate(360deg); }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 .loader-text {
@@ -780,7 +786,12 @@
   content: '';
   position: absolute;
   inset: 0;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.03), transparent);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.03),
+    transparent
+  );
   animation: shimmer-wave 1.5s infinite;
 }
 
@@ -829,8 +840,12 @@
 }
 
 @keyframes shimmer {
-  0% { background-position: -200% 0; }
-  100% { background-position: 200% 0; }
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
 }
 
 @keyframes shimmer-wave {
@@ -843,8 +858,12 @@
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 .movie-card-animated {
@@ -859,4 +878,163 @@
 
 .skeleton-wrapper {
   transition: opacity 0.3s ease;
+}
+
+/* PROFILE PAGE */
+.profile-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 30px 20px;
+  min-height: calc(100vh - 80px);
+}
+
+.profile-container h2 {
+  font-size: 26px;
+  font-weight: 500;
+  margin-bottom: 25px;
+  color: #fff;
+  letter-spacing: 1px;
+}
+
+.profile-card {
+  background: rgba(20, 20, 20, 0.8);
+  backdrop-filter: blur(15px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 30px;
+  border-radius: 12px;
+  width: 100%;
+  max-width: 420px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.7);
+  transition: transform 0.3s ease;
+}
+
+.profile-card:hover {
+  border-color: rgba(229, 9, 20, 0.4);
+}
+
+.profile-avatar {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid #e50914;
+  margin-bottom: 20px;
+  background-color: #262626;
+  box-shadow: 0 0 20px rgba(229, 9, 20, 0.3);
+}
+
+.profile-info {
+  width: 100%;
+  margin-bottom: 25px;
+}
+
+.profile-info p, .info-row {
+  font-size: 15px;
+  color: #ccc;
+  margin-bottom: 12px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.profile-info strong {
+  color: #e50914;
+  font-weight: 500;
+  text-transform: uppercase;
+  font-size: 11px;
+  letter-spacing: 0.5px;
+}
+
+.avatar-section {
+  position: relative;
+  margin-bottom: 15px;
+}
+
+.photo-upload-btn {
+  position: absolute;
+  bottom: 15px;
+  right: 5px;
+  background: #e50914;
+  border: 2px solid #141414;
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  color: white;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s;
+}
+
+.edit-input {
+  background: #1a1a1a;
+  border: 1px solid #333;
+  color: #fff;
+  padding: 6px 10px;
+  border-radius: 4px;
+  outline: none;
+  font-size: 14px;
+  width: 65%;
+}
+
+.edit-textarea {
+  width: 100%;
+  min-height: 70px;
+  background: #1a1a1a;
+  border: 1px solid #333;
+  color: white;
+  padding: 10px;
+  border-radius: 6px;
+  resize: none;
+  font-size: 14px;
+}
+
+.profile-actions-group {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+}
+
+.profile-actions {
+  display: flex;
+  gap: 8px;
+  width: 100%;
+}
+
+.edit-btn, .save-btn, .cancel-btn {
+  flex: 1;
+  padding: 10px;
+  border-radius: 4px;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  border: none;
+}
+
+.edit-btn, .save-btn {
+  background: #e50914;
+  color: white;
+}
+
+.cancel-btn {
+  background: #333;
+  color: white;
+}
+
+.logout-link-btn {
+  background: none;
+  border: none;
+  color: #666;
+  cursor: pointer;
+  font-size: 12px;
+  text-decoration: underline;
+  margin-top: 5px;
 }

@@ -1,20 +1,26 @@
 import { BellIcon, MagnifyingGlassIcon, UserIcon } from '@phosphor-icons/react';
 import { useState } from 'react';
 import { useNavigate, Link, useSearchParams } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 import FilterModal from './FilterModal';
 import SearchModal from './SearchModal';
 
 function Dashboard() {
+  const { user } = useAuth();
   const [showFilters, setShowFilters] = useState(false);
-  const [searchParams, setSearchParams] = useSearchParams()
+  const [searchParams, setSearchParams] = useSearchParams();
   const showSearch = searchParams.get('search') === 'true';
   const navigate = useNavigate();
 
   const handleUserClick = () => {
-    navigate('../register');
+    if (user) {
+      navigate('/profile');
+    } else {
+      navigate('/login');
+    }
   };
 
-  const openSearch = () => setSearchParams({search: 'true'});
+  const openSearch = () => setSearchParams({ search: 'true' });
   const closeSearch = () => {
     searchParams.delete('search');
     setSearchParams(searchParams);

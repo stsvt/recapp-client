@@ -1,13 +1,15 @@
-import React from 'react';
 import { useState } from 'react';
 import Dashboard from '../components/Dashboard';
 import PasswordField from '../components/PasswordField';
+import { register } from '../services/auth';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 
 function RegisterPage() {
+  const {login} = useAuth();
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
-    username: '',
+    name: '',
     email: '',
     password: '',
     confirmPassword: '',
@@ -17,9 +19,26 @@ function RegisterPage() {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log('Дані для реєстрації:', formData);
+
+    if (formData.password !== formData.confirmPassword) {
+      alert('Passwords do not match.');
+      return;
+    }
+
+    try {
+      const res = await register(formData);
+      login(res.data.user, res.token);
+      console.log('Success', res);
+      navigate('/');
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        alert(error.message);
+      } else {
+        alert('An unexpected error occurred');
+      }
+    }
   };
 
   return (
@@ -33,9 +52,9 @@ function RegisterPage() {
             <label>Ім'я</label>
             <input
               type='text'
-              name='username'
+              name='name'
               placeholder="Введіть ім'я"
-              value={formData.username}
+              value={formData.name}
               onChange={handleChange}
               required
             />
