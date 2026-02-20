@@ -2,10 +2,16 @@ import { useState, useRef, useEffect, useMemo } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import Dashboard from '../components/Dashboard';
-import { CaretLeftIcon, CameraIcon } from '@phosphor-icons/react';
-import { updateMe } from '../services/user';
+import {
+  CaretLeftIcon,
+  CameraIcon,
+  TrashIcon,
+  WarningCircleIcon,
+} from '@phosphor-icons/react';
+import { updateMe, deleteMe, deletePhoto } from '../services/user';
 
 const DICEBEAR_BASE = import.meta.env.VITE_DICEBEAR_URL;
+const USERS_IMAGES_BASE = import.meta.env.VITE_USERS_IMAGES_BASE;
 
 function ProfilePage() {
   const { user, login, logout } = useAuth();
@@ -16,8 +22,15 @@ function ProfilePage() {
     description: user?.description || '',
   });
   const [loading, setLoading] = useState(false);
+  const [imgVersion, setImgVersion] = useState(Date.now());
   const fileInputRef = useRef<HTMLInputElement>(null);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!user) {
+      navigate('/');
+    }
+  }, [user, navigate]);
 
   useEffect(() => {
     if (user) {
@@ -29,12 +42,20 @@ function ProfilePage() {
     }
   }, [user]);
 
+  const avatarUrl = useMemo(() => {
+    if (user?.photo && user.photo !== 'default.jpg') {
+      return `${USERS_IMAGES_BASE}${user.photo}?v=${imgVersion}`;
+    }
+    const seed = encodeURIComponent(user?.name || 'User');
+    return `${DICEBEAR_BASE}?seed=${seed}&chars=1&backgroundColor=e50914`;
+  }, [user?.name, user?.photo, imgVersion]);
 
   const handleUpdate = async () => {
     setLoading(true);
     try {
       const res = await updateMe(formData);
-      login(res.data.user, localStorage.getItem('token') || '');
+      login({ ...res.data.user }, localStorage.getItem('token') || '');
+      setImgVersion(Date.now());
       setIsEditing(false);
       alert('Дані успішно оновлено!');
     } catch (error: unknown) {
@@ -57,6 +78,8 @@ function ProfilePage() {
       try {
         const res = await updateMe(fileData);
         login(res.data.user, localStorage.getItem('token') || '');
+        setImgVersion(Date.now());
+        if (fileInputRef.current) fileInputRef.current.value = '';
         alert('Фото оновлено!');
       } catch (error: unknown) {
         if (error instanceof Error) {
@@ -69,24 +92,72 @@ function ProfilePage() {
     }
   };
 
-  const avatarUrl = useMemo(() => {
-    if (user?.photo && user.photo !== 'default.jpg') return user.photo;
-    const seed = encodeURIComponent(user?.name || 'User');
-    return `${DICEBEAR_BASE}?seed=${seed}&chars=1&backgroundColor=e50914`;
-  }, [user?.name, user?.photo]);
+  const handleDeletePhoto = async () => {
+    if (!window.confirm('Ви впевнені, що хочете видалити фото профілю?'))
+      return;
 
-  if (!user) {
-    return <p className='status-text'>Будь ласка, увійдіть в акаунт</p>;
-  }
+    setLoading(true);
+    try {
+      const res = await deletePhoto();
+      console.log('Повна відповідь сервера:', res);
+      
+      const updatedUser = res.data?.user || res.user || res;
+      
+      if (updatedUser) {
+        login({ ...updatedUser }, localStorage.getItem('token') || '');
+        setImgVersion(Date.now());
+        setIsEditing(false);
+        alert('Фото успішно видалено');
+      } else {
+        console.error('Сервер не повернув дані користувача:', res);
+      }
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        if (error.message.includes('401')) {
+          logout();
+          return;
+        }
+        alert(error.message);
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleDeleteAccount = async () => {
+    if (
+      !window.confirm(
+        'ЦЯ ДІЯ НЕЗВОРОТНЯ! Ви впевнені, що хочете видалити свій профіль?'
+      )
+    )
+      return;
+
+    setLoading(true);
+    try {
+      await deleteMe();
+      logout();
+      navigate('/');
+      alert('Ваш акаунт успішно видалено');
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        console.error(err.message);
+      }
+      alert('Помилка видалення акаунту');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleCancel = () => {
-  setIsEditing(false);
-  setFormData({
-    name: user.name,
-    email: user.email,
-    description: user.description || '',
-  });
-};
+    setIsEditing(false);
+    setFormData({
+      name: user.name,
+      email: user.email,
+      description: user.description || '',
+    });
+  };
+
+  if (!user) return null;
 
   return (
     <div className='full-screen'>
@@ -99,21 +170,39 @@ function ProfilePage() {
         <div className='profile-card'>
           <div className='avatar-section'>
             <img
+              key={imgVersion}
               src={avatarUrl}
               alt={user.name}
-              className='profile-avatar'
+              className={`profile-avatar ${isEditing ? 'editing' : ''}`}
+              crossOrigin='anonymous'
               onError={(e) => {
-                (e.target as HTMLImageElement).src =
-                  `${DICEBEAR_BASE}?seed=User&chars=1&backgroundColor=e50914`;
+                const target = e.target as HTMLImageElement;
+                const fallbackSeed = encodeURIComponent(user?.name || 'User');
+                target.src = `${DICEBEAR_BASE}?seed=${fallbackSeed}&chars=1&backgroundColor=e50914`;
               }}
             />
-            <button
-              className='photo-upload-btn'
-              onClick={() => fileInputRef.current?.click()}
-              title='Змінити фото'
-            >
-              <CameraIcon size={20} />
-            </button>
+            {isEditing && (
+              <div className='avatar-edit-overlay'>
+                <button
+                  className='avatar-action-btn upload'
+                  onClick={() => fileInputRef.current?.click()}
+                  title='Змінити фото'
+                >
+                  <CameraIcon size={22} />
+                </button>
+
+                {user.photo && user.photo !== 'default.jpg' && (
+                  <button
+                    className='avatar-action-btn delete'
+                    onClick={handleDeletePhoto}
+                    title='Видалити фото'
+                  >
+                    <TrashIcon size={20} />
+                  </button>
+                )}
+              </div>
+            )}
+
             <input
               type='file'
               ref={fileInputRef}
@@ -177,7 +266,7 @@ function ProfilePage() {
 
           <div className='profile-actions-group'>
             {isEditing ? (
-              <>
+              <div className='edit-actions-row'>
                 <button
                   onClick={handleUpdate}
                   disabled={loading}
@@ -185,20 +274,25 @@ function ProfilePage() {
                 >
                   {loading ? 'Збереження...' : 'Зберегти'}
                 </button>
-                <button
-                  onClick={handleCancel}
-                  className='cancel-btn'
-                >
+                <button onClick={handleCancel} className='cancel-btn'>
                   Скасувати
                 </button>
-              </>
+              </div>
             ) : (
               <>
                 <button onClick={() => setIsEditing(true)} className='edit-btn'>
-                  Редагувати
+                  Редагувати профіль
                 </button>
                 <button onClick={logout} className='logout-link-btn'>
                   Вийти з акаунта
+                </button>
+
+                <button
+                  onClick={handleDeleteAccount}
+                  className='delete-account-btn'
+                >
+                  <WarningCircleIcon size={16} />
+                  Видалити акаунт
                 </button>
               </>
             )}
