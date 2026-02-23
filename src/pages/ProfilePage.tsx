@@ -100,9 +100,9 @@ function ProfilePage() {
     try {
       const res = await deletePhoto();
       console.log('Повна відповідь сервера:', res);
-      
+
       const updatedUser = res.data?.user || res.user || res;
-      
+
       if (updatedUser) {
         login({ ...updatedUser }, localStorage.getItem('token') || '');
         setImgVersion(Date.now());
@@ -121,6 +121,12 @@ function ProfilePage() {
       }
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleLogout = () => {
+    if (window.confirm('Ви впевнені, що хочете вийти з акаунту?')) {
+      logout();
     }
   };
 
@@ -283,7 +289,7 @@ function ProfilePage() {
                 <button onClick={() => setIsEditing(true)} className='edit-btn'>
                   Редагувати профіль
                 </button>
-                <button onClick={logout} className='logout-link-btn'>
+                <button onClick={handleLogout} className='logout-link-btn'>
                   Вийти з акаунта
                 </button>
 

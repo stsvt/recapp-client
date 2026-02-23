@@ -5,7 +5,7 @@ import MovieSection from '../components/MovieSection';
 import Dashboard from '../components/Dashboard';
 import MovieStatusButton from '../components/MovieStatusButton';
 import Spinner from '../components/Spinner';
-import type { Movie, CrewMember, CastMember, Genre } from '../types/index';
+import type { Movie, CrewMember, Genre } from '../types/index';
 import {
   HeartIcon,
   BookmarkSimpleIcon,
@@ -58,13 +58,10 @@ function MoviePage() {
 
   if (!movie) return null;
 
-  const director =
-    movie.credits?.crew?.find((p: CrewMember) => p.job === 'Director')?.name ||
-    'Невідомо';
-  const topCast = movie.credits?.cast
-    ?.slice(0, 10)
-    .map((a: CastMember) => a.name)
-    .join(', ');
+  const directorData = movie.credits?.crew?.find(
+    (p: CrewMember) => p.job === 'Director'
+  );
+  const directorName = directorData?.name || 'Невідомо';
 
   const toggleFavorite = () => setIsFavorite(!isFavorite);
   const toggleWatched = () => setIsWatched(!isWatched);
@@ -99,8 +96,7 @@ function MoviePage() {
               }}
             >
               {isImageLoading && (
-                <div className='image-loader-overlay shimmer-wave'>
-                </div>
+                <div className='image-loader-overlay shimmer-wave'></div>
               )}
               <img
                 src={`${import.meta.env.VITE_IMAGE_URL}${movie.poster_path || movie.backdrop_path}`}
@@ -143,12 +139,37 @@ function MoviePage() {
               <div className='cast-info'>
                 <p className='cast-row'>
                   <strong className='cast-label'>Режисер</strong>
-                  <span className='cast-value'>{director}</span>
+                  <button
+                    className='actor-link-btn'
+                    onClick={() =>
+                      navigate(`/person/${directorData?.id}`, {
+                        state: { name: directorName },
+                      })
+                    }
+                  >
+                    <span className='cast-value'>{directorName}</span>
+                  </button>
                 </p>
                 <p className='cast-row'>
                   <strong className='cast-label'>У ролях</strong>
                   <span className='cast-value'>
-                    {topCast || 'Дані відсутні'}
+                    {movie.credits?.cast
+                      ?.slice(0, 10)
+                      .map((actor, index, array) => (
+                        <span key={actor.id}>
+                          <button
+                            className='actor-link-btn'
+                            onClick={() =>
+                              navigate(`/person/${actor.id}`, {
+                                state: { name: actor.name },
+                              })
+                            }
+                          >
+                            {actor.name}
+                          </button>
+                          {index < array.length - 1 ? ', ' : ''}
+                        </span>
+                      )) || 'Дані відсутні'}
                   </span>
                 </p>
               </div>

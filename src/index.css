@@ -1099,3 +1099,70 @@
 .delete-account-btn:hover {
   color: #e50914;
 }
+
+/* PERSON PAGE */
+.movie-page-content .back-button {
+  margin: 0 15px;
+  position: absolute;
+}
+
+.content-wrapper {
+  position: relative;
+  z-index: 1;
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.movie-header {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.movie-header h1 {
+  font-size: 28px;
+  margin-bottom: 5px;
+  margin-top: 30px;
+}
+
+.similar-movies-full-width {
+  width: 100%;
+  margin-top: 60px;
+  padding: 20px 0;
+}
+
+.similar-title-container {
+  max-width: 1000px;
+  margin: 0 auto 20px auto;
+  padding: 0 20px;
+}
+
+.similar-title-container h2 {
+  font-size: 22px;
+  font-weight: 500;
+  color: white;
+  text-align: left;
+}
+
+.actor-link-btn {
+  background: none;
+  border: none;
+  padding: 0;
+  color: #ccc;
+  font-family: inherit;
+  font-size: inherit;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  display: inline;
+  border-bottom: 1px solid transparent;
+}
+
+.actor-link-btn:hover {
+  color: #fff;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.4);
+}
+
+.actor-link-btn .cast-value {
+  color: inherit;
+}
