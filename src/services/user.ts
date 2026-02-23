@@ -21,8 +21,29 @@ export const updateMe = async (data: UpdateMeData | FormData) => {
 
   if (!response.ok) {
     const errorData = await response.json();
-    throw new Error(errorData.message || 'Update failed');
+    throw new Error(errorData.message || `Update Error: ${response.status}`);
   }
 
   return await response.json();
+};
+
+export const deleteMe = async () => {
+  const token = localStorage.getItem('token');
+  const response = await fetch(`${BASE_URL}users/deleteMe`, {
+    method: 'DELETE',
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  if (!response.ok) {
+    const errorData = await response.json();
+    throw new Error(errorData.message || `Delete Error: ${response.status}`);
+  }
+
+  return true;
+};
+
+export const deletePhoto = async () => {
+  return await updateMe({ photo: 'default.jpg' });
 };
