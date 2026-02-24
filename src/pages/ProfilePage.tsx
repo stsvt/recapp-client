@@ -4,7 +4,6 @@ import { useNavigate } from 'react-router-dom';
 import Dashboard from '../components/Dashboard';
 import PasswordField from '../components/PasswordField';
 import ConfirmModal from '../components/ConfirmModal';
-import Toast from '../components/Toast';
 import {
   CaretLeftIcon,
   CameraIcon,
@@ -17,6 +16,7 @@ import {
   deletePhoto,
   updateMyPassword,
 } from '../services/user';
+import toast from 'react-hot-toast';
 
 const DICEBEAR_BASE = import.meta.env.VITE_DICEBEAR_URL;
 const USERS_IMAGES_BASE = import.meta.env.VITE_USERS_IMAGES_BASE;
@@ -52,9 +52,6 @@ function ProfilePage() {
     onConfirm: () => {},
     type: 'info',
   });
-  const [toasts, setToasts] = useState<
-    { id: number; message: string; type: 'success' | 'error' }[]
-  >([]);
 
   useEffect(() => {
     if (!user) {
@@ -80,11 +77,6 @@ function ProfilePage() {
     return `${DICEBEAR_BASE}?seed=${seed}&chars=1&backgroundColor=e50914`;
   }, [user?.name, user?.photo, imgVersion]);
 
-  const addToast = (message: string, type: 'success' | 'error') => {
-    const id = Date.now();
-    setToasts((prev) => [...prev, { id, message, type }]);
-  };
-
   const handleUpdate = async () => {
     setLoading(true);
     try {
@@ -92,11 +84,10 @@ function ProfilePage() {
       login({ ...res.data.user }, localStorage.getItem('token') || '');
       setImgVersion(Date.now());
       setIsEditing(false);
-      addToast('Дані успішно оновлено!', 'success');
+      toast.success('Дані успішно оновлено!');
     } catch (error: unknown) {
-      const message =
-        error instanceof Error ? error.message : 'Помилка оновлення';
-      addToast(message, 'error');
+      const msg = error instanceof Error ? error.message : 'Помилка оновлення';
+      toast.error(msg);
     } finally {
       setLoading(false);
     }
@@ -113,11 +104,11 @@ function ProfilePage() {
         login(res.data.user, localStorage.getItem('token') || '');
         setImgVersion(Date.now());
         if (fileInputRef.current) fileInputRef.current.value = '';
-        addToast('Фото профілю оновлено!', 'success');
+        toast.success('Фото профілю оновлено!');
       } catch (err: unknown) {
         const msg =
           err instanceof Error ? err.message : 'Помилка завантаження фото';
-        addToast(msg, 'error');
+        toast.error(msg);
       } finally {
         setLoading(false);
       }
@@ -134,7 +125,7 @@ function ProfilePage() {
         login({ ...updatedUser }, localStorage.getItem('token') || '');
         setImgVersion(Date.now());
         setIsEditing(false);
-        addToast('Фото успішно видалено', 'success');
+        toast.success('Фото успішно видалено');
       }
     } catch (error: unknown) {
       if (error instanceof Error) {
@@ -142,7 +133,7 @@ function ProfilePage() {
           logout();
           return;
         }
-        addToast(error.message, 'error');
+        toast.error(error.message);
       }
     } finally {
       setLoading(false);
@@ -156,12 +147,12 @@ function ProfilePage() {
       await deleteMe();
       logout();
       navigate('/');
-      addToast('Ваш акаунт успішно видалено', 'success');
+      toast.success('Ваш акаунт успішно видалено');
     } catch (err: unknown) {
       if (err instanceof Error) {
         console.error(err.message);
       }
-      addToast('Помилка видалення акаунту', 'error');
+      toast.error('Помилка видалення акаунту');
     } finally {
       setLoading(false);
       setModalConfig((prev) => ({ ...prev, isOpen: false }));
@@ -181,13 +172,13 @@ function ProfilePage() {
     e.preventDefault();
 
     if (passwordData.password !== passwordData.confirmPassword) {
-      return addToast('Нові паролі не збігаються', 'error');
+      return toast.error('Нові паролі не збігаються');
     }
 
     setLoading(true);
     try {
       await updateMyPassword(passwordData);
-      addToast('Пароль успішно змінено', 'success');
+      toast.success('Пароль успішно змінено');
       setIsChangingPassword(false);
       setPasswordData({
         passwordCurrent: '',
@@ -197,7 +188,7 @@ function ProfilePage() {
     } catch (err: unknown) {
       const msg =
         err instanceof Error ? err.message : 'Помилка при зміні паролю';
-      addToast(msg, 'error');
+      toast.error(msg);
     } finally {
       setLoading(false);
     }
@@ -392,21 +383,6 @@ function ProfilePage() {
               confirmText='Підтвердити'
               cancelText='Скасувати'
             />
-
-            <div className='toast-list'>
-              {toasts.map((t) => (
-                <Toast
-                  key={t.id}
-                  message={t.message}
-                  type={t.type}
-                  onClose={() =>
-                    setToasts((prev) =>
-                      prev.filter((toast) => toast.id !== t.id)
-                    )
-                  }
-                />
-              ))}
-            </div>
 
             {!isEditing && !isChangingPassword && (
               <button

@@ -1,5 +1,6 @@
 import { Routes, Route } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
+import { Toaster } from 'react-hot-toast';
 import MainPage from './pages/MainPage';
 import RegisterPage from './pages/RegisterPage';
 import LoginPage from './pages/LoginPage';
@@ -22,6 +23,30 @@ function App() {
         <Route path='/movie/:id' element={<MoviePage />} />
         <Route path='/person/:id' element={<PersonPage />} />
       </Routes>
+      <Toaster
+        position='bottom-right'
+        toastOptions={{
+          style: {
+            background: '#181818',
+            color: '#fff',
+            border: '1px solid rgba(255, 255, 255, 0.1)',
+            borderRadius: '4px',
+            fontSize: '14px',
+          },
+          success: {
+            iconTheme: {
+              primary: '#46d369',
+              secondary: '#fff',
+            },
+          },
+          error: {
+            iconTheme: {
+              primary: '#e50914',
+              secondary: '#fff',
+            },
+          },
+        }}
+      />
     </AuthProvider>
   );
 }
