@@ -1,9 +1,10 @@
 import { BellIcon, MagnifyingGlassIcon, UserIcon } from '@phosphor-icons/react';
 import { useState } from 'react';
-import { useNavigate, Link, useSearchParams } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import FilterModal from './FilterModal';
 import SearchModal from './SearchModal';
+import Logo from './Logo';
 
 function Dashboard() {
   const { user } = useAuth();
@@ -29,13 +30,7 @@ function Dashboard() {
   return (
     <>
       <div className='dashboard'>
-        <Link to='/' className='logo-link'>
-          <ul className='text-logo'>
-            <li>RE</li>
-            <li>CC</li>
-            <li>AP</li>
-          </ul>
-        </Link>
+        <Logo />
         <ul className='section'>
           <li
             onClick={() => setShowFilters(!showFilters)}

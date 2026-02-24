@@ -1,10 +1,10 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import Dashboard from '../components/Dashboard';
 import PasswordField from '../components/PasswordField';
 import { login as loginApi } from '../services/auth';
 import { useAuth } from '../context/AuthContext';
 import { forgotPassword } from '../services/user';
+import Logo from '../components/Logo';
 
 function LoginPage() {
   const { login } = useAuth();
@@ -43,59 +43,82 @@ function LoginPage() {
       setShowForgotForm(false);
       setForgotEmail('');
     } catch (error: unknown) {
-      alert(error instanceof Error ? error.message : 'Помилка при відправці листа');
+      alert(
+        error instanceof Error ? error.message : 'Помилка при відправці листа'
+      );
     } finally {
       setLoading(false);
     }
   };
 
+  const handleGoogleAuth = () => {
+    window.location.href = `${import.meta.env.VITE_API_URL}users/auth/google`;
+  };
+
   return (
     <div className='full-screen'>
-      <Dashboard />
+      <Logo />
       <div className='auth-container'>
         {!showForgotForm ? (
-        <form className='auth-box' onSubmit={handleSubmit}>
-          <h2>Вхід</h2>
-          <div className='input-group'>
-            <label>Email</label>
-            <input
-              type='email'
-              name='email'
-              placeholder='example@gmail.com'
-              value={formData.email}
+          <form className='auth-box' onSubmit={handleSubmit}>
+            <h2>Вхід</h2>
+            <div className='input-group'>
+              <label>Email</label>
+              <input
+                type='email'
+                name='email'
+                placeholder='example@gmail.com'
+                value={formData.email}
+                onChange={handleChange}
+                required
+              />
+            </div>
+            <PasswordField
+              label='Пароль'
+              name='password'
+              value={formData.password}
               onChange={handleChange}
-              required
+              placeholder='••••••••'
             />
-          </div>
-          <PasswordField
-            label='Пароль'
-            name='password'
-            value={formData.password}
-            onChange={handleChange}
-            placeholder='••••••••'
-          />
 
-          <div className="forgot-password-link">
-              <span className="link-small" onClick={() => setShowForgotForm(true)}>
+            <div className='forgot-password-link'>
+              <span
+                className='link-small'
+                onClick={() => setShowForgotForm(true)}
+              >
                 Забули пароль?
               </span>
             </div>
 
-          <button type='submit' className='submit-btn'>
-            Увійти
-          </button>
+            <button type='submit' className='submit-btn'>
+              Увійти
+            </button>
+            <div className='separator'>або</div>
+            <button
+              type='button'
+              className='google-btn'
+              onClick={handleGoogleAuth}
+            >
+              <img
+                src='https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg'
+                alt='Google'
+              />
+              Увійти через Google
+            </button>
 
-          <p className='auth-footer'>
-            Немає акаунту?{' '}
-            <span className='link' onClick={() => navigate('/register')}>
-              Зареєструватись
-            </span>
-          </p>
-        </form>
+            <p className='auth-footer'>
+              Немає акаунту?{' '}
+              <span className='link' onClick={() => navigate('/register')}>
+                Зареєструватись
+              </span>
+            </p>
+          </form>
         ) : (
           <form className='auth-box' onSubmit={handleForgotPassword}>
             <h2>Відновлення пароля</h2>
-            <p className="auth-subtitle">Введіть ваш email, щоб отримати посилання для скидання пароля</p>
+            <p className='auth-subtitle'>
+              Введіть ваш email, щоб отримати посилання для скидання пароля
+            </p>
             <div className='input-group'>
               <label>Email</label>
               <input
@@ -106,7 +129,7 @@ function LoginPage() {
                 required
               />
             </div>
-            
+
             <button type='submit' className='submit-btn' disabled={loading}>
               {loading ? 'Надсилання...' : 'Надіслати інструкції'}
             </button>

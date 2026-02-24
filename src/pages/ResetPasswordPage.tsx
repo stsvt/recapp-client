@@ -9,7 +9,7 @@ function ResetPasswordPage() {
   const { token } = useParams<{ token: string }>();
   const navigate = useNavigate();
   const { login } = useAuth();
-  
+
   const [formData, setFormData] = useState({
     password: '',
     confirmPassword: '',
@@ -27,11 +27,14 @@ function ResetPasswordPage() {
     try {
       const res = await resetPassword(token!, formData);
       login(res.data.user, res.token);
-      
+
       alert('Пароль успішно змінено! Ви увійшли в систему.');
       navigate('/');
-    } catch (error: unknown) {
-      alert(error.message || 'Посилання недійсне або термін дії закінчився');
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        console.error(err.message);
+      }
+      alert('Посилання недійсне або термін дії закінчився');
     } finally {
       setLoading(false);
     }
@@ -43,25 +46,29 @@ function ResetPasswordPage() {
       <div className='auth-container'>
         <form className='auth-box' onSubmit={handleSubmit}>
           <h2>Новий пароль</h2>
-          <p className="auth-subtitle">Введіть ваш новий надійний пароль</p>
+          <p className='auth-subtitle'>Введіть ваш новий надійний пароль</p>
 
           <PasswordField
-            label="Новий пароль"
-            name="password"
+            label='Новий пароль'
+            name='password'
             value={formData.password}
-            onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-            placeholder="Мінімум 8 символів"
+            onChange={(e) =>
+              setFormData({ ...formData, password: e.target.value })
+            }
+            placeholder='Мінімум 8 символів'
           />
 
           <PasswordField
-            label="Підтвердження"
-            name="confirmPassword"
+            label='Підтвердження'
+            name='confirmPassword'
             value={formData.confirmPassword}
-            onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })}
-            placeholder="Повторіть пароль"
+            onChange={(e) =>
+              setFormData({ ...formData, confirmPassword: e.target.value })
+            }
+            placeholder='Повторіть пароль'
           />
 
-          <button type="submit" className="submit-btn" disabled={loading}>
+          <button type='submit' className='submit-btn' disabled={loading}>
             {loading ? 'Збереження...' : 'Змінити пароль'}
           </button>
         </form>
