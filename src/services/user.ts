@@ -7,6 +7,17 @@ interface UpdateMeData {
   photo?: string;
 }
 
+interface UpdatePasswordData {
+  passwordCurrent: string;
+  password: string;
+  confirmPassword: string;
+}
+
+interface ResetPaswordData {
+  password: string;
+  confirmPassword: string;
+}
+
 export const updateMe = async (data: UpdateMeData | FormData) => {
   const token = localStorage.getItem('token');
   const isFormData = data instanceof FormData;
@@ -47,3 +58,65 @@ export const deleteMe = async () => {
 export const deletePhoto = async () => {
   return await updateMe({ photo: 'default.jpg' });
 };
+
+export const updateMyPassword = async (data: UpdatePasswordData) => {
+  const token = localStorage.getItem('token');
+  const response = await fetch(`${BASE_URL}users/updateMyPassword`, {
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(data),
+  });
+
+  const result = await response.json();
+
+  if(!response.ok) {
+    throw new Error(result.message || 'Error while changing password') 
+  }
+
+  if(result.token) {
+    localStorage.setItem('token', result.token);
+  }
+
+  return result;
+}
+
+export const resetPassword = async (tokenFromUrl: string, data: ResetPaswordData) => {
+  const response = await fetch(`${BASE_URL}users/resetPassword/${tokenFromUrl}`, {
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json'
+    }, 
+    body: JSON.stringify(data),
+  });
+
+  const result = await response.json();
+
+  if(!response.ok) {
+    throw new Error(result.message || 'Invalid or expired token')
+  }
+
+  if(result.token) {
+    localStorage.setItem('token', result.token);
+  }
+
+  return result;
+}
+
+export const forgotPassword = async (email: string) => {
+  const response = await fetch(`${BASE_URL}users/forgotPassword`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    }, 
+    body: JSON.stringify({email}),
+  });
+
+  if(!response.ok) {
+    const errorData = await response.json();
+    throw new Error(errorData.message || 'Failed to send recovery email');
+  }
+  return await response.json();
+}

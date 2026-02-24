@@ -1,0 +1,73 @@
+import { useState } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
+import Dashboard from '../components/Dashboard';
+import PasswordField from '../components/PasswordField';
+import { resetPassword } from '../services/user';
+import { useAuth } from '../context/AuthContext';
+
+function ResetPasswordPage() {
+  const { token } = useParams<{ token: string }>();
+  const navigate = useNavigate();
+  const { login } = useAuth();
+  
+  const [formData, setFormData] = useState({
+    password: '',
+    confirmPassword: '',
+  });
+  const [loading, setLoading] = useState(false);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (formData.password !== formData.confirmPassword) {
+      return alert('Паролі не збігаються!');
+    }
+
+    setLoading(true);
+    try {
+      const res = await resetPassword(token!, formData);
+      login(res.data.user, res.token);
+      
+      alert('Пароль успішно змінено! Ви увійшли в систему.');
+      navigate('/');
+    } catch (error: unknown) {
+      alert(error.message || 'Посилання недійсне або термін дії закінчився');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div className='full-screen'>
+      <Dashboard />
+      <div className='auth-container'>
+        <form className='auth-box' onSubmit={handleSubmit}>
+          <h2>Новий пароль</h2>
+          <p className="auth-subtitle">Введіть ваш новий надійний пароль</p>
+
+          <PasswordField
+            label="Новий пароль"
+            name="password"
+            value={formData.password}
+            onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+            placeholder="Мінімум 8 символів"
+          />
+
+          <PasswordField
+            label="Підтвердження"
+            name="confirmPassword"
+            value={formData.confirmPassword}
+            onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })}
+            placeholder="Повторіть пароль"
+          />
+
+          <button type="submit" className="submit-btn" disabled={loading}>
+            {loading ? 'Збереження...' : 'Змінити пароль'}
+          </button>
+        </form>
+      </div>
+    </div>
+  );
+}
+
+export default ResetPasswordPage;

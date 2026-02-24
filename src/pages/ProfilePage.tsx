@@ -2,13 +2,14 @@ import { useState, useRef, useEffect, useMemo } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import Dashboard from '../components/Dashboard';
+import PasswordField from '../components/PasswordField';
 import {
   CaretLeftIcon,
   CameraIcon,
   TrashIcon,
   WarningCircleIcon,
 } from '@phosphor-icons/react';
-import { updateMe, deleteMe, deletePhoto } from '../services/user';
+import { updateMe, deleteMe, deletePhoto, updateMyPassword } from '../services/user';
 
 const DICEBEAR_BASE = import.meta.env.VITE_DICEBEAR_URL;
 const USERS_IMAGES_BASE = import.meta.env.VITE_USERS_IMAGES_BASE;
@@ -25,6 +26,12 @@ function ProfilePage() {
   const [imgVersion, setImgVersion] = useState(Date.now());
   const fileInputRef = useRef<HTMLInputElement>(null);
   const navigate = useNavigate();
+  const [isChangingPassword, setIsChangingPassword] = useState(false);
+  const [passwordData, setPasswordData] = useState({
+    passwordCurrent: '',
+    password: '',
+    confirmPassword: ''
+  });
 
   useEffect(() => {
     if (!user) {
@@ -162,6 +169,30 @@ function ProfilePage() {
       description: user.description || '',
     });
   };
+
+  const handlePasswordUpdate = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if(passwordData.password !== passwordData.confirmPassword) {
+      return alert('Нові паролі не збігаються');
+    }
+
+    setLoading(true);
+    try {
+      await updateMyPassword(passwordData);
+      alert('пароль успішно змінено');
+      setIsChangingPassword(false);
+      setPasswordData({ passwordCurrent: '', password: '', confirmPassword: ''})
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        console.error(err.message);
+      }
+      alert('Помилка при зміні паролю');
+    } finally 
+    {
+      setLoading(false);
+    }
+  }
 
   if (!user) return null;
 
@@ -301,6 +332,49 @@ function ProfilePage() {
                   Видалити акаунт
                 </button>
               </>
+            )}
+
+            {
+              !isEditing && !isChangingPassword && (
+                <button onClick={() => setIsChangingPassword(true)}
+                className='change-password-btn'>Змінити пароль</button>
+              )
+            }
+
+            {isChangingPassword && (
+              <form onSubmit={handlePasswordUpdate} className="password-change-form">
+                <h3>Зміна пароля</h3>
+                <PasswordField
+                  label="Поточний пароль"
+                  name="passwordCurrent"
+                  value={passwordData.passwordCurrent}
+                  onChange={(e) => setPasswordData({ ...passwordData, passwordCurrent: e.target.value })}
+                  placeholder="Введіть старий пароль"
+                />
+
+                <PasswordField
+                  label="Новий пароль"
+                  name="password"
+                  value={passwordData.password}
+                  onChange={(e) => setPasswordData({ ...passwordData, password: e.target.value })}
+                  placeholder="Мінімум 8 символів"
+                />
+
+                <PasswordField
+                  label="Підтвердіть новий пароль"
+                  name="confirmPassword"
+                  value={passwordData.confirmPassword}
+                  onChange={(e) => setPasswordData({ ...passwordData, confirmPassword: e.target.value })}
+                  placeholder="Повторіть пароль"
+                />
+
+                 <div className="edit-actions-row">
+                  <button type="submit" className="save-btn" disabled={loading} >
+                  {loading ? 'Оновлення...' : "Оновити пароль"}
+                  </button>
+                  <button type="button" className="cancel-btn" onClick={() => setIsChangingPassword(false)}>Скасувати</button>
+                </div>
+              </form>
             )}
           </div>
         </div>

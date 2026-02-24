@@ -4,11 +4,15 @@ import Dashboard from '../components/Dashboard';
 import PasswordField from '../components/PasswordField';
 import { login as loginApi } from '../services/auth';
 import { useAuth } from '../context/AuthContext';
+import { forgotPassword } from '../services/user';
 
 function LoginPage() {
   const { login } = useAuth();
   const navigate = useNavigate();
   const [formData, setFormData] = useState({ email: '', password: '' });
+  const [showForgotForm, setShowForgotForm] = useState(false);
+  const [forgotEmail, setForgotEmail] = useState('');
+  const [loading, setLoading] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -16,7 +20,6 @@ function LoginPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
     try {
       const res = await loginApi(formData);
       login(res.data.user, res.token);
@@ -31,10 +34,26 @@ function LoginPage() {
     }
   };
 
+  const handleForgotPassword = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    try {
+      await forgotPassword(forgotEmail);
+      alert('Лист для відновлення надіслано на вашу пошту!');
+      setShowForgotForm(false);
+      setForgotEmail('');
+    } catch (error: unknown) {
+      alert(error instanceof Error ? error.message : 'Помилка при відправці листа');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div className='full-screen'>
       <Dashboard />
       <div className='auth-container'>
+        {!showForgotForm ? (
         <form className='auth-box' onSubmit={handleSubmit}>
           <h2>Вхід</h2>
           <div className='input-group'>
@@ -55,6 +74,13 @@ function LoginPage() {
             onChange={handleChange}
             placeholder='••••••••'
           />
+
+          <div className="forgot-password-link">
+              <span className="link-small" onClick={() => setShowForgotForm(true)}>
+                Забули пароль?
+              </span>
+            </div>
+
           <button type='submit' className='submit-btn'>
             Увійти
           </button>
@@ -66,6 +92,32 @@ function LoginPage() {
             </span>
           </p>
         </form>
+        ) : (
+          <form className='auth-box' onSubmit={handleForgotPassword}>
+            <h2>Відновлення пароля</h2>
+            <p className="auth-subtitle">Введіть ваш email, щоб отримати посилання для скидання пароля</p>
+            <div className='input-group'>
+              <label>Email</label>
+              <input
+                type='email'
+                placeholder='example@gmail.com'
+                value={forgotEmail}
+                onChange={(e) => setForgotEmail(e.target.value)}
+                required
+              />
+            </div>
+            
+            <button type='submit' className='submit-btn' disabled={loading}>
+              {loading ? 'Надсилання...' : 'Надіслати інструкції'}
+            </button>
+
+            <p className='auth-footer'>
+              <span className='link' onClick={() => setShowForgotForm(false)}>
+                Повернутися до входу
+              </span>
+            </p>
+          </form>
+        )}
       </div>
     </div>
   );
