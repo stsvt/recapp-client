@@ -3,13 +3,20 @@ import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import Dashboard from '../components/Dashboard';
 import PasswordField from '../components/PasswordField';
+import ConfirmModal from '../components/ConfirmModal';
 import {
   CaretLeftIcon,
   CameraIcon,
   TrashIcon,
   WarningCircleIcon,
 } from '@phosphor-icons/react';
-import { updateMe, deleteMe, deletePhoto, updateMyPassword } from '../services/user';
+import {
+  updateMe,
+  deleteMe,
+  deletePhoto,
+  updateMyPassword,
+} from '../services/user';
+import toast from 'react-hot-toast';
 
 const DICEBEAR_BASE = import.meta.env.VITE_DICEBEAR_URL;
 const USERS_IMAGES_BASE = import.meta.env.VITE_USERS_IMAGES_BASE;
@@ -30,7 +37,20 @@ function ProfilePage() {
   const [passwordData, setPasswordData] = useState({
     passwordCurrent: '',
     password: '',
-    confirmPassword: ''
+    confirmPassword: '',
+  });
+  const [modalConfig, setModalConfig] = useState<{
+    isOpen: boolean;
+    title: string;
+    message: string;
+    onConfirm: () => void;
+    type: 'danger' | 'info';
+  }>({
+    isOpen: false,
+    title: '',
+    message: '',
+    onConfirm: () => {},
+    type: 'info',
   });
 
   useEffect(() => {
@@ -64,13 +84,10 @@ function ProfilePage() {
       login({ ...res.data.user }, localStorage.getItem('token') || '');
       setImgVersion(Date.now());
       setIsEditing(false);
-      alert('Дані успішно оновлено!');
+      toast.success('Дані успішно оновлено!');
     } catch (error: unknown) {
-      if (error instanceof Error) {
-        alert(error.message);
-      } else {
-        alert('Помилка при оновленні даних');
-      }
+      const msg = error instanceof Error ? error.message : 'Помилка оновлення';
+      toast.error(msg);
     } finally {
       setLoading(false);
     }
@@ -87,12 +104,11 @@ function ProfilePage() {
         login(res.data.user, localStorage.getItem('token') || '');
         setImgVersion(Date.now());
         if (fileInputRef.current) fileInputRef.current.value = '';
-        alert('Фото оновлено!');
-      } catch (error: unknown) {
-        if (error instanceof Error) {
-          console.error(error.message);
-        }
-        alert('Помилка завантаження фото');
+        toast.success('Фото профілю оновлено!');
+      } catch (err: unknown) {
+        const msg =
+          err instanceof Error ? err.message : 'Помилка завантаження фото';
+        toast.error(msg);
       } finally {
         setLoading(false);
       }
@@ -100,23 +116,16 @@ function ProfilePage() {
   };
 
   const handleDeletePhoto = async () => {
-    if (!window.confirm('Ви впевнені, що хочете видалити фото профілю?'))
-      return;
-
     setLoading(true);
     try {
       const res = await deletePhoto();
-      console.log('Повна відповідь сервера:', res);
-
       const updatedUser = res.data?.user || res.user || res;
 
       if (updatedUser) {
         login({ ...updatedUser }, localStorage.getItem('token') || '');
         setImgVersion(Date.now());
         setIsEditing(false);
-        alert('Фото успішно видалено');
-      } else {
-        console.error('Сервер не повернув дані користувача:', res);
+        toast.success('Фото успішно видалено');
       }
     } catch (error: unknown) {
       if (error instanceof Error) {
@@ -124,75 +133,100 @@ function ProfilePage() {
           logout();
           return;
         }
-        alert(error.message);
+        toast.error(error.message);
       }
     } finally {
       setLoading(false);
-    }
-  };
-
-  const handleLogout = () => {
-    if (window.confirm('Ви впевнені, що хочете вийти з акаунту?')) {
-      logout();
+      setModalConfig((prev) => ({ ...prev, isOpen: false }));
     }
   };
 
   const handleDeleteAccount = async () => {
-    if (
-      !window.confirm(
-        'ЦЯ ДІЯ НЕЗВОРОТНЯ! Ви впевнені, що хочете видалити свій профіль?'
-      )
-    )
-      return;
-
     setLoading(true);
     try {
       await deleteMe();
       logout();
       navigate('/');
-      alert('Ваш акаунт успішно видалено');
+      toast.success('Ваш акаунт успішно видалено');
     } catch (err: unknown) {
       if (err instanceof Error) {
         console.error(err.message);
       }
-      alert('Помилка видалення акаунту');
+      toast.error('Помилка видалення акаунту');
     } finally {
       setLoading(false);
+      setModalConfig((prev) => ({ ...prev, isOpen: false }));
     }
   };
 
   const handleCancel = () => {
     setIsEditing(false);
     setFormData({
-      name: user.name,
-      email: user.email,
-      description: user.description || '',
+      name: user?.name || '',
+      email: user?.email || '',
+      description: user?.description || '',
     });
   };
 
   const handlePasswordUpdate = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if(passwordData.password !== passwordData.confirmPassword) {
-      return alert('Нові паролі не збігаються');
+    if (passwordData.password !== passwordData.confirmPassword) {
+      return toast.error('Нові паролі не збігаються');
     }
 
     setLoading(true);
     try {
       await updateMyPassword(passwordData);
-      alert('пароль успішно змінено');
+      toast.success('Пароль успішно змінено');
       setIsChangingPassword(false);
-      setPasswordData({ passwordCurrent: '', password: '', confirmPassword: ''})
+      setPasswordData({
+        passwordCurrent: '',
+        password: '',
+        confirmPassword: '',
+      });
     } catch (err: unknown) {
-      if (err instanceof Error) {
-        console.error(err.message);
-      }
-      alert('Помилка при зміні паролю');
-    } finally 
-    {
+      const msg =
+        err instanceof Error ? err.message : 'Помилка при зміні паролю';
+      toast.error(msg);
+    } finally {
       setLoading(false);
     }
-  }
+  };
+
+  const openModal = (
+    title: string,
+    message: string,
+    onConfirm: () => void,
+    type: 'danger' | 'info' = 'info'
+  ) => {
+    setModalConfig({ isOpen: true, title, message, onConfirm, type });
+  };
+
+  const handleDeletePhotoAction = () => {
+    openModal(
+      'Видалити фото?',
+      'Ви впевнені, що хочете видалити фото профілю?',
+      handleDeletePhoto,
+      'danger'
+    );
+  };
+
+  const handleLogoutAction = () => {
+    openModal('Вихід', 'Ви впевнені, що хочете вийти з акаунту?', () => {
+      logout();
+      setModalConfig((prev) => ({ ...prev, isOpen: false }));
+    });
+  };
+
+  const handleDeleteAccountAction = () => {
+    openModal(
+      'Видалити акаунт?',
+      'Ця дія є незворотною. Всі ваші дані будуть втрачені назавжди.',
+      handleDeleteAccount,
+      'danger'
+    );
+  };
 
   if (!user) return null;
 
@@ -231,7 +265,7 @@ function ProfilePage() {
                 {user.photo && user.photo !== 'default.jpg' && (
                   <button
                     className='avatar-action-btn delete'
-                    onClick={handleDeletePhoto}
+                    onClick={handleDeletePhotoAction}
                     title='Видалити фото'
                   >
                     <TrashIcon size={20} />
@@ -320,12 +354,15 @@ function ProfilePage() {
                 <button onClick={() => setIsEditing(true)} className='edit-btn'>
                   Редагувати профіль
                 </button>
-                <button onClick={handleLogout} className='logout-link-btn'>
+                <button
+                  onClick={handleLogoutAction}
+                  className='logout-link-btn'
+                >
                   Вийти з акаунта
                 </button>
 
                 <button
-                  onClick={handleDeleteAccount}
+                  onClick={handleDeleteAccountAction}
                   className='delete-account-btn'
                 >
                   <WarningCircleIcon size={16} />
@@ -334,45 +371,84 @@ function ProfilePage() {
               </>
             )}
 
-            {
-              !isEditing && !isChangingPassword && (
-                <button onClick={() => setIsChangingPassword(true)}
-                className='change-password-btn'>Змінити пароль</button>
-              )
-            }
+            <ConfirmModal
+              isOpen={modalConfig.isOpen}
+              title={modalConfig.title}
+              message={modalConfig.message}
+              onConfirm={modalConfig.onConfirm}
+              onCancel={() =>
+                setModalConfig((prev) => ({ ...prev, isOpen: false }))
+              }
+              type={modalConfig.type}
+              confirmText='Підтвердити'
+              cancelText='Скасувати'
+            />
+
+            {!isEditing && !isChangingPassword && (
+              <button
+                onClick={() => setIsChangingPassword(true)}
+                className='change-password-btn'
+              >
+                Змінити пароль
+              </button>
+            )}
 
             {isChangingPassword && (
-              <form onSubmit={handlePasswordUpdate} className="password-change-form">
+              <form
+                onSubmit={handlePasswordUpdate}
+                className='password-change-form'
+              >
                 <h3>Зміна пароля</h3>
                 <PasswordField
-                  label="Поточний пароль"
-                  name="passwordCurrent"
+                  label='Поточний пароль'
+                  name='passwordCurrent'
                   value={passwordData.passwordCurrent}
-                  onChange={(e) => setPasswordData({ ...passwordData, passwordCurrent: e.target.value })}
-                  placeholder="Введіть старий пароль"
+                  onChange={(e) =>
+                    setPasswordData({
+                      ...passwordData,
+                      passwordCurrent: e.target.value,
+                    })
+                  }
+                  placeholder='Введіть старий пароль'
                 />
 
                 <PasswordField
-                  label="Новий пароль"
-                  name="password"
+                  label='Новий пароль'
+                  name='password'
                   value={passwordData.password}
-                  onChange={(e) => setPasswordData({ ...passwordData, password: e.target.value })}
-                  placeholder="Мінімум 8 символів"
+                  onChange={(e) =>
+                    setPasswordData({
+                      ...passwordData,
+                      password: e.target.value,
+                    })
+                  }
+                  placeholder='Мінімум 8 символів'
                 />
 
                 <PasswordField
-                  label="Підтвердіть новий пароль"
-                  name="confirmPassword"
+                  label='Підтвердіть новий пароль'
+                  name='confirmPassword'
                   value={passwordData.confirmPassword}
-                  onChange={(e) => setPasswordData({ ...passwordData, confirmPassword: e.target.value })}
-                  placeholder="Повторіть пароль"
+                  onChange={(e) =>
+                    setPasswordData({
+                      ...passwordData,
+                      confirmPassword: e.target.value,
+                    })
+                  }
+                  placeholder='Повторіть пароль'
                 />
 
-                 <div className="edit-actions-row">
-                  <button type="submit" className="save-btn" disabled={loading} >
-                  {loading ? 'Оновлення...' : "Оновити пароль"}
+                <div className='edit-actions-row'>
+                  <button type='submit' className='save-btn' disabled={loading}>
+                    {loading ? 'Оновлення...' : 'Оновити пароль'}
                   </button>
-                  <button type="button" className="cancel-btn" onClick={() => setIsChangingPassword(false)}>Скасувати</button>
+                  <button
+                    type='button'
+                    className='cancel-btn'
+                    onClick={() => setIsChangingPassword(false)}
+                  >
+                    Скасувати
+                  </button>
                 </div>
               </form>
             )}
