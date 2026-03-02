@@ -1,6 +1,7 @@
 export interface Movie {
   id: number;
-  title: string;
+  title?: string;
+  name?: string;
   original_title: string;
   backdrop_path: string;
   poster_path: string;
@@ -20,7 +21,8 @@ export interface Movie {
 
 export interface MovieSummary {
   id: number;
-  title: string;
+  title?: string;
+  name?: string;
   backdrop_path?: string;
   poster_path?: string;
 }
@@ -65,6 +67,7 @@ export interface PersonDetails {
   name_en?: string;
   profile_path: string | null;
   birthday?: string;
+  deathday?: string;
   place_of_birth?: string;
   biography?: string;
   movies?: ActorMovie[];

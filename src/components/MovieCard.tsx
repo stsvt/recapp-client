@@ -9,18 +9,15 @@ function MovieCard({ movie }: MovieCardProps) {
   const navigate = useNavigate();
 
   return (
-    <div
-      className='movie-card'
-      onClick={() => navigate(`/movie/${movie.id}`)}
-    >
+    <div className='movie-card' onClick={() => navigate(`/movie/${movie.id}`)}>
       <div className='image-container'>
         <img
           src={`${import.meta.env.VITE_POSTER_URL}${movie.backdrop_path}`}
-          alt={movie.title}
+          alt={movie.title || movie.name}
           className='movie-poster'
         />
         <div className='movie-overlay'>
-          <p className='movie-title-text'>{movie.title}</p>
+          <p className='movie-title-text'>{movie.title || movie.name}</p>
         </div>
       </div>
     </div>

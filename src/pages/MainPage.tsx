@@ -5,6 +5,8 @@ import {
   fetchTopRatedMovies,
   fetchUpcomingMovies,
   fetchNowPlayingMovies,
+  fetchTopRatedSeries,
+  fetchTopRatedAnimations,
 } from '../services/apiMovies';
 
 function MainPage() {
@@ -12,6 +14,8 @@ function MainPage() {
     upcoming: [],
     nowPlaying: [],
     topRated: [],
+    topRatedSeries: [],
+    topRatedAnimations: [],
   });
   const [loading, setLoading] = useState(true);
 
@@ -20,11 +24,27 @@ function MainPage() {
       fetchUpcomingMovies(),
       fetchNowPlayingMovies(),
       fetchTopRatedMovies(),
+      fetchTopRatedSeries(),
+      fetchTopRatedAnimations(),
     ])
-      .then(([upcoming, nowPlaying, topRated]) => {
-        setSections({ upcoming, nowPlaying, topRated });
-        setLoading(false);
-      })
+      .then(
+        ([
+          upcoming,
+          nowPlaying,
+          topRated,
+          topRatedSeries,
+          topRatedAnimations,
+        ]) => {
+          setSections({
+            upcoming,
+            nowPlaying,
+            topRated,
+            topRatedSeries,
+            topRatedAnimations,
+          });
+          setLoading(false);
+        }
+      )
       .catch((err) => console.error('Failed to fetch: ', err))
       .finally(() => setLoading(false));
   }, []);
@@ -48,8 +68,16 @@ function MainPage() {
           movies={sections.topRated}
           loading={loading}
         />
-        <MovieSection title='Серіали' movies={[]} loading={false} />
-        <MovieSection title='Мультфільми' movies={[]} loading={false} />
+        <MovieSection
+          title='Серіали'
+          movies={sections.topRatedSeries}
+          loading={loading}
+        />
+        <MovieSection
+          title='Мультфільми'
+          movies={sections.topRatedAnimations}
+          loading={loading}
+        />
       </div>
     </div>
   );
