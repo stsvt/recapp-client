@@ -19,7 +19,12 @@ const getMoviesData = async (url: string) => {
     throw new Error(`Failed to fetch movies data. Status: ${response.status}`);
   }
   const result = await response.json();
-  return result?.data?.movies?.results || [];
+  const data = result?.data;
+  if (!data) return [];
+
+  const dynamicKey = Object.keys(data).find(key => data[key] && data[key].results);
+
+  return dynamicKey ? data[dynamicKey].results : [];
 };
 
 export const fetchMovieDetails = async (id: string) => {
@@ -43,6 +48,12 @@ export const fetchUpcomingMovies = () =>
 
 export const fetchNowPlayingMovies = () =>
   getMoviesData(`${BASE_URL}tmdb/nowPlaying`);
+
+export const fetchTopRatedSeries = () => 
+  getMoviesData(`${BASE_URL}tmdb/topRatedSeries`);
+
+export const fetchTopRatedAnimations = () => 
+  getMoviesData(`${BASE_URL}tmdb/topRatedAnimations`);
 
 export const searchMovies = async (query: string, page: number = 1) => {
   try {
