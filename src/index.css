@@ -76,7 +76,7 @@
 .dashboard-avatar {
   width: 32px;
   height: 32px;
-  border-radius: 50%; 
+  border-radius: 50%;
   object-fit: cover;
   border: 1px solid transparent;
   transition: border-color 0.2s ease;
@@ -254,7 +254,7 @@
   display: flex;
   align-items: center;
   text-align: center;
-  color: #808080; 
+  color: #808080;
   margin: 20px 0;
   font-size: 14px;
   text-transform: lowercase;
@@ -1164,7 +1164,9 @@
   width: 100%;
 }
 
-.edit-btn, .save-btn, .cancel-btn {
+.edit-btn,
+.save-btn,
+.cancel-btn {
   width: 100%;
   padding: 12px;
   border-radius: 4px;
@@ -1175,7 +1177,8 @@
   transition: opacity 0.2s;
 }
 
-.edit-btn, .save-btn {
+.edit-btn,
+.save-btn {
   background: #e50914;
   color: white;
 }
@@ -1185,7 +1188,8 @@
   color: white;
 }
 
-.edit-btn:hover, .save-btn:hover {
+.edit-btn:hover,
+.save-btn:hover {
   opacity: 0.9;
 }
 
@@ -1370,10 +1374,10 @@
 }
 
 .password-change-form input::placeholder {
-  font-size: 13px; 
-  color: #666; 
+  font-size: 13px;
+  color: #666;
   font-weight: 400;
-  letter-spacing: 0; 
+  letter-spacing: 0;
   opacity: 0.8;
   transition: opacity 0.2s ease;
 }
@@ -1402,7 +1406,9 @@
   border-radius: 4px;
   font-weight: 600;
   cursor: pointer;
-  transition: transform 0.1s, background 0.2s;
+  transition:
+    transform 0.1s,
+    background 0.2s;
 }
 
 .password-change-form .save-btn:hover:not(:disabled) {
@@ -1523,6 +1529,56 @@
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/*ACTIVITY LISTS */
+.profile-content-list {
+  max-width: 1400px;
+  margin: 0 auto;
+  width: 100%;
+  padding: '0 40px';
+  margin-top: '40px';
+}
+
+.profile-lists-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+  padding: '0 40px';
+  margin-top: '40px';
+  padding-bottom: '60px';
+}
+
+.empty-activity {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px dashed rgba(255, 255, 255, 0.2);
+  border-radius: 12px;
+  padding: 60px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: 'center';
+  opacity: 0.5;
+  margin-top: '40px';
+}
+
+.empty-activity p {
+  font-size: 1.1rem;
+  color: #aaa;
+  max-width: 400px;
+  line-height: 1.5;
+}
+
+@media (max-width: 768px) {
+  .profile-content-list,
+  .profile-lists-wrapper {
+    padding: 0 20px !important;
+  }
 }

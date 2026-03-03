@@ -17,9 +17,27 @@ import {
   updateMyPassword,
 } from '../services/user';
 import toast from 'react-hot-toast';
+import type { MovieSummary } from '../types';
+import { getUserActivity } from '../services/activity';
+import MovieSection from '../components/MovieSection';
 
 const DICEBEAR_BASE = import.meta.env.VITE_DICEBEAR_URL;
 const USERS_IMAGES_BASE = import.meta.env.VITE_USERS_IMAGES_BASE;
+
+interface ActivityItem {
+  movie: MovieSummary;
+  activityType: 'liked' | 'watched';
+}
+
+interface ActivityResponse {
+  data?: {
+    movies: ActivityItem[];
+  };
+}
+
+interface MovieActivity extends MovieSummary {
+  activityType: 'liked' | 'watched';
+}
 
 function ProfilePage() {
   const { user, login, logout } = useAuth();
@@ -52,6 +70,10 @@ function ProfilePage() {
     onConfirm: () => {},
     type: 'info',
   });
+  const [activity, setActivity] = useState<{
+    liked: MovieSummary[];
+    watched: MovieSummary[];
+  }>({ liked: [], watched: [] });
 
   useEffect(() => {
     if (!user) {
@@ -68,6 +90,32 @@ function ProfilePage() {
       });
     }
   }, [user]);
+
+  useEffect(() => {
+    const loadActivity = async () => {
+      try {
+        setLoading(true);
+        const res: ActivityResponse = await getUserActivity();
+        const allMovies: MovieActivity[] = (res.data?.movies || []).map(
+          (item) => ({
+            ...item.movie,
+            tmdbId: item.movie.tmdbId,
+            activityType: item.activityType,
+          })
+        );
+
+        setActivity({
+          liked: allMovies.filter((m) => m.activityType === 'liked'),
+          watched: allMovies.filter((m) => m.activityType === 'watched'),
+        });
+      } catch (error) {
+        console.error('Error loading lists', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    loadActivity();
+  }, []);
 
   const avatarUrl = useMemo(() => {
     if (user?.photo && user.photo !== 'default.jpg') {
@@ -453,6 +501,35 @@ function ProfilePage() {
               </form>
             )}
           </div>
+        </div>
+      </div>
+      <div className='profile-content-list'>
+        <div className='profile-lists-wrapper'>
+          {activity.liked.length > 0 ? (
+            <MovieSection
+              key='liked-section'
+              title='Хочу переглянути'
+              movies={activity.liked}
+              loading={loading}
+            />
+          ) : null}
+
+          {activity.watched.length > 0 ? (
+            <MovieSection
+              key='watched-section'
+              title='Переглянуто'
+              movies={activity.watched}
+              loading={loading}
+            />
+          ) : null}
+
+          {!loading &&
+            activity.liked.length === 0 &&
+            activity.watched.length === 0 && (
+              <div className='empty-activity'>
+                <p>Тут з'являться ваші фільми, коли ви додасте їх до списків</p>
+              </div>
+            )}
         </div>
       </div>
     </div>
