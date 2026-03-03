@@ -597,6 +597,14 @@
   font-size: 15px;
 }
 
+.person-label {
+  color: #888;
+  font-weight: 500;
+  min-width: 170px;
+  flex-shrink: 0;
+  font-size: 15px;
+}
+
 .cast-value {
   color: #fff;
   font-size: 15px;
