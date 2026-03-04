@@ -8,11 +8,20 @@ interface MovieCardProps {
 function MovieCard({ movie }: MovieCardProps) {
   const navigate = useNavigate();
 
+  const handleNavigation = () => {
+    const targetId = movie.id || movie.tmdbId;
+    if (!targetId) {
+      console.error('Missing movie ID in object:', movie);
+      return;
+    }
+    navigate(`/movie/${targetId}`);
+  };
+
   return (
-    <div className='movie-card' onClick={() => navigate(`/movie/${movie.id}`)}>
+    <div className='movie-card' onClick={handleNavigation}>
       <div className='image-container'>
         <img
-          src={`${import.meta.env.VITE_POSTER_URL}${movie.backdrop_path}`}
+          src={`${import.meta.env.VITE_POSTER_URL}${movie.backdrop_path || movie.posterPath}`}
           alt={movie.title || movie.name}
           className='movie-poster'
         />

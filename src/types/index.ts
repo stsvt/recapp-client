@@ -1,5 +1,6 @@
 export interface Movie {
   id: number;
+  tmdbId?: string | number;
   title?: string;
   name?: string;
   original_title: string;
@@ -20,11 +21,13 @@ export interface Movie {
 }
 
 export interface MovieSummary {
-  id: number;
+  id?: number | string;
+  tmdbId?: string | number;
   title?: string;
   name?: string;
   backdrop_path?: string;
   poster_path?: string;
+  posterPath?: string;
 }
 
 export interface Genre {

@@ -11,48 +11,44 @@ import {
   BookmarkSimpleIcon,
   CaretLeftIcon,
 } from '@phosphor-icons/react';
+import { getMovieStatus, toggleActivityMovie } from '../services/activity';
+import { useAuth } from '../context/AuthContext';
+import toast from 'react-hot-toast';
 
 function MoviePage() {
+  const { user} = useAuth();
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const [movie, setMovie] = useState<Movie | null>(null);
   const [loading, setLoading] = useState(true);
-  const [isFavorite, setIsFavorite] = useState(false);
+  const [isLiked, setIsLiked] = useState(false);
   const [isWatched, setIsWatched] = useState(false);
   const [isImageLoading, setIsImageLoading] = useState(true);
 
   useEffect(() => {
-    let isMounted = true;
-    window.scrollTo(0, 0);
-    setIsImageLoading(true);
-
     const loadData = async () => {
       if (!id) return;
-
       try {
         setLoading(true);
-        const data = await fetchMovieDetails(id);
-        if (isMounted) {
-          if (!data) {
-            navigate('/404');
-          } else {
-            setMovie(data);
-          }
+        const [movieData, statusData] = await Promise.all([
+          fetchMovieDetails(id),
+          getMovieStatus(id),
+        ]);
+
+        if (movieData) setMovie(movieData);
+        
+        if (statusData) {
+          setIsLiked(statusData.liked);
+          setIsWatched(statusData.watched);
         }
       } catch (error) {
-        console.error('Failed to fetch movie:', error);
-        if (isMounted) navigate('/404');
+        console.error(error);
       } finally {
-        if (isMounted) setLoading(false);
+        setLoading(false);
       }
     };
-
     loadData();
-
-    return () => {
-      isMounted = false;
-    };
-  }, [id, navigate]);
+  }, [id]);
 
   if (loading) return <Spinner />;
 
@@ -63,8 +59,26 @@ function MoviePage() {
   );
   const directorName = directorData?.name || 'Невідомо';
 
-  const toggleFavorite = () => setIsFavorite(!isFavorite);
-  const toggleWatched = () => setIsWatched(!isWatched);
+  const handleToggleActivity = async (type: 'liked' | 'watched') => {
+    if (!user) {
+      toast.error('Будь ласка, увійдіть в акаунт, щоб додавати фільми до списків', {
+        icon: '🔒',
+        duration: 4000
+      });
+      return;
+    }
+    
+    try {
+      await toggleActivityMovie(id!, type);
+      if (type === 'liked') setIsLiked(!isLiked);
+      if (type === 'watched') setIsWatched(!isWatched);
+      toast.success('Список оновлено');
+    } catch (error: unknown) {
+      const msg =
+        error instanceof Error ? error.message : 'Не вдалося оновити статус';
+      toast.error(msg);
+    }
+  };
 
   return (
     <div className='full-screen'>
@@ -156,7 +170,7 @@ function MoviePage() {
                     {movie.credits?.cast
                       ?.slice(0, 10)
                       .map((actor, index, array) => (
-                        <span key={actor.id}>
+                        <span key={`${actor.id}-${index}`}>
                           <button
                             className='actor-link-btn'
                             onClick={() =>
@@ -181,14 +195,14 @@ function MoviePage() {
           <div className='check-buttons'>
             <MovieStatusButton
               label='Хочу переглянути'
-              isActive={isFavorite}
-              onClick={toggleFavorite}
+              isActive={isLiked}
+              onClick={() => handleToggleActivity('liked')}
               Icon={HeartIcon}
             />
             <MovieStatusButton
               label='Переглянуто'
               isActive={isWatched}
-              onClick={toggleWatched}
+              onClick={() => handleToggleActivity('watched')}
               Icon={BookmarkSimpleIcon}
               activeColor='#fff'
             />
@@ -201,6 +215,7 @@ function MoviePage() {
               <h2 className='section-title'>Фільми схожі на "{movie.title}"</h2>
             </div>
             <MovieSection
+              key={`recommendations-${movie.id}`}
               title=''
               movies={movie.recommendations.results}
               loading={false}

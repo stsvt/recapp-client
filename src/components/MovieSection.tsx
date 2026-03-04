@@ -16,7 +16,12 @@ function MovieSection({ title, movies, loading }: MovieSectionProps) {
         {loading ? (
           [...Array(8)].map((_, i) => <SkeletonCard key={i} />)
         ) : movies && movies.length > 0 ? (
-          movies.map((movie) => <MovieCard key={movie.id} movie={movie} />)
+          movies.map((movie, index) => (
+            <MovieCard
+              key={movie.tmdbId || movie.id || `movie-${index}`}
+              movie={movie}
+            />
+          ))
         ) : (
           <p className='status-text'>Фільмів не знайдено</p>
         )}
