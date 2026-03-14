@@ -9,6 +9,8 @@ import MoviePage from './pages/MoviePage';
 import ProfilePage from './pages/ProfilePage';
 import PersonPage from './pages/PersonPage';
 import GoogleCallback from './pages/GoogleCallback';
+import UserPage from './pages/UserPage';
+import FriendRequestsPage from './pages/FriendRequestsPage';
 
 function App() {
   return (
@@ -22,6 +24,8 @@ function App() {
         <Route path='/profile' element={<ProfilePage />} />
         <Route path='/movie/:id' element={<MoviePage />} />
         <Route path='/person/:id' element={<PersonPage />} />
+        <Route path='/user/:userId' element={<UserPage />} />
+        <Route path='/friends/requests' element={<FriendRequestsPage />} />
       </Routes>
       <Toaster
         position='bottom-right'

@@ -72,51 +72,89 @@ export const updateMyPassword = async (data: UpdatePasswordData) => {
 
   const result = await response.json();
 
-  if(!response.ok) {
-    throw new Error(result.message || 'Error while changing password') 
+  if (!response.ok) {
+    throw new Error(result.message || 'Error while changing password');
   }
 
-  if(result.token) {
+  if (result.token) {
     localStorage.setItem('token', result.token);
   }
 
   return result;
-}
+};
 
-export const resetPassword = async (tokenFromUrl: string, data: ResetPaswordData) => {
-  const response = await fetch(`${BASE_URL}users/resetPassword/${tokenFromUrl}`, {
-    method: 'PATCH',
-    headers: {
-      'Content-Type': 'application/json'
-    }, 
-    body: JSON.stringify(data),
-  });
+export const resetPassword = async (
+  tokenFromUrl: string,
+  data: ResetPaswordData
+) => {
+  const response = await fetch(
+    `${BASE_URL}users/resetPassword/${tokenFromUrl}`,
+    {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    }
+  );
 
   const result = await response.json();
 
-  if(!response.ok) {
-    throw new Error(result.message || 'Invalid or expired token')
+  if (!response.ok) {
+    throw new Error(result.message || 'Invalid or expired token');
   }
 
-  if(result.token) {
+  if (result.token) {
     localStorage.setItem('token', result.token);
   }
 
   return result;
-}
+};
 
 export const forgotPassword = async (email: string) => {
   const response = await fetch(`${BASE_URL}users/forgotPassword`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-    }, 
-    body: JSON.stringify({email}),
+    },
+    body: JSON.stringify({ email }),
   });
 
-  if(!response.ok) {
+  if (!response.ok) {
     const errorData = await response.json();
     throw new Error(errorData.message || 'Failed to send recovery email');
   }
   return await response.json();
-}
+};
+
+export const searchUsers = async (query: string) => {
+  const token = localStorage.getItem('token');
+  const response = await fetch(`${BASE_URL}users?search=${query}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  const result = await response.json();
+  if (!response.ok) {
+    throw new Error(result.message || 'Search error');
+  }
+  return result.data.users;
+};
+
+export const getUserById = async (id: string) => {
+  const token = localStorage.getItem('token');
+  const response = await fetch(`${BASE_URL}users/${id}`, {
+    method: 'GET',
+    headers: {
+      Authorization: `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    },
+  });
+
+  const result = await response.json();
+  if (!response.ok) {
+    throw new Error(result.message || 'Користувача не знайдено');
+  }
+  return result.data.user;
+};

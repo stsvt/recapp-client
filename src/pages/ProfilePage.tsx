@@ -19,7 +19,10 @@ import {
 import toast from 'react-hot-toast';
 import type { MovieSummary } from '../types';
 import { getUserActivity } from '../services/activity';
+import { getFriends } from '../services/friends';
 import MovieSection from '../components/MovieSection';
+import UserSearch from '../components/UserSearch';
+import type { Friend } from '../types/index.ts';
 
 const DICEBEAR_BASE = import.meta.env.VITE_DICEBEAR_URL;
 const USERS_IMAGES_BASE = import.meta.env.VITE_USERS_IMAGES_BASE;
@@ -74,6 +77,7 @@ function ProfilePage() {
     liked: MovieSummary[];
     watched: MovieSummary[];
   }>({ liked: [], watched: [] });
+  const [friends, setFriends] = useState<Friend[]>([]);
 
   useEffect(() => {
     if (!user) {
@@ -117,8 +121,22 @@ function ProfilePage() {
     loadActivity();
   }, []);
 
+  useEffect(() => {
+    const loadFriends = async () => {
+      try {
+        const res = await getFriends();
+        if (res.status === 'success' && res.data?.friends) {
+          setFriends(res.data.friends);
+        }
+      } catch {
+        toast.error('Помилка завантаження друзів');
+      }
+    };
+    loadFriends();
+  }, []);
+
   const avatarUrl = useMemo(() => {
-    if (user?.photo && user.photo !== 'default.jpg') {
+    if (user?.photo && user.photo !== `${USERS_IMAGES_BASE}default.jpg`) {
       return `${USERS_IMAGES_BASE}${user.photo}?v=${imgVersion}`;
     }
     const seed = encodeURIComponent(user?.name || 'User');
@@ -284,6 +302,7 @@ function ProfilePage() {
       <button className='back-button' onClick={() => navigate(-1)}>
         <CaretLeftIcon size={28} />
       </button>
+      <UserSearch />
 
       <div className='profile-container'>
         <div className='profile-card'>
@@ -503,6 +522,35 @@ function ProfilePage() {
           </div>
         </div>
       </div>
+
+      <div className='friends-section'>
+        <h3>Друзі ({friends.length})</h3>
+        <div className='friends-list-horizontal'>
+          {friends.length > 0 ? (
+            friends.map((friend) => (
+              <div
+                key={friend._id}
+                className='friend-item'
+                onClick={() => navigate(`/user/${friend._id}`)}
+              >
+                <img
+                  src={
+                    friend.photo !== 'default.jpg'
+                      ? `${USERS_IMAGES_BASE}${friend.photo}`
+                      : `${DICEBEAR_BASE}?seed=${friend.name}`
+                  }
+                  alt={friend.name}
+                  crossOrigin='anonymous'
+                />
+                <span>{friend.name}</span>
+              </div>
+            ))
+          ) : (
+            <p className='empty-text'>У вас поки немає друзів</p>
+          )}
+        </div>
+      </div>
+
       <div className='profile-content-list'>
         <div className='profile-lists-wrapper'>
           {activity.liked.length > 0 ? (

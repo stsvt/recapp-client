@@ -1,5 +1,7 @@
 /* eslint-disable react-refresh/only-export-components */
-import { createContext, useState, useContext } from 'react';
+import { createContext, useState, useContext, useEffect } from 'react';
+import { io } from 'socket.io-client';
+import toast from 'react-hot-toast';
 
 interface User {
   _id: string;
@@ -13,6 +15,8 @@ interface AuthContextType {
   user: User | null;
   login: (userData: User, token: string) => void;
   logout: () => void;
+  incomingRequestsCount: number;
+  setIncomingRequestsCount: (count: number) => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -32,6 +36,43 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     return null;
   });
 
+  const [incomingRequestsCount, setIncomingRequestsCount] = useState(0);
+
+  useEffect(() => {
+    if (!user) return;
+
+    const newSocket = io('http://localhost:3000', {
+      auth: { token: localStorage.getItem('token') },
+    });
+
+    newSocket.on('new_friend_request', (data: { senderName: string }) => {
+      setIncomingRequestsCount((prev) => prev + 1);
+      toast(`Новий запит у друзі від ${data.senderName}`, {
+        position: 'top-right',
+        duration: 5000,
+      });
+    });
+
+    newSocket.on('friend_request_accepted', (data: { userName: string }) => {
+      toast.success(`${data.userName} прийняв ваш запит у друзі!`);
+    });
+
+    return () => {
+      newSocket.close();
+    };
+  }, [user]);
+
+  useEffect(() => {
+    const handleStorageChange = (e: StorageEvent) => {
+      if (e.key === 'token') {
+        window.location.reload();
+      }
+    };
+
+    window.addEventListener('storage', handleStorageChange);
+    return () => window.removeEventListener('storage', handleStorageChange);
+  }, []);
+
   const login = (userData: User, token: string) => {
     localStorage.setItem('token', token);
     localStorage.setItem('user', JSON.stringify(userData));
@@ -42,10 +83,20 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     localStorage.removeItem('token');
     localStorage.removeItem('user');
     setUser(null);
+    setIncomingRequestsCount(0);
+    window.location.href = '/login';
   };
 
   return (
-    <AuthContext.Provider value={{ user, login, logout }}>
+    <AuthContext.Provider
+      value={{
+        user,
+        login,
+        logout,
+        incomingRequestsCount,
+        setIncomingRequestsCount,
+      }}
+    >
       {children}
     </AuthContext.Provider>
   );
