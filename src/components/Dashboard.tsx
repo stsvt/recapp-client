@@ -1,7 +1,8 @@
 import { BellIcon, MagnifyingGlassIcon, UserIcon } from '@phosphor-icons/react';
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { getIncomingRequests } from '../services/friends';
 import FilterModal from './FilterModal';
 import SearchModal from './SearchModal';
 import Logo from './Logo';
@@ -10,11 +11,28 @@ const DICEBEAR_BASE = import.meta.env.VITE_DICEBEAR_URL;
 const USERS_IMAGES_BASE = import.meta.env.VITE_USERS_IMAGES_BASE;
 
 function Dashboard() {
-  const { user } = useAuth();
+  const { user, incomingRequestsCount, setIncomingRequestsCount } = useAuth();
   const [showFilters, setShowFilters] = useState(false);
   const [searchParams, setSearchParams] = useSearchParams();
   const showSearch = searchParams.get('search') === 'true';
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchRequests = async () => {
+      if (user) {
+        try {
+          const response = await getIncomingRequests();
+          if (response.status === 'success') {
+            setIncomingRequestsCount(response.results || 0);
+          }
+        } catch (error) {
+          console.error('Failed to fetch friend requests:', error);
+        }
+      }
+    };
+
+    fetchRequests();
+  }, [user, setIncomingRequestsCount]);
 
   const handleUserClick = () => {
     if (user) {
@@ -58,16 +76,21 @@ function Dashboard() {
           <button onClick={openSearch}>
             <MagnifyingGlassIcon className='icon' size={24} />{' '}
           </button>
-          <button>
-            <BellIcon className='icon' size={24} />{' '}
+          <button onClick={() => navigate('/friends/requests')}>
+            <div className='icon icon-wrapper'>
+              <BellIcon size={24} />
+              {incomingRequestsCount > 0 && (
+                <span className='badge'>{incomingRequestsCount}</span>
+              )}
+            </div>
           </button>
-          <button onClick={handleUserClick} className="user-avatar-btn">
+          <button onClick={handleUserClick} className='user-avatar-btn'>
             {user ? (
-              <img 
-                src={avatarUrl} 
-                alt={user.name} 
-                className="dashboard-avatar"
-                crossOrigin="anonymous" 
+              <img
+                src={avatarUrl}
+                alt={user.name}
+                className='dashboard-avatar'
+                crossOrigin='anonymous'
               />
             ) : (
               <UserIcon className='icon last-icon' size={24} />

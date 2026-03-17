@@ -76,3 +76,10 @@ export interface PersonDetails {
   movies?: ActorMovie[];
   works?: BaseWork[];
 }
+
+export interface Friend {
+  _id: string;
+  name: string;
+  email: string;
+  photo: string;
+}
