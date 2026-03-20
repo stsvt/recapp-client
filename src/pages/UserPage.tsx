@@ -6,6 +6,8 @@ import {
   acceptFriendRequest,
   rejectFriendRequest,
   removeFriend,
+  getFriends,
+  getIncomingRequests,
 } from '../services/friends';
 import toast from 'react-hot-toast';
 import Dashboard from '../components/Dashboard';
@@ -27,9 +29,15 @@ interface UserData {
   name: string;
   photo: string;
   description?: string;
-  friends: (string | Friend)[];
-  friendRequestsSent: (string | Friend)[];
-  friendRequestsReceived: (string | Friend)[];
+}
+
+interface FriendRequest {
+  _id: string;
+  requester: {
+    _id: string;
+    name: string;
+  } | string;
+  recipient?: string;
 }
 
 function UserPage() {
@@ -40,103 +48,83 @@ function UserPage() {
   const [userData, setUserData] = useState<UserData | undefined>();
   const [loading, setLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [myFriends, setMyFriends] = useState<Friend[]>([]);
+  const [incomingRequests, setIncomingRequests] = useState<FriendRequest[]>([]);
+  const [sentRequests, setSentRequests] = useState<string[]>([]);
 
   useEffect(() => {
-    const loadUser = async () => {
+    const loadData = async () => {
+      if (!userId) return;
       try {
         setLoading(true);
-        if (userId) {
-          const user = await getUserById(userId);
-          console.log('Дані користувача з бази:', user);
-          setUserData(user);
-        }
-      } catch (err: unknown) {
-        const msg = err instanceof Error ? err.message : 'Користувача не знайдено';
-        toast.error(msg);
-        navigate(-1);
+        const [userRes, friendsRes, requestsRes] = await Promise.all([
+          getUserById(userId),
+          getFriends(),
+          getIncomingRequests()
+        ]);
+
+        setUserData(userRes);
+        setMyFriends(friendsRes.data?.friends || []);
+        setIncomingRequests(requestsRes.data?.requests || []);
+      } catch (err) {
+        console.error('Initial load error:', err);
+        toast.error('Помилка завантаження даних');
       } finally {
         setLoading(false);
       }
     };
-    loadUser();
-  }, [userId, navigate]);
+    loadData();
+  }, [userId]);
 
-  const isOwnProfile = currentUser?._id === userId;
+  const isOwnProfile = useMemo(() => currentUser?._id === userId, [currentUser?._id, userId]);
 
   const friendshipStatus = useMemo(() => {
-    if (!userData || !currentUser || isOwnProfile) return 'none';
-    
-    const myId = currentUser._id.toString();
+    if (!userData || !currentUser || isOwnProfile || !userId) return 'none';
 
-    const checkStatus = (list: (string | Friend)[] | undefined): boolean => {
-      if (!list || !Array.isArray(list)) return false;
-      return list.some((item) => {
-        const itemId = (typeof item === 'string' ? item : item._id).toString();
-        return itemId === myId;
-      });
-    };
+    if (myFriends.some(f => f._id === userId)) return 'friends';
 
-    if (checkStatus(userData.friends)) return 'friends';
-    if (checkStatus(userData.friendRequestsReceived)) return 'pending';
-    if (checkStatus(userData.friendRequestsSent)) return 'requested';
+    const hasReceived = incomingRequests.some(req => {
+    const requesterId = typeof req.requester === 'object' ? req.requester._id : req.requester;
+    return requesterId === userId;
+  });
+    if (hasReceived) return 'requested';
+
+    if (sentRequests.includes(userId)) return 'pending';
 
     return 'none';
-  }, [userData, currentUser, isOwnProfile]);
+  }, [userData, currentUser, isOwnProfile, myFriends, incomingRequests, sentRequests, userId]);
 
   const handleAction = async () => {
-    if (!userId || !currentUser || isSubmitting || isOwnProfile) return;
+    if (!userId || isSubmitting) return;
     setIsSubmitting(true);
 
     try {
-      const myId = currentUser._id;
-      console.log('Поточний статус:', friendshipStatus)
-
       if (friendshipStatus === 'none') {
         await sendFriendRequest(userId);
-        setUserData(prev => prev ? {
-          ...prev,
-          friendRequestsReceived: [...(prev.friendRequestsReceived || []), myId]
-        } : prev);
+        setSentRequests(prev => [...prev, userId]);
         toast.success('Запит надіслано');
-      } 
-      else if (friendshipStatus === 'pending') {
-        await rejectFriendRequest(userId);
-        setUserData(prev => prev ? {
-          ...prev,
-          friendRequestsReceived: (prev.friendRequestsReceived || []).filter(id => 
-            (typeof id === 'string' ? id : id._id) !== myId
-          )
-        } : prev);
-        toast.success('Запит скасовано');
       } 
       else if (friendshipStatus === 'requested') {
         await acceptFriendRequest(userId);
-        setUserData(prev => {
-          if (!prev) return prev;
-          return {
-            ...prev,
-            friends: [...(prev.friends || []), myId], 
-            friendRequestsSent: (prev.friendRequestsSent || []).filter(item => 
-              (typeof item === 'string' ? item : item._id).toString() !== myId
-            )
-          };
-        });
-        toast.success('Тепер ви друзі!');
+        toast.success('Запит прийнято!');
+        const res = await getFriends();
+        setMyFriends(res.data.friends);
+      } 
+      else if (friendshipStatus === 'pending') {
+        await rejectFriendRequest(userId);
+        setSentRequests(prev => prev.filter(id => id !== userId));
+        toast.success('Запит скасовано');
       }
       else if (friendshipStatus === 'friends') {
         if (window.confirm('Видалити з друзів?')) {
           await removeFriend(userId);
-          setUserData(prev => prev ? {
-            ...prev,
-            friends: (prev.friends || []).filter(id => 
-              (typeof id === 'string' ? id : id._id) !== myId
-            )
-          } : prev);
+          setMyFriends(prev => prev.filter(f => f._id !== userId));
           toast.success('Видалено з друзів');
         }
       }
-    } catch {
-      toast.error('Помилка дії');
+    } catch (err: unknown) {
+      const errorMessage = err instanceof Error ? err.message : 'Помилка дії';
+      toast.error(errorMessage);
     } finally {
       setIsSubmitting(false);
     }
@@ -162,7 +150,9 @@ function UserPage() {
   return (
     <div className='full-screen'>
       <Dashboard />
-      <button className='back-button' onClick={() => navigate(-1)}><CaretLeftIcon size={28} /></button>
+      <button className='back-button' onClick={() => navigate(-1)}>
+        <CaretLeftIcon size={28} />
+      </button>
       <UserSearch />
       <div className='profile-container'>
         <div className='profile-card'>
@@ -175,12 +165,14 @@ function UserPage() {
             <div className='info-row bio'><strong>Про мене</strong><span>{userData.description || 'Немає опису.'}</span></div>
           </div>
           <div className='profile-actions-group'>
-            {isOwnProfile ? <p>Це ви</p> : (
+            {isOwnProfile ? <p className='own-profile-tag'>Це ви</p> : (
               <div className='friendship-controls'>
                 {friendshipStatus === 'friends' && (
                   <>
                     <div className='friends-badge'><CheckCircleIcon size={26} color='#4caf50' /><span>Ви друзі</span></div>
-                    <button onClick={handleAction} className='remove-friend-btn' disabled={isSubmitting}><UserMinusIcon size={20} />Видалити</button>
+                    <button onClick={handleAction} className='remove-friend-btn' disabled={isSubmitting}>
+                      <UserMinusIcon size={20} />Видалити
+                    </button>
                   </>
                 )}
                 {friendshipStatus === 'pending' && (

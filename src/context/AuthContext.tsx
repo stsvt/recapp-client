@@ -17,6 +17,7 @@ interface AuthContextType {
   logout: () => void;
   incomingRequestsCount: number;
   setIncomingRequestsCount: (count: number) => void;
+  friendsUpdateTick: number;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -37,6 +38,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   });
 
   const [incomingRequestsCount, setIncomingRequestsCount] = useState(0);
+  const [friendsUpdateTick, setFriendsUpdateTick] = useState(0);
 
   useEffect(() => {
     if (!user) return;
@@ -55,6 +57,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
     newSocket.on('friend_request_accepted', (data: { userName: string }) => {
       toast.success(`${data.userName} прийняв ваш запит у друзі!`);
+      setFriendsUpdateTick(prev => prev + 1);
     });
 
     return () => {
@@ -95,6 +98,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         logout,
         incomingRequestsCount,
         setIncomingRequestsCount,
+        friendsUpdateTick
       }}
     >
       {children}

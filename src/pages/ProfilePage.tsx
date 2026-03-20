@@ -43,7 +43,7 @@ interface MovieActivity extends MovieSummary {
 }
 
 function ProfilePage() {
-  const { user, login, logout } = useAuth();
+  const { user, login, friendsUpdateTick,logout } = useAuth();
   const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState({
     name: user?.name || '',
@@ -122,18 +122,20 @@ function ProfilePage() {
   }, []);
 
   useEffect(() => {
-    const loadFriends = async () => {
-      try {
-        const res = await getFriends();
-        if (res.status === 'success' && res.data?.friends) {
-          setFriends(res.data.friends);
-        }
-      } catch {
-        toast.error('Помилка завантаження друзів');
+  const loadFriends = async () => {
+    if (!user?._id) return;
+    try {
+      const res = await getFriends();
+      if (res.status === 'success' && res.data?.friends) {
+        setFriends(res.data.friends);
       }
-    };
-    loadFriends();
-  }, []);
+    } catch {
+      toast.error('Помилка завантаження друзів');
+    }
+  };
+  loadFriends();
+
+}, [user?._id, friendsUpdateTick]);
 
   const avatarUrl = useMemo(() => {
     if (user?.photo && user.photo !== `${USERS_IMAGES_BASE}default.jpg`) {
