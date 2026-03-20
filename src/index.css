@@ -1813,6 +1813,7 @@
 .user-email {
   font-size: 0.85rem;
   color: #aaa;
+  margin-right: 10px;
 }
 
 .action-buttons {
@@ -1821,8 +1822,8 @@
 }
 
 .action-buttons button {
-  width: 42px;
-  height: 42px;
+  width: 32px;
+  height: 32px;
   border-radius: 10px;
   border: none;
   display: flex;
@@ -1838,17 +1839,17 @@
 }
 
 .btn-accept:hover {
-  background: #4ade80;
+  background: #2fcb68;
   color: #000;
 }
 
 .btn-reject {
   background: rgba(248, 113, 113, 0.1);
-  color: #f87171;
+  color: #f75757;
 }
 
 .btn-reject:hover {
-  background: #f87171;
+  background: #d73030;
   color: #fff;
 }
 
@@ -1903,123 +1904,118 @@
   text-overflow: ellipsis;
 }
 
-.friendship-status-container {
+.friendship-controls {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 12px;
+  gap: 16px;
   width: 100%;
+  padding-top: 10px;
+  padding: 15px 0;
 }
 
-.friends-badge {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  color: #4caf50;
-  font-weight: 600;
-  font-size: 1.1rem;
-  padding: 10px;
-}
-
+.friends-badge, 
 .pending-badge {
   display: flex;
   align-items: center;
-  gap: 8px;
-  color: #ff9800; 
+  gap: 10px;
   font-weight: 600;
+  font-size: 0.95rem;
+  padding: 10px 20px;
+  border-radius: 50px;
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(5px);
+  transition: all 0.3s ease;
+  letter-spacing: 0.3px;
 }
 
-.remove-friend-btn {
-  background: rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  color: #ff4d4d;
-  padding: 8px 16px;
-  border-radius: 8px;
+.friends-badge {
+  color: #4ade80;
+  border: 1px solid rgba(74, 222, 128, 0.2);
+  box-shadow: 0 0 15px rgba(74, 222, 128, 0.05);
+}
+
+.friends-badge svg {
+  filter: drop-shadow(0 0 5px rgba(74, 222, 128, 0.5));
+}
+
+.pending-badge {
+  color: #fbbf24;
+  border: 1px solid rgba(251, 191, 36, 0.2);
+  box-shadow: 0 0 15px rgba(251, 191, 36, 0.05);
+}
+
+.remove-friend-btn, 
+.cancel-request-btn {
+  background: none;
+  border: none;
+  color: rgba(255, 255, 255, 0.4);
+  font-size: 0.85rem;
+  font-weight: 500;
   display: flex;
   align-items: center;
   gap: 6px;
   cursor: pointer;
-  font-size: 0.9rem;
-  transition: all 0.2s;
-}
-
-.remove-friend-btn:hover {
-  background: rgba(255, 77, 77, 0.1);
-  border-color: #ff4d4d;
-}
-
-.add-friend-btn, .accept-friend-btn {
-  background: #e50914;
-  color: white;
-  border: none;
-  padding: 12px 24px;
-  border-radius: 8px;
-  font-weight: bold;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  cursor: pointer;
-  width: 100%;
-  justify-content: center;
-}
-
-.add-friend-btn:hover {
-  background: #ff0a16;
-}
-
-.friendship-status-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 12px;
-  width: 100%;
-}
-
-.friends-badge, .pending-badge {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-weight: 600;
-  font-size: 1.1rem;
+  padding: 5px 10px;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+  text-transform: lowercase; 
 }
 
 .remove-friend-btn {
-  background-color: transparent;
-  color: #ff4d4d;
-  border: 1px solid #ff4d4d;
-  padding: 8px 16px;
-  border-radius: 8px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  cursor: pointer;
-  transition: all 0.2s;
+  color: #9ca3af; 
 }
 
 .remove-friend-btn:hover {
-  background-color: #ff4d4d;
-  color: white;
-}
-
-.cancel-request-btn {
-  background-color: #333;
-  color: #ccc;
-  border: none;
-  padding: 8px 16px;
-  border-radius: 8px;
-  cursor: pointer;
+  color: #ff4d4d;
+  background: rgba(255, 77, 77, 0.05);
 }
 
 .cancel-request-btn:hover {
-  background-color: #444;
-  color: white;
+  color: #fff;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.add-friend-btn, 
+.accept-friend-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  max-width: 280px;
+  padding: 12px 24px;
+  border-radius: 50px; 
+  font-weight: 500;
+  font-size: 0.95rem;
+  cursor: pointer;
+  letter-spacing: 0.3px;
+  background: rgba(218, 217, 217, 0.05);
+}
+
+.add-friend-btn {
+  color: #ff4d4d;
+  border: 1px solid rgba(255, 77, 77, 0.3);
+}
+
+.add-friend-btn:hover:not(:disabled) {
+  border-color: rgba(255, 77, 77, 0.6);
+  color: #ff3333;
+  background: rgba(203, 203, 203, 0.05);
 }
 
 .accept-friend-btn {
-  background-color: #4caf50;
-  color: white;
-  width: 100%;
-  padding: 12px;
-  border-radius: 8px;
-  font-weight: bold;
+  color: #4ade80;
+  border: 1px solid rgba(129, 208, 158, 0.3);
+}
+
+.accept-friend-btn:hover:not(:disabled) {
+  background: rgba(188, 189, 188, 0.1);
+  border-color: rgba(74, 222, 128, 0.6);
+  color: #2edb6b;
+}
+
+.add-friend-btn:active, 
+.accept-friend-btn:active {
+  opacity: 0.8;
 }
