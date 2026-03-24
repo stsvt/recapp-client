@@ -43,6 +43,8 @@ export const rejectFriendRequest = async (userId: string) => {
     headers: getHeaders(),
   });
 
+  if (response.status === 204) return { status: 'success' };
+
   const data = await response.json();
   if (!response.ok) {
     throw new Error(data.message || 'Помилка запиту');
@@ -57,7 +59,7 @@ export const removeFriend = async (userId: string) => {
   });
 
   if (response.status === 204) return { status: 'success' };
-  
+
   const data = await response.json();
   if (!response.ok) {
     throw new Error(data.message || 'Помилка запиту');

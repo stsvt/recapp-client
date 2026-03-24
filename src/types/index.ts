@@ -83,3 +83,22 @@ export interface Friend {
   email: string;
   photo: string;
 }
+
+export interface ReviewData {
+  review: string;
+  rating: string | number;
+}
+
+export interface Review {
+  _id: string;
+  user:
+    | string
+    | {
+        _id: string;
+        name?: string;
+        username?: string;
+      };
+  review: string;
+  rating: number;
+  createdAt: string;
+}

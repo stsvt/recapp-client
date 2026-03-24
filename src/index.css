@@ -1914,7 +1914,7 @@
   padding: 15px 0;
 }
 
-.friends-badge, 
+.friends-badge,
 .pending-badge {
   display: flex;
   align-items: center;
@@ -1945,7 +1945,7 @@
   box-shadow: 0 0 15px rgba(251, 191, 36, 0.05);
 }
 
-.remove-friend-btn, 
+.remove-friend-btn,
 .cancel-request-btn {
   background: none;
   border: none;
@@ -1959,11 +1959,11 @@
   padding: 5px 10px;
   border-radius: 6px;
   transition: all 0.2s ease;
-  text-transform: lowercase; 
+  text-transform: lowercase;
 }
 
 .remove-friend-btn {
-  color: #9ca3af; 
+  color: #9ca3af;
 }
 
 .remove-friend-btn:hover {
@@ -1976,7 +1976,7 @@
   background: rgba(255, 255, 255, 0.05);
 }
 
-.add-friend-btn, 
+.add-friend-btn,
 .accept-friend-btn {
   display: flex;
   align-items: center;
@@ -1985,7 +1985,7 @@
   width: 100%;
   max-width: 280px;
   padding: 12px 24px;
-  border-radius: 50px; 
+  border-radius: 50px;
   font-weight: 500;
   font-size: 0.95rem;
   cursor: pointer;
@@ -2015,7 +2015,213 @@
   color: #2edb6b;
 }
 
-.add-friend-btn:active, 
+.add-friend-btn:active,
 .accept-friend-btn:active {
   opacity: 0.8;
+}
+
+.reviews-section {
+  background-color: #000;
+  color: #fff;
+  font-family: 'Inter', sans-serif;
+}
+
+.comment-card {
+  background: #121212;
+  border-radius: 16px;
+  padding: 24px;
+  margin-bottom: 20px;
+  position: relative;
+  border: 1px solid #1f1f1f;
+}
+
+.comment-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #333;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 14px;
+}
+
+.username {
+  font-weight: 600;
+  color: #efefef;
+}
+
+.comment-date {
+  font-size: 13px;
+  color: #888;
+}
+
+.comment-text {
+  line-height: 1.6;
+  color: #d1d1d1;
+  font-size: 15px;
+  margin-bottom: 20px;
+}
+
+.comment-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.reactions {
+  display: flex;
+  gap: 10px;
+  cursor: pointer;
+  background: #1a1a1a;
+  padding: 6px 12px;
+  border-radius: 20px;
+}
+
+.add-comment-btn {
+  background: #222;
+  color: #fff;
+  border: 1px solid #333;
+  padding: 8px 16px;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.add-comment-btn:hover {
+  background: #333;
+}
+
+.admin-actions {
+  display: flex;
+  gap: 12px;
+}
+
+.admin-actions button {
+  background: transparent;
+  border: none;
+  color: #888;
+  cursor: pointer;
+  font-size: 14px;
+  transition: 0.2s;
+}
+
+.admin-actions .edit-btn:hover {
+  color: #fff;
+}
+
+.admin-actions .delete-btn:hover {
+  color: #ff4d4d;
+}
+
+.comment-card .add-review-container {
+  background: transparent;
+  padding: 0;
+  border: none;
+}
+
+.reviews-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 30px;
+}
+
+.reviews-title {
+  font-size: 24px;
+  font-weight: 700;
+  margin: 0;
+}
+
+.add-review-container {
+  background: #121212;
+  border: 1px solid #1f1f1f;
+  border-radius: 16px;
+  padding: 24px;
+  margin-bottom: 30px;
+}
+
+.add-review-container h3 {
+  margin-top: 0;
+  font-size: 18px;
+  margin-bottom: 15px;
+  color: #efefef;
+}
+
+.add-review-container textarea {
+  width: 100%;
+  background: #1a1a1a;
+  border: 1px solid #333;
+  border-radius: 8px;
+  color: #fff;
+  padding: 12px;
+  font-family: inherit;
+  resize: vertical;
+  margin-bottom: 15px;
+  outline: none;
+}
+
+.add-review-container textarea:focus {
+  border-color: #555;
+}
+
+.add-review-container input[type='number'] {
+  background: #1a1a1a;
+  border: 1px solid #333;
+  color: #fff;
+  padding: 8px;
+  border-radius: 8px;
+  margin-bottom: 15px;
+  width: 60px;
+}
+
+.form-actions {
+  display: flex;
+  gap: 12px;
+}
+
+.form-actions button[type='submit'] {
+  background: #fff;
+  color: #000;
+  border: none;
+  padding: 10px 24px;
+  border-radius: 20px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.form-actions button[type='submit']:hover {
+  background: #e0e0e0;
+}
+
+.form-actions .cancel-btn {
+  background: transparent;
+  color: #888;
+  border: 1px solid #333;
+  padding: 10px 20px;
+  border-radius: 20px;
+  cursor: pointer;
+}
+
+.form-actions .cancel-btn:hover {
+  border-color: #555;
+  color: #fff;
 }
