@@ -56,13 +56,17 @@ function FriendRequestsPage() {
         await rejectFriendRequest(userId);
         toast.success('Запит відхилено');
       }
-      setRequests((prev) => prev.filter((req) => req.requester._id !== userId));
-      setIncomingRequestsCount(Math.max(0, requests.length - 1));
-    } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : 'Помилка операції';
-      toast.error(msg);
-    }
-  };
+      setRequests((prev) => {
+      const updatedList = prev.filter((req) => req.requester._id !== userId);
+      setIncomingRequestsCount(updatedList.length);
+      return updatedList;
+    });
+
+  } catch (err: unknown) {
+    const msg = err instanceof Error ? err.message : 'Помилка операції';
+    toast.error(msg);
+  }
+};
 
   return (
     <div className='full-screen'>

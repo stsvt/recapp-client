@@ -55,6 +55,9 @@ export const removeFriend = async (userId: string) => {
     method: 'DELETE',
     headers: getHeaders(),
   });
+
+  if (response.status === 204) return { status: 'success' };
+  
   const data = await response.json();
   if (!response.ok) {
     throw new Error(data.message || 'Помилка запиту');
