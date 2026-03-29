@@ -1,0 +1,421 @@
+/* PROFILE PAGE */
+.profile-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 30px 20px;
+    min-height: calc(100vh - 80px);
+}
+
+.profile-container h2 {
+    font-size: 26px;
+    font-weight: 500;
+    margin-bottom: 25px;
+    letter-spacing: 1px;
+}
+
+.profile-card {
+    background: var(--color-bg-overlay-dark-80);
+    backdrop-filter: blur(15px);
+    border: 1px solid var(--color-text-white10);
+    padding: 30px;
+    border-radius: 12px;
+    width: 100%;
+    max-width: 420px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    box-shadow: 0 15px 35px var(--color-text-black-70);
+    transition: border-color 0.3s ease;
+}
+
+.profile-card:hover {
+    border-color: var(--color-primary-40);
+}
+
+/* AVATAR SECTION */
+.avatar-section {
+    position: relative;
+    width: 120px;
+    height: 120px;
+    margin-bottom: 20px;
+    border-radius: 50%;
+    overflow: hidden;
+}
+
+.profile-avatar {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+    background-color: var(--color-bg-dark-hex);
+    box-shadow: 0 0 20px var(--color-primary-30);
+    transition: filter 0.3s ease;
+}
+
+.profile-avatar.editing {
+    filter: brightness(0.4);
+}
+
+.avatar-edit-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+    z-index: 5;
+}
+
+.avatar-action-btn {
+    background: var(--color-text-white10);
+    backdrop-filter: blur(5px);
+    border: 1px solid var(--color-text-white30);
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    color: white;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+}
+
+.avatar-action-btn.upload:hover {
+    background: var(--color-primary);
+    border-color: var(--color-primary);
+    transform: scale(1.1);
+}
+
+.avatar-action-btn.delete:hover {
+    background: var(--color-text);
+    color: var(--color-primary);
+    transform: scale(1.1);
+}
+
+/* INFO SECTION */
+.profile-info {
+    width: 100%;
+    margin-bottom: 25px;
+}
+
+.info-row {
+    font-size: 15px;
+    color: var(--color-text-secondary);
+    margin-bottom: 12px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--color-text-white5);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.info-row strong {
+    color: var(--color-primary);
+    font-weight: 500;
+    text-transform: uppercase;
+    font-size: 11px;
+    letter-spacing: 0.5px;
+}
+
+.info-row.bio {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+}
+
+.edit-input {
+    background: var(--color-bg-secondary);
+    border: 1px solid var(--color-text-dark-900);
+    padding: 6px 10px;
+    border-radius: 4px;
+    font-size: 14px;
+    width: 65%;
+}
+
+.edit-textarea {
+    width: 100%;
+    min-height: 80px;
+    background: var(--color-bg-secondary);
+    border: 1px solid var(--color-text-dark-900);
+    padding: 10px;
+    border-radius: 6px;
+    resize: none;
+    font-size: 14px;
+}
+
+/* ACTIONS */
+.profile-actions-group {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    width: 100%;
+}
+
+.edit-actions-row {
+    display: flex;
+    gap: 10px;
+    width: 100%;
+}
+
+.edit-btn,
+.save-btn,
+.cancel-btn {
+    width: 100%;
+    padding: 12px;
+    border-radius: 4px;
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+    border: none;
+    transition: opacity 0.2s;
+}
+
+.edit-btn,
+.save-btn {
+    background: var(--color-primary);
+}
+
+.cancel-btn {
+    background: var(--color-text-dark-900);
+}
+
+.edit-btn:hover,
+.save-btn:hover {
+    opacity: 0.9;
+}
+
+.logout-link-btn {
+    background: none;
+    border: none;
+    color: var(--color-text-dark-600);
+    cursor: pointer;
+    font-size: 13px;
+    text-decoration: underline;
+}
+
+.delete-account-btn {
+    background: transparent;
+    border: none;
+    color: var(--color-text-dark-400);
+    font-size: 11px;
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    margin-top: 10px;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+.delete-account-btn:hover {
+    color: var(--color-primary);
+}
+
+/* CHANGE PASSWORD */
+.change-password-btn {
+    background: transparent;
+    border: 1px solid var(--color-text-dark-400);
+    padding: 10px 16px;
+    border-radius: 4px;
+    font-weight: 500;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    width: 100%;
+    margin-top: 5px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.change-password-btn:hover {
+    border-color: var(--color-primary);
+    background: var(--color-primary-05);
+}
+
+.password-change-form {
+    width: 100%;
+    background: var(--color-bg-overlay-dark-60);
+    backdrop-filter: blur(10px);
+    padding: 20px;
+    border-radius: 8px;
+    margin-top: 15px;
+    border: 1px solid var(--color-text-white10);
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    box-shadow: inset 0 0 10px var(--color-text-black-30);
+    animation: slideDown 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.password-change-form h3 {
+    font-size: 16px;
+    margin-bottom: 5px;
+    text-align: center;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.password-change-form .input-group label {
+    color: var(--color-primary);
+    font-weight: 500;
+    text-transform: uppercase;
+    font-size: 11px;
+    letter-spacing: 0.5px;
+    margin-bottom: 5px;
+    display: block;
+}
+
+.password-change-form .password-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.password-change-form .password-wrapper input {
+    width: 100%;
+    background: var(--color-bg-secondary);
+    border: 1px solid var(--color-text-dark-900);
+    padding: 10px 45px 10px 12px;
+    border-radius: 4px;
+}
+
+.password-change-form .eye-button {
+    position: absolute;
+    right: 12px;
+    background: none;
+    border: none;
+    color: var(--color-text-dark-600);
+    cursor: pointer;
+    padding: 0;
+    display: flex;
+    align-items: center;
+}
+
+.password-change-form input::placeholder {
+    font-size: 13px;
+    color: var(--color-text-dark-600);
+    font-weight: 400;
+    letter-spacing: 0;
+    opacity: 0.8;
+    transition: opacity 0.2s ease;
+}
+
+.password-change-form input:focus::placeholder {
+    opacity: 0.4;
+}
+
+.password-change-form .password-wrapper input:hover {
+    border-color: var(--color-primary-50);
+    background: var(--color-hex-2222228d);
+}
+
+.password-change-form .password-wrapper input:focus {
+    border-color: var(--color-primary);
+    background: var(--color-hex-11111137);
+    outline: none;
+}
+
+.password-change-form .save-btn {
+    flex: 2;
+    background: var(--color-primary);
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 4px;
+    font-weight: 600;
+    cursor: pointer;
+    transition:
+            transform 0.1s,
+            background 0.2s;
+}
+
+.password-change-form .save-btn {
+    background: var(--color-accent-red);
+}
+
+.password-change-form .save-btn:active {
+    transform: scale(0.98);
+}
+
+.password-change-form .save-btn:hover {
+    background: var(--color-text-dark-400);
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+.password-change-form .cancel-btn {
+    flex: 1;
+    background: var(--color-text-dark-900);
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.password-change-form .cancel-btn {
+    background: var(--color-text-gray);
+}
+
+/* ACTIVITY LISTS */
+.profile-content-list {
+    max-width: 1400px;
+    width: 100%;
+    padding: 0 40px;
+    margin: 40px auto 0;
+}
+
+.profile-lists-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+    margin-top: 40px;
+    padding: 0 40px 60px;
+}
+
+.empty-activity {
+    background: var(--color-text-white5);
+    border: 1px dashed var(--color-text-white20);
+    border-radius: 12px;
+    padding: 60px 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: 'center';
+    opacity: 0.5;
+    margin-top: 40px;
+}
+
+.empty-activity p {
+    font-size: 1.1rem;
+    color: var(--color-text-dark-90);
+    max-width: 400px;
+    line-height: 1.5;
+}
+
+@media (max-width: 768px) {
+    .profile-content-list,
+    .profile-lists-wrapper {
+        padding: 0 20px !important;
+    }
+}
+
+/* ANIMATIONS */
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

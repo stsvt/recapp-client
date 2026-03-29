@@ -1,0 +1,246 @@
+/* MOVIE PAGE & PERSON PAGE */
+.movie-page-content {
+    width: 100%;
+    padding-bottom: 50px;
+}
+
+.content-wrapper {
+    position: relative;
+    z-index: 1;
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.movie-header {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.movie-header h1 {
+    font-size: 28px;
+    margin-bottom: 5px;
+    margin-top: 30px;
+}
+
+.original-title {
+    color: var(--color-text-dark-500);
+    font-size: 16px;
+}
+
+.main-info-grid {
+    display: grid;
+    grid-template-columns: 240px 1fr;
+    gap: 40px;
+    background: var(--color-bg-overlay-dark);
+    padding: 30px;
+    border-radius: 12px;
+    backdrop-filter: blur(10px);
+    align-items: start;
+}
+
+.poster-column img {
+    width: 240px;
+    min-height: 360px;
+    border-radius: 4px;
+    background-color: var(--color-bg-secondary);
+    overflow: hidden;
+    box-shadow: 0 10px 30px var(--color-text-black50);
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+.stats-row {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 20px;
+    font-size: 16px;
+}
+
+.imdb-tag {
+    background: var(--color-imdb-gold);
+    color: var(--color-text-black);
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-weight: bold;
+}
+
+.genres-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 25px;
+}
+
+.genre-pill {
+    background: var(--color-text-white10);
+    border: 1px solid var(--color-text-white20);
+    padding: 6px 16px;
+    border-radius: 20px;
+    font-size: 14px;
+}
+
+.cast-info {
+    margin-top: 20px;
+}
+
+.cast-row {
+    display: flex;
+    align-items: flex-start;
+    margin: 12px 0 !important;
+    line-height: 1.6;
+}
+
+.cast-label {
+    color: var(--color-text-dark-500);
+    font-weight: 500;
+    min-width: 100px;
+    flex-shrink: 0;
+    font-size: 15px;
+}
+
+.person-label {
+    color: var(--color-text-dark-500);
+    font-weight: 500;
+    min-width: 170px;
+    flex-shrink: 0;
+    font-size: 15px;
+}
+
+.cast-value {
+    color: var(--color-text-white);
+    font-size: 15px;
+    flex: 1;
+}
+
+.description-section {
+    margin: 40px 0;
+    line-height: 1.8;
+    font-size: 16px;
+    max-width: 900px;
+    color: var(--color-text-secondary);
+}
+
+.similar-movies-full-width {
+    width: 100%;
+    margin-top: 60px;
+    padding: 20px 0;
+}
+
+.similar-title-container {
+    max-width: 1000px;
+    margin: 0 auto 20px auto;
+    padding: 0 20px;
+}
+
+.similar-title-container h2 {
+    font-size: 22px;
+    font-weight: 500;
+    color: var(--color-text-white);
+    text-align: left;
+}
+
+/* CHECK BUTTONS */
+.check-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 60px;
+    margin: 50px 0;
+    padding-top: 20px;
+    border-top: 1px solid var(--color-text-white10);
+}
+
+.check-btn {
+    background: none;
+    border: none;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: pointer;
+    transition:
+            opacity 0.2s ease,
+            filter 0.2s ease;
+}
+
+.icon-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: var(--color-text-white0);
+    transition:
+            background 0.3s ease,
+            box-shadow 0.3s ease;
+    margin-bottom: 8px;
+    position: relative;
+}
+
+.check-btn:hover .icon-wrapper {
+    background: var(--color-text-white5);
+}
+
+.check-btn.active {
+    transform: scale(0.95);
+}
+
+.label {
+    font-size: 14px;
+    font-weight: 400;
+    color: var(--color-text-white60);
+    letter-spacing: 0.5px;
+    transition: color 0.3s ease;
+}
+
+.check-btn.active .label {
+    color: var(--color-text-white);
+    font-weight: 500;
+}
+
+/* BACK BUTTON */
+.back-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    border: none;
+    color: var(--color-text-dark-500);
+    cursor: pointer;
+    padding: 5px;
+    transition: color 0.2s;
+}
+
+.movie-page-content .back-button {
+    margin: 0 15px;
+    position: absolute;
+}
+
+.back-button:hover {
+    color: var(--color-accent);
+}
+
+/* ACTOR LINK */
+.actor-link-btn {
+    background: none;
+    border: none;
+    padding: 0;
+    color: var(--color-text-secondary);
+    font-family: inherit;
+    font-size: inherit;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: inline;
+    border-bottom: 1px solid transparent;
+}
+
+.actor-link-btn:hover {
+    color: var(--color-text-white);
+    border-bottom: 1px solid var(--color-text-white40);
+}
+
+.actor-link-btn .cast-value {
+    color: inherit;
+}

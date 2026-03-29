@@ -16,7 +16,7 @@ import { useAuth } from '../context/AuthContext';
 import toast from 'react-hot-toast';
 
 function MoviePage() {
-  const { user} = useAuth();
+  const { user } = useAuth();
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const [movie, setMovie] = useState<Movie | null>(null);
@@ -30,13 +30,16 @@ function MoviePage() {
       if (!id) return;
       try {
         setLoading(true);
-        const [movieData, statusData] = await Promise.all([
-          fetchMovieDetails(id),
-          getMovieStatus(id),
-        ]);
+
+        const movieData = await fetchMovieDetails(id);
+        let statusData;
+
+        if (user) {
+          statusData = await getMovieStatus(id);
+        }
 
         if (movieData) setMovie(movieData);
-        
+
         if (statusData) {
           setIsLiked(statusData.liked);
           setIsWatched(statusData.watched);
@@ -48,7 +51,7 @@ function MoviePage() {
       }
     };
     loadData();
-  }, [id]);
+  }, [id, user]);
 
   if (loading) return <Spinner />;
 
@@ -61,13 +64,16 @@ function MoviePage() {
 
   const handleToggleActivity = async (type: 'liked' | 'watched') => {
     if (!user) {
-      toast.error('Будь ласка, увійдіть в акаунт, щоб додавати фільми до списків', {
-        icon: '🔒',
-        duration: 4000
-      });
+      toast.error(
+        'Будь ласка, увійдіть в акаунт, щоб додавати фільми до списків',
+        {
+          icon: '🔒',
+          duration: 4000,
+        }
+      );
       return;
     }
-    
+
     try {
       await toggleActivityMovie(id!, type);
       if (type === 'liked') setIsLiked(!isLiked);
