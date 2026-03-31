@@ -5,7 +5,7 @@ import MovieSection from '../components/MovieSection';
 import Dashboard from '../components/Dashboard';
 import MovieStatusButton from '../components/MovieStatusButton';
 import Spinner from '../components/Spinner';
-import type { Movie, CrewMember, Genre } from '../types/index';
+import type { Movie, CrewMember, Genre, Review } from '../types/index';
 import {
   HeartIcon,
   BookmarkSimpleIcon,
@@ -14,9 +14,11 @@ import {
 import { getMovieStatus, toggleActivityMovie } from '../services/activity';
 import { useAuth } from '../context/AuthContext';
 import toast from 'react-hot-toast';
+import AddReviewForm from '../components/AddReviewForm';
+import { deleteReview, fetchReviews } from '../services/reviews';
 
 function MoviePage() {
-  const { user} = useAuth();
+  const { user } = useAuth();
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const [movie, setMovie] = useState<Movie | null>(null);
@@ -24,22 +26,30 @@ function MoviePage() {
   const [isLiked, setIsLiked] = useState(false);
   const [isWatched, setIsWatched] = useState(false);
   const [isImageLoading, setIsImageLoading] = useState(true);
+  const [reviews, setReviews] = useState<Review[]>([]);
+  const [editingReviewId, setEditingReviewId] = useState<string | null>(null);
+  const [isFormVisible, setIsFormVisible] = useState(false);
 
   useEffect(() => {
     const loadData = async () => {
       if (!id) return;
       try {
         setLoading(true);
-        const [movieData, statusData] = await Promise.all([
+        const [movieData, statusData, reviewsData] = await Promise.all([
           fetchMovieDetails(id),
           getMovieStatus(id),
+          fetchReviews(id),
         ]);
 
         if (movieData) setMovie(movieData);
-        
+
         if (statusData) {
           setIsLiked(statusData.liked);
           setIsWatched(statusData.watched);
+        }
+
+        if (reviewsData?.data?.reviews) {
+          setReviews(reviewsData.data.reviews);
         }
       } catch (error) {
         console.error(error);
@@ -61,13 +71,16 @@ function MoviePage() {
 
   const handleToggleActivity = async (type: 'liked' | 'watched') => {
     if (!user) {
-      toast.error('Будь ласка, увійдіть в акаунт, щоб додавати фільми до списків', {
-        icon: '🔒',
-        duration: 4000
-      });
+      toast.error(
+        'Будь ласка, увійдіть в акаунт, щоб додавати фільми до списків',
+        {
+          icon: '🔒',
+          duration: 4000,
+        }
+      );
       return;
     }
-    
+
     try {
       await toggleActivityMovie(id!, type);
       if (type === 'liked') setIsLiked(!isLiked);
@@ -76,6 +89,33 @@ function MoviePage() {
     } catch (error: unknown) {
       const msg =
         error instanceof Error ? error.message : 'Не вдалося оновити статус';
+      toast.error(msg);
+    }
+  };
+
+  const handleNewReview = (newReview: Review) => {
+    setReviews((prev) => [newReview, ...prev]);
+    setIsFormVisible(false);
+    toast.success('Ваш відгук додано');
+  };
+
+  const handleUpdateReview = (updatedReview: Review) => {
+    setReviews((prev) =>
+      prev.map((rev) => (rev._id === updatedReview._id ? updatedReview : rev))
+    );
+    toast.success('Ваш відгук оновлено');
+  };
+
+  const handleDeleteReview = async (reviewId: string) => {
+    if (!window.confirm('Ви впевнені, що хочете видалити цей відгук?')) return;
+
+    try {
+      await deleteReview(reviewId);
+      setReviews((prev) => prev.filter((rev) => rev._id !== reviewId));
+      toast.success('Відгук видалено');
+    } catch (error: unknown) {
+      const msg =
+        error instanceof Error ? error.message : 'Не вдалося видалити відгук';
       toast.error(msg);
     }
   };
@@ -222,6 +262,135 @@ function MoviePage() {
             />
           </section>
         )}
+
+        <div className='content-wrapper'>
+          <section className='reviews-section' style={{ marginTop: '40px' }}>
+            <div
+              className='reviews-header'
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '20px',
+                marginBottom: '30px',
+              }}
+            >
+              <h2 className='section-title'>Коментарі ({reviews.length})</h2>
+
+              {!editingReviewId && (
+                <button
+                  className='add-comment-btn'
+                  onClick={() => setIsFormVisible(!isFormVisible)}
+                >
+                  {isFormVisible ? 'Скасувати' : 'Додати коментар ✎'}
+                </button>
+              )}
+            </div>
+
+            {isFormVisible && !editingReviewId && (
+              <div className='form-wrapper-animation'>
+                <AddReviewForm movieId={id!} onReviewAdded={handleNewReview} />
+              </div>
+            )}
+
+            <div className='reviews-list'>
+              {reviews.length === 0 ? (
+                <p
+                  style={{
+                    color: '#888',
+                    textAlign: 'center',
+                    padding: '40px',
+                  }}
+                >
+                  Поки що немає жодного відгуку. Будьте першим!
+                </p>
+              ) : (
+                [...reviews]
+                  .sort(
+                    (a, b) =>
+                      new Date(b.createdAt).getTime() -
+                      new Date(a.createdAt).getTime()
+                  )
+                  .map((rev) => (
+                    <div key={rev._id} className='comment-card'>
+                      {editingReviewId === rev._id ? (
+                        <AddReviewForm
+                          movieId={id!}
+                          initialData={rev}
+                          onReviewAdded={(updated) => {
+                            handleUpdateReview(updated);
+                            setEditingReviewId(null);
+                          }}
+                          onCancel={() => setEditingReviewId(null)}
+                        />
+                      ) : (
+                        <>
+                          <div className='comment-header'>
+                            <div className='user-info'>
+                              <div className='avatar'>
+                                {typeof rev.user === 'object' &&
+                                rev.user !== null
+                                  ? rev.user.name?.charAt(0).toUpperCase() ||
+                                    'U'
+                                  : rev.user
+                                      ?.toString()
+                                      .slice(-1)
+                                      .toUpperCase() || 'U'}
+                              </div>
+                              <span className='username'>
+                                {typeof rev.user === 'object' &&
+                                rev.user !== null
+                                  ? rev.user.username ||
+                                    rev.user.name ||
+                                    'Користувач'
+                                  : `Користувач ${rev.user?.toString().slice(-4) || ''}`}
+                              </span>
+                            </div>
+                            <span className='comment-date'>
+                              {new Date(rev.createdAt).toLocaleDateString(
+                                'uk-UA',
+                                {
+                                  day: 'numeric',
+                                  month: 'long',
+                                }
+                              )}
+                            </span>
+                          </div>
+
+                          <p className='comment-text'>{rev.review}</p>
+
+                          <div className='comment-footer'>
+                            <div className='reactions'>
+                              <span>👍</span> <span>❤️</span>
+                            </div>
+
+                            {user?._id ===
+                              (typeof rev.user === 'object'
+                                ? rev.user?._id
+                                : rev.user) && (
+                              <div className='admin-actions'>
+                                <button
+                                  onClick={() => setEditingReviewId(rev._id)}
+                                  className='edit-btn'
+                                >
+                                  Редагувати
+                                </button>
+                                <button
+                                  onClick={() => handleDeleteReview(rev._id)}
+                                  className='delete-btn'
+                                >
+                                  Видалити
+                                </button>
+                              </div>
+                            )}
+                          </div>
+                        </>
+                      )}
+                    </div>
+                  ))
+              )}
+            </div>
+          </section>
+        </div>
       </div>
     </div>
   );

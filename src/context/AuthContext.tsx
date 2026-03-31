@@ -55,8 +55,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       });
     });
 
-    newSocket.on('friend_request_accepted', (data: { userName: string }) => {
-      toast.success(`${data.userName} прийняв ваш запит у друзі!`);
+    newSocket.on('friend_request_accepted', (data: { friend: { name: string } }) => {
+      toast.success(`${data.friend.name} прийняв ваш запит у друзі!`);
       setFriendsUpdateTick(prev => prev + 1);
     });
 
