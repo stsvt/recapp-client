@@ -6,11 +6,12 @@ interface MovieSectionProps {
   title: string;
   movies: MovieSummary[];
   loading: boolean;
+  id?: string;
 }
 
-function MovieSection({ title, movies, loading }: MovieSectionProps) {
+function MovieSection({ id, title, movies, loading }: MovieSectionProps) {
   return (
-    <div className='recomendation-section'>
+    <div id={id}>
       <h2 className='section-title'>{title}</h2>
       <div className='movies-slider'>
         {loading ? (

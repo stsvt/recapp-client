@@ -23,6 +23,7 @@ import { getFriends } from '../services/friends';
 import MovieSection from '../components/MovieSection';
 import UserSearch from '../components/UserSearch';
 import type { Friend } from '../types/index.ts';
+import { Button } from '../components/Button.tsx';
 
 const DICEBEAR_BASE = import.meta.env.VITE_DICEBEAR_URL;
 const USERS_IMAGES_BASE = import.meta.env.VITE_USERS_IMAGES_BASE;
@@ -43,7 +44,7 @@ interface MovieActivity extends MovieSummary {
 }
 
 function ProfilePage() {
-  const { user, login, friendsUpdateTick,logout } = useAuth();
+  const { user, login, friendsUpdateTick, logout } = useAuth();
   const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState({
     name: user?.name || '',
@@ -122,20 +123,19 @@ function ProfilePage() {
   }, []);
 
   useEffect(() => {
-  const loadFriends = async () => {
-    if (!user?._id) return;
-    try {
-      const res = await getFriends();
-      if (res.status === 'success' && res.data?.friends) {
-        setFriends(res.data.friends);
+    const loadFriends = async () => {
+      if (!user?._id) return;
+      try {
+        const res = await getFriends();
+        if (res.status === 'success' && res.data?.friends) {
+          setFriends(res.data.friends);
+        }
+      } catch {
+        toast.error('Помилка завантаження друзів');
       }
-    } catch {
-      toast.error('Помилка завантаження друзів');
-    }
-  };
-  loadFriends();
-
-}, [user?._id, friendsUpdateTick]);
+    };
+    loadFriends();
+  }, [user?._id, friendsUpdateTick]);
 
   const avatarUrl = useMemo(() => {
     if (user?.photo && user.photo !== `${USERS_IMAGES_BASE}default.jpg`) {
@@ -430,13 +430,15 @@ function ProfilePage() {
                   Вийти з акаунта
                 </button>
 
-                <button
-                  onClick={handleDeleteAccountAction}
+                <Button
                   className='delete-account-btn'
+                  variant='secondary'
+                  size='sm'
+                  onClick={handleDeleteAccountAction}
+                  icon={<WarningCircleIcon size={16} />}
                 >
-                  <WarningCircleIcon size={16} />
                   Видалити акаунт
-                </button>
+                </Button>
               </>
             )}
 

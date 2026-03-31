@@ -11,6 +11,7 @@ import type {
 import MovieSection from '../components/MovieSection';
 import Dashboard from '../components/Dashboard';
 import Spinner from '../components/Spinner';
+import { Button } from '../components/Button.tsx';
 
 interface PersonState extends Partial<PersonDetails> {
   isDirector?: boolean;
@@ -103,13 +104,12 @@ function PersonPage() {
     <div className='full-screen'>
       <Dashboard />
       <div className='movie-page-content'>
-        <button
-          className='back-button'
+        <Button
+          variant='icon'
+          icon={<CaretLeftIcon size={28} />}
           onClick={() => navigate(-1)}
           title='Назад'
-        >
-          <CaretLeftIcon size={28} />
-        </button>
+        />
 
         <div className='content-wrapper'>
           <header className='movie-header'>

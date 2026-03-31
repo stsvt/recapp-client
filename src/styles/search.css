@@ -45,17 +45,6 @@
     outline: none;
 }
 
-.close-search {
-    background: transparent;
-    border: none;
-    color: var(--color-text-dark-500);
-    cursor: pointer;
-    transition: color 0.2s;
-}
-
-.close-search:hover {
-    color: var(--color-accent);
-}
 
 .search-results-area {
     margin-top: 40px;

@@ -1,3 +1,5 @@
+import { Button } from './Button';
+
 interface ConfirmModalProps {
   isOpen: boolean;
   title: string;
@@ -26,15 +28,20 @@ function ConfirmModal({
         <h3>{title}</h3>
         <p>{message}</p>
         <div className='modal-actions'>
-          <button className='modal-btn cancel' onClick={onCancel}>
+          <Button
+            variant='secondary'
+            className='modal-btn cancel'
+            onClick={onCancel}
+          >
             {cancelText}
-          </button>
-          <button
+          </Button>
+          <Button
+            variant={type === 'danger' ? 'danger' : 'primary'}
             className={`modal-btn confirm ${type === 'danger' ? 'danger-bg' : ''}`}
             onClick={onConfirm}
           >
             {confirmText}
-          </button>
+          </Button>
         </div>
       </div>
     </div>

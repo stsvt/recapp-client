@@ -16,6 +16,7 @@ import { useAuth } from '../context/AuthContext';
 import toast from 'react-hot-toast';
 import AddReviewForm from '../components/AddReviewForm';
 import { deleteReview, fetchReviews } from '../services/reviews';
+import { Button } from '../components/Button.tsx';
 
 function MoviePage() {
   const { user } = useAuth();
@@ -124,17 +125,20 @@ function MoviePage() {
     <div className='full-screen'>
       <Dashboard />
       <div className='movie-page-content'>
-        <button
-          className='back-button'
-          onClick={() => navigate(-1)}
-          title='Назад'
-        >
-          <CaretLeftIcon size={28} />
-        </button>
         <div className='content-wrapper'>
           <header className='movie-header'>
-            <h1>{movie.title}</h1>
-            <p className='original-title'>{movie.original_title}</p>
+            <div className='movie-title-row'>
+              <Button
+                variant='icon'
+                icon={<CaretLeftIcon size={28} />}
+                onClick={() => navigate(-1)}
+                title='Назад'
+              />
+              <div>
+                <h1>{movie.title}</h1>
+                <p className='original-title'>{movie.original_title}</p>
+              </div>
+            </div>
           </header>
 
           <section className='main-info-grid'>
@@ -172,14 +176,23 @@ function MoviePage() {
                     ? new Date(movie.release_date).getFullYear()
                     : '—'}
                 </span>
-                <span className='dot'>•</span>
-                <span>
-                  {Math.floor(movie.runtime / 60)} год {movie.runtime % 60} хв
-                </span>
-                <span className='dot'>•</span>
-                <span className='imdb-tag'>
-                  IMDb {movie.vote_average?.toFixed(1) || '0.0'}/10
-                </span>
+                {movie.runtime > 0 && (
+                  <>
+                    <span className='dot'>•</span>
+                    <span>
+                      {Math.floor(movie.runtime / 60)} год {movie.runtime % 60}{' '}
+                      хв
+                    </span>
+                  </>
+                )}
+                {movie.vote_average > 0.0 && (
+                  <>
+                    <span className='dot'>•</span>
+                    <span className='imdb-tag'>
+                      IMDb {movie.vote_average.toFixed(1) || '0.0'}/10
+                    </span>
+                  </>
+                )}
               </div>
 
               <div className='genres-row'>

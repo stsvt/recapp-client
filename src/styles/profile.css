@@ -199,18 +199,10 @@
 }
 
 .delete-account-btn {
-    background: transparent;
     border: none;
     color: var(--color-text-dark-400);
-    font-size: 11px;
     text-transform: uppercase;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 6px;
     margin-top: 10px;
-    cursor: pointer;
-    transition: color 0.2s;
 }
 
 .delete-account-btn:hover {

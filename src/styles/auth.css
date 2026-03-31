@@ -101,21 +101,6 @@
     transform: scale(0.9);
 }
 
-.submit-btn {
-    width: 100%;
-    padding: 12px;
-    background-color: var(--color-primary);
-    border: none;
-    border-radius: 6px;
-    font-weight: bold;
-    cursor: pointer;
-    transition: 0.3s;
-}
-
-.submit-btn:hover {
-    background-color: var(--color-primary-hover);
-}
-
 .auth-footer {
     text-align: center;
     margin-top: 15px;
@@ -175,32 +160,4 @@
     content: '';
     flex: 1;
     border-bottom: 1px solid var(--color-text-secondary);
-}
-
-.google-btn {
-    width: 100%;
-    padding: 12px;
-    background-color: transparent;
-    border: 1px solid var(--color-text-secondary);
-    border-radius: 6px;
-    font-size: 14px;
-    font-weight: 500;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 12px;
-    cursor: pointer;
-    transition: all 0.2s ease;
-}
-
-.google-btn:hover {
-    background-color: var(--color-text-white5);
-    border-color: var(--color-text-dark-500);
-}
-
-.google-btn img {
-    width: 20px;
-    height: 20px;
-    border-radius: 50%;
-    padding: 2px;
 }
