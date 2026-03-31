@@ -1,85 +1,86 @@
 .dashboard {
-    display: flex;
-    justify-content: space-between;
-    position: relative;
+  display: flex;
+  justify-content: space-between;
+  position: relative;
+  padding: 1rem 1.6rem;
 }
 
 .text-logo li:nth-child(2) {
-    color: var(--color-accent);
+  color: var(--color-accent);
 }
 
 .logo-link {
-    display: flex;
-    justify-content: center;
-    align-items: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .text-logo {
-    display: flex;
-    justify-self: start;
-    cursor: pointer;
-    font-size: 22px;
+  display: flex;
+  justify-self: start;
+  cursor: pointer;
+  font-size: 22px;
 }
 
 .section {
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    display: flex;
-    gap: 2.2rem;
-    justify-self: center;
-    align-items: center;
-    list-style-type: none;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  gap: 2.2rem;
+  justify-self: center;
+  align-items: center;
+  list-style-type: none;
 }
 
 .icons-wrapper {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
 }
 
 .icons {
-    display: flex;
-    justify-self: end;
-    gap: 0.5rem;
+  display: flex;
+  justify-self: end;
+  gap: 0.5rem;
 }
 
 .icon {
-    color: var(--color-text-white)
+  color: var(--color-text-white);
 }
 
 .notifications-icon {
-    position: relative;
+  position: relative;
 }
 
 .dashboard-avatar {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 1px solid transparent;
-    transition: border-color 0.2s ease;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1px solid transparent;
+  transition: border-color 0.2s ease;
 }
 
 .user-avatar-btn:hover .dashboard-avatar {
-    border-color: var(--color-primary-40);
+  border-color: var(--color-primary-40);
 }
 
 .badge {
-    position: absolute;
-    top: -5px;
-    right: -5px;
-    background-color: var(--color-primary);
-    color: var(--color-text-white);
-    font-size: 10px;
-    font-weight: bold;
-    min-width: 18px;
-    height: 18px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border: 2px solid var(--color-surface);
-    padding: 2px;
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  background-color: var(--color-primary);
+  color: var(--color-text-white);
+  font-size: 10px;
+  font-weight: bold;
+  min-width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid var(--color-surface);
+  padding: 2px;
 }
