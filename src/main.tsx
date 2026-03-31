@@ -1,6 +1,7 @@
 import { createRoot } from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
 import './styles/dashboard.css';
+import './styles/reviews.css';
 import './styles/auth.css';
 import './styles/movies.css';
 import './styles/movie-page.css';
