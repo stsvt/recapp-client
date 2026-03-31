@@ -33,7 +33,7 @@ function App() {
           style: {
             background: '#181818',
             color: '#fff',
-            border: '1px solid rgba(255, 255, 255, 0.1)',
+            border: '1px solid var(--color-text-white10)',
             borderRadius: '4px',
             fontSize: '14px',
           },
