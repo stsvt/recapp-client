@@ -106,10 +106,14 @@
   box-sizing: border-box;
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 .full-screen {
   background-color: var(--color-bg);
   min-height: 100vh;
-  padding-top: 20px;
   font-family: 'Verdana', sans-serif;
   color: var(--color-text);
+  padding: 1rem 1.6rem;
 }

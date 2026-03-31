@@ -108,8 +108,11 @@
 }
 
 /* RECOMMENDATION SECTIONS */
-.recomendation-sections {
-    padding: 20px 0 20px 40px;
+.recommendation-sections {
+    padding: 20px 0;
+    display: flex;
+    flex-direction: column;
+    gap: 40px
 }
 
 .section-title {
@@ -121,7 +124,6 @@
     display: flex;
     overflow-x: auto;
     gap: 15px;
-    padding-bottom: 20px;
     scroll-behavior: smooth;
     -ms-overflow-style: none;
     scrollbar-width: none;

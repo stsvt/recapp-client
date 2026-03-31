@@ -5,6 +5,7 @@ import { login as loginApi } from '../services/auth';
 import { useAuth } from '../context/AuthContext';
 import { forgotPassword } from '../services/user';
 import Logo from '../components/Logo';
+import { Button } from '../components/Button.tsx';
 
 function LoginPage() {
   const { login } = useAuth();
@@ -90,21 +91,22 @@ function LoginPage() {
               </span>
             </div>
 
-            <button type='submit' className='submit-btn'>
+            <Button type='submit' className='submit-btn' variant='primary'>
               Увійти
-            </button>
+            </Button>
             <div className='separator'>або</div>
-            <button
-              type='button'
+            <Button
               className='google-btn'
               onClick={handleGoogleAuth}
+              variant='secondary'
+              size='md'
             >
               <img
                 src='https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg'
                 alt='Google'
               />
               Увійти через Google
-            </button>
+            </Button>
 
             <p className='auth-footer'>
               Немає акаунту?{' '}

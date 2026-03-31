@@ -1,8 +1,14 @@
-import { BellIcon, MagnifyingGlassIcon, UserIcon } from '@phosphor-icons/react';
+import {
+  BellIcon,
+  MagnifyingGlassIcon,
+  UserIcon,
+  FunnelIcon,
+} from '@phosphor-icons/react';
 import { useState, useMemo, useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { getIncomingRequests } from '../services/friends';
+import { Button } from './Button';
 import FilterModal from './FilterModal';
 import SearchModal from './SearchModal';
 import Logo from './Logo';
@@ -58,46 +64,86 @@ function Dashboard() {
 
   return (
     <>
-      <div className='dashboard'>
+      <header className='dashboard'>
         <Logo />
-        <ul className='section'>
-          <li
-            onClick={() => setShowFilters(!showFilters)}
-            style={{ cursor: 'pointer' }}
-          >
-            ФІЛЬМИ
+        <nav className='section'>
+          <li>
+            <Button variant='link' to='#upcoming' className='nav-link'>
+              ФІЛЬМИ
+            </Button>
           </li>
-          <li>СЕРІАЛИ</li>
-          <li>МУЛЬТФІЛЬМИ</li>
-          <li>ПІДБІРКИ</li>
-          <li>МОЇ СПИСКИ</li>
-        </ul>
-        <div className='icons'>
-          <button onClick={openSearch}>
-            <MagnifyingGlassIcon className='icon' size={24} />{' '}
-          </button>
-          <button onClick={() => navigate('/friends/requests')}>
-            <div className='icon icon-wrapper'>
-              <BellIcon size={24} />
+          <li>
+            <Button variant='link' to='#nowPlaying' className='nav-link'>
+              СЕРІАЛИ
+            </Button>
+          </li>
+          <li>
+            <Button variant='link' to='#topRated' className='nav-link'>
+              МУЛЬТФІЛЬМИ
+            </Button>
+          </li>
+          <li>
+            <Button variant='link' to='#topRatedSeries' className='nav-link'>
+              ПІДБІРКИ
+            </Button>
+          </li>
+          <li>
+            <Button
+              variant='link'
+              to='#topRatedAnimations'
+              className='nav-link'
+            >
+              МОЇ СПИСКИ
+            </Button>
+          </li>
+        </nav>
+        <div className='icons-wrapper'>
+          <div className='icons'>
+            <Button
+              variant='icon'
+              className='icon'
+              onClick={openSearch}
+              icon={<MagnifyingGlassIcon size={24} />}
+              aria-label='Search'
+            />
+            <Button
+              variant='icon'
+              onClick={() => navigate('/friends/requests')}
+              className='icon notifications-icon'
+              icon={<BellIcon size={24} />}
+              aria-label='Friend requests'
+            >
               {incomingRequestsCount > 0 && (
                 <span className='badge'>{incomingRequestsCount}</span>
               )}
-            </div>
-          </button>
-          <button onClick={handleUserClick} className='user-avatar-btn'>
-            {user ? (
-              <img
-                src={avatarUrl}
-                alt={user.name}
-                className='dashboard-avatar'
-                crossOrigin='anonymous'
-              />
-            ) : (
-              <UserIcon className='icon last-icon' size={24} />
-            )}
-          </button>
+            </Button>
+            <Button
+              variant='icon'
+              className='icon'
+              onClick={() => setShowFilters(!showFilters)}
+              icon={<FunnelIcon size={24} />}
+              aria-label='Filter movies'
+            />
+          </div>
+          <Button
+            variant='icon'
+            onClick={handleUserClick}
+            aria-label={user ? 'View profile' : 'Login'}
+            icon={
+              user ? (
+                <img
+                  src={avatarUrl}
+                  alt={user.name}
+                  className='dashboard-avatar'
+                  crossOrigin='anonymous'
+                />
+              ) : (
+                <UserIcon className='icon last-icon' size={40} />
+              )
+            }
+          />
         </div>
-      </div>
+      </header>
       <FilterModal isOpen={showFilters} onClose={() => setShowFilters(false)} />
       <SearchModal isOpen={showSearch} onClose={closeSearch} />
     </>

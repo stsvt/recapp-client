@@ -52,28 +52,36 @@ function MainPage() {
   return (
     <div className='full-screen'>
       <Dashboard />
-      <div className='recomendation-sections'>
+      <div className='recommendation-sections'>
         <MovieSection
+          id='upcoming'
           title='Незабаром'
           movies={sections.upcoming}
           loading={loading}
         />
+
         <MovieSection
+          id='nowPlaying'
           title='У прокаті'
           movies={sections.nowPlaying}
           loading={loading}
         />
         <MovieSection
+          id='topRated'
           title='Фільми'
           movies={sections.topRated}
           loading={loading}
         />
+
         <MovieSection
+          id='topRatedSeries'
           title='Серіали'
           movies={sections.topRatedSeries}
           loading={loading}
         />
+
         <MovieSection
+          id='topRatedAnimations'
           title='Мультфільми'
           movies={sections.topRatedAnimations}
           loading={loading}

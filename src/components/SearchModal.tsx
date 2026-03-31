@@ -6,6 +6,7 @@ import {
 } from '@phosphor-icons/react';
 import type { MovieSummary } from '../types';
 import { searchMovies } from '../services/apiMovies';
+import { Button } from './Button';
 import MovieCard from './MovieCard';
 import SkeletonCard from './SkeletonCard';
 
@@ -75,9 +76,11 @@ function SearchModal({ isOpen, onClose }: SearchModalProps) {
     <div className='search-overlay'>
       <div className='search-container'>
         <header className='search-header'>
-          <button className='back-button' onClick={handleClose}>
-            <CaretLeftIcon size={28} />
-          </button>
+          <Button
+            variant='icon'
+            onClick={handleClose}
+            icon={<CaretLeftIcon size={28} />}
+          />
           <div className='search-input-wrapper'>
             <MagnifyingGlassIcon size={24} className='search-icon-inner' />
             <input
@@ -88,21 +91,22 @@ function SearchModal({ isOpen, onClose }: SearchModalProps) {
               onChange={(e) => setQuery(e.target.value)}
             />
           </div>
-          <button className='close-search' onClick={onClose}>
-            <XIcon size={28} />
-          </button>
+          <Button variant='icon' onClick={onClose} icon={<XIcon size={28} />} />
         </header>
 
         <div className='search-results-area'>
-          
           {loading && results.length === 0 && (
             <div className='search-results-grid'>
-              {[...Array(12)].map((_, i) => <SkeletonCard key={i} />)}
+              {[...Array(12)].map((_, i) => (
+                <SkeletonCard key={i} />
+              ))}
             </div>
           )}
 
           {results.length > 0 && (
-            <div className={`search-results-grid ${loading ? 'results-updating' : ''}`}>
+            <div
+              className={`search-results-grid ${loading ? 'results-updating' : ''}`}
+            >
               {results.map((movie) => (
                 <div key={movie.id} className='movie-card-animated'>
                   <MovieCard movie={movie} />
@@ -114,13 +118,17 @@ function SearchModal({ isOpen, onClose }: SearchModalProps) {
           {!loading && results.length === 0 && (
             <>
               {query.trim() ? (
-                <p className='no-results'>За запитом "{query}" нічого не знайдено</p>
+                <p className='no-results'>
+                  За запитом "{query}" нічого не знайдено
+                </p>
               ) : (
                 <div className='popular-tags'>
                   <h3>Популярні запити</h3>
                   <div className='tags-row'>
                     {['Служниця', 'Інтерстеллар', 'Месники'].map((tag) => (
-                      <span key={tag} onClick={() => setQuery(tag)}>{tag}</span>
+                      <span key={tag} onClick={() => setQuery(tag)}>
+                        {tag}
+                      </span>
                     ))}
                   </div>
                 </div>

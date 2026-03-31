@@ -1,7 +1,7 @@
 /* MOVIE PAGE & PERSON PAGE */
 .movie-page-content {
     width: 100%;
-    padding-bottom: 50px;
+    padding: 25px 0 50px 0;
 }
 
 .content-wrapper {
@@ -23,6 +23,24 @@
     margin-top: 30px;
 }
 
+.movie-title-row {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.movie-title-row button {
+    position: absolute;
+    left: 0;
+}
+
+.movie-title-row > div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
 .original-title {
     color: var(--color-text-dark-500);
     font-size: 16px;
@@ -32,11 +50,7 @@
     display: grid;
     grid-template-columns: 240px 1fr;
     gap: 40px;
-    background: var(--color-bg-overlay-dark);
     padding: 30px;
-    border-radius: 12px;
-    backdrop-filter: blur(10px);
-    align-items: start;
 }
 
 .poster-column img {
@@ -174,7 +188,6 @@
     transition:
             background 0.3s ease,
             box-shadow 0.3s ease;
-    margin-bottom: 8px;
     position: relative;
 }
 
