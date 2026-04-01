@@ -5,9 +5,9 @@ import {
   XIcon,
 } from '@phosphor-icons/react';
 import type { MovieSummary } from '../types';
-import { searchMovies } from '../services/apiMovies';
-import { Button } from './Button';
-import MovieCard from './MovieCard';
+import { searchMovies } from '../services/moviesApi.ts';
+import { Button } from './ui/Button.tsx';
+import MovieCard from './movies/MovieCard.tsx';
 import SkeletonCard from './SkeletonCard';
 
 interface SearchModalProps {

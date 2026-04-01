@@ -1,93 +1,88 @@
-import { useState, useEffect } from 'react';
-import Dashboard from '../components/Dashboard';
-import MovieSection from '../components/MovieSection';
+import { useQuery } from '@tanstack/react-query';
+import MovieSection from '../components/movies/MovieSection.tsx';
 import {
   fetchTopRatedMovies,
   fetchUpcomingMovies,
   fetchNowPlayingMovies,
   fetchTopRatedSeries,
   fetchTopRatedAnimations,
-} from '../services/apiMovies';
+} from '../services/moviesApi.ts';
 
 function MainPage() {
-  const [sections, setSections] = useState({
+  const { data: sections, isLoading } = useQuery({
+    queryKey: ['mainPageSections'],
+    queryFn: async () => {
+      const [
+        upcoming,
+        nowPlaying,
+        topRated,
+        topRatedSeries,
+        topRatedAnimations,
+      ] = await Promise.all([
+        fetchUpcomingMovies(),
+        fetchNowPlayingMovies(),
+        fetchTopRatedMovies(),
+        fetchTopRatedSeries(),
+        fetchTopRatedAnimations(),
+      ]);
+
+      return {
+        upcoming,
+        nowPlaying,
+        topRated,
+        topRatedSeries,
+        topRatedAnimations,
+      };
+    },
+    staleTime: 1000 * 60 * 60 * 24 * 7, // 7 днів
+  });
+
+  const safeSections = sections || {
     upcoming: [],
     nowPlaying: [],
     topRated: [],
     topRatedSeries: [],
     topRatedAnimations: [],
-  });
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    Promise.all([
-      fetchUpcomingMovies(),
-      fetchNowPlayingMovies(),
-      fetchTopRatedMovies(),
-      fetchTopRatedSeries(),
-      fetchTopRatedAnimations(),
-    ])
-      .then(
-        ([
-          upcoming,
-          nowPlaying,
-          topRated,
-          topRatedSeries,
-          topRatedAnimations,
-        ]) => {
-          setSections({
-            upcoming,
-            nowPlaying,
-            topRated,
-            topRatedSeries,
-            topRatedAnimations,
-          });
-          setLoading(false);
-        }
-      )
-      .catch((err) => console.error('Failed to fetch: ', err))
-      .finally(() => setLoading(false));
-  }, []);
+  };
 
   return (
-    <div className='full-screen'>
-      <Dashboard />
+    <>
       <div className='recommendation-sections'>
         <MovieSection
           id='upcoming'
           title='Незабаром'
-          movies={sections.upcoming}
-          loading={loading}
+          movies={safeSections.upcoming}
+          loading={isLoading}
         />
 
         <MovieSection
           id='nowPlaying'
           title='У прокаті'
-          movies={sections.nowPlaying}
-          loading={loading}
+          movies={safeSections.nowPlaying}
+          loading={isLoading}
         />
         <MovieSection
           id='topRated'
           title='Фільми'
-          movies={sections.topRated}
-          loading={loading}
+          movies={safeSections.topRated}
+          loading={isLoading}
         />
 
         <MovieSection
           id='topRatedSeries'
           title='Серіали'
-          movies={sections.topRatedSeries}
-          loading={loading}
+          movies={safeSections.topRatedSeries}
+          loading={isLoading}
         />
 
         <MovieSection
           id='topRatedAnimations'
           title='Мультфільми'
-          movies={sections.topRatedAnimations}
-          loading={loading}
+          movies={safeSections.topRatedAnimations}
+          loading={isLoading}
         />
       </div>
-    </div>
+    </>
   );
 }
 

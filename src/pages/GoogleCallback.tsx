@@ -17,28 +17,25 @@ function GoogleCallback() {
     if (hasLogged.current) return;
 
     const token = searchParams.get('token');
-    const userData = searchParams.get('user');
 
     console.log('Token received:', !!token);
-    console.log('User data received:', userData);
 
-    if (token && userData) {
+    if (token) {
       try {
         hasLogged.current = true;
 
-        const decodedUser = decodeURIComponent(userData);
-        const parsedData = JSON.parse(decodedUser);
-        const userObject = parsedData.user || parsedData;
-
-        login(userObject, token);
+        login(token);
 
         navigate('/', { replace: true });
       } catch (error) {
-        console.error('Помилка парсингу даних користувача:', error);
+        console.error('Помилка під час входу через Google:', error);
         navigate('/login', { replace: true });
       }
     } else {
-      const timeout = setTimeout(() => navigate('/login', { replace: true }), 2000);
+      const timeout = setTimeout(
+        () => navigate('/login', { replace: true }),
+        2000
+      );
       return () => clearTimeout(timeout);
     }
   }, [searchParams, login, navigate, user]);

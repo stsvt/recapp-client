@@ -1,6 +1,8 @@
 import { Routes, Route } from 'react-router-dom';
-import { AuthProvider } from './context/AuthContext';
+import { QueryClientProvider, QueryClient } from '@tanstack/react-query';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { Toaster } from 'react-hot-toast';
+import { AuthProvider } from './context/AuthContext';
 import MainPage from './pages/MainPage';
 import RegisterPage from './pages/RegisterPage';
 import LoginPage from './pages/LoginPage';
@@ -11,47 +13,62 @@ import PersonPage from './pages/PersonPage';
 import GoogleCallback from './pages/GoogleCallback';
 import UserPage from './pages/UserPage';
 import FriendRequestsPage from './pages/FriendRequestsPage';
+import Layout from './components/ui/Layout.tsx';
+
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: { staleTime: 5 * 60 * 1000 },
+  },
+});
 
 function App() {
   return (
-    <AuthProvider>
-      <Routes>
-        <Route path='/' element={<MainPage />} />
-        <Route path='/register' element={<RegisterPage />} />
-        <Route path='/login' element={<LoginPage />} />
-        <Route path='/reset-password/:token' element={<ResetPasswordPage />} />
-        <Route path='/google/callback' element={<GoogleCallback />} />
-        <Route path='/profile' element={<ProfilePage />} />
-        <Route path='/movie/:id' element={<MoviePage />} />
-        <Route path='/person/:id' element={<PersonPage />} />
-        <Route path='/user/:userId' element={<UserPage />} />
-        <Route path='/friends/requests' element={<FriendRequestsPage />} />
-      </Routes>
-      <Toaster
-        position='bottom-right'
-        toastOptions={{
-          style: {
-            background: '#181818',
-            color: '#fff',
-            border: '1px solid var(--color-text-white10)',
-            borderRadius: '4px',
-            fontSize: '14px',
-          },
-          success: {
-            iconTheme: {
-              primary: '#46d369',
-              secondary: '#fff',
+    <QueryClientProvider client={queryClient}>
+      <AuthProvider>
+        <Routes>
+          <Route path='/google/callback' element={<GoogleCallback />} />
+          <Route path='/register' element={<RegisterPage />} />
+          <Route path='/login' element={<LoginPage />} />
+          <Route element={<Layout />}>
+            <Route path='/' element={<MainPage />} />
+            <Route
+              path='/reset-password/:token'
+              element={<ResetPasswordPage />}
+            />
+            <Route path='/profile' element={<ProfilePage />} />
+            <Route path='/movie/:id' element={<MoviePage />} />
+            <Route path='/person/:id' element={<PersonPage />} />
+            <Route path='/user/:userId' element={<UserPage />} />
+            <Route path='/friends/requests' element={<FriendRequestsPage />} />
+          </Route>
+        </Routes>
+        <Toaster
+          position='bottom-right'
+          toastOptions={{
+            style: {
+              background: '#181818',
+              color: '#fff',
+              border: '1px solid var(--color-text-white10)',
+              borderRadius: '4px',
+              fontSize: '14px',
             },
-          },
-          error: {
-            iconTheme: {
-              primary: '#e50914',
-              secondary: '#fff',
+            success: {
+              iconTheme: {
+                primary: '#46d369',
+                secondary: '#fff',
+              },
             },
-          },
-        }}
-      />
-    </AuthProvider>
+            error: {
+              iconTheme: {
+                primary: '#e50914',
+                secondary: '#fff',
+              },
+            },
+          }}
+        />
+      </AuthProvider>
+      <ReactQueryDevtools initialIsOpen={false} />
+    </QueryClientProvider>
   );
 }
 

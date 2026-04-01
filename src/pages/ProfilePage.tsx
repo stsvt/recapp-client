@@ -1,7 +1,6 @@
 import { useState, useRef, useEffect, useMemo } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
-import Dashboard from '../components/Dashboard';
 import PasswordField from '../components/PasswordField';
 import ConfirmModal from '../components/ConfirmModal';
 import {
@@ -15,15 +14,16 @@ import {
   deleteMe,
   deletePhoto,
   updateMyPassword,
-} from '../services/user';
+} from '../services/usersApi.ts';
 import toast from 'react-hot-toast';
 import type { MovieSummary } from '../types';
-import { getUserActivity } from '../services/activity';
-import { getFriends } from '../services/friends';
-import MovieSection from '../components/MovieSection';
+import { getUserActivity } from '../services/activitiesApi.ts';
+import { getFriends } from '../services/friendsApi.ts';
+import MovieSection from '../components/movies/MovieSection.tsx';
 import UserSearch from '../components/UserSearch';
-import type { Friend } from '../types/index.ts';
-import { Button } from '../components/Button.tsx';
+import type { Friend } from '../types';
+import { Button } from '../components/ui/Button.tsx';
+import { minutesToStr } from '../utils.ts';
 
 const DICEBEAR_BASE = import.meta.env.VITE_DICEBEAR_URL;
 const USERS_IMAGES_BASE = import.meta.env.VITE_USERS_IMAGES_BASE;
@@ -44,7 +44,7 @@ interface MovieActivity extends MovieSummary {
 }
 
 function ProfilePage() {
-  const { user, login, friendsUpdateTick, logout } = useAuth();
+  const { user, setUser, friendsUpdateTick, logout } = useAuth();
   const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState({
     name: user?.name || '',
@@ -149,7 +149,7 @@ function ProfilePage() {
     setLoading(true);
     try {
       const res = await updateMe(formData);
-      login({ ...res.data.user }, localStorage.getItem('token') || '');
+      setUser(res.data.user);
       setImgVersion(Date.now());
       setIsEditing(false);
       toast.success('Дані успішно оновлено!');
@@ -169,7 +169,7 @@ function ProfilePage() {
       setLoading(true);
       try {
         const res = await updateMe(fileData);
-        login(res.data.user, localStorage.getItem('token') || '');
+        setUser(res.data.user);
         setImgVersion(Date.now());
         if (fileInputRef.current) fileInputRef.current.value = '';
         toast.success('Фото профілю оновлено!');
@@ -190,7 +190,7 @@ function ProfilePage() {
       const updatedUser = res.data?.user || res.user || res;
 
       if (updatedUser) {
-        login({ ...updatedUser }, localStorage.getItem('token') || '');
+        setUser(updatedUser);
         setImgVersion(Date.now());
         setIsEditing(false);
         toast.success('Фото успішно видалено');
@@ -299,11 +299,13 @@ function ProfilePage() {
   if (!user) return null;
 
   return (
-    <div className='full-screen'>
-      <Dashboard />
-      <button className='back-button' onClick={() => navigate(-1)}>
-        <CaretLeftIcon size={28} />
-      </button>
+    <>
+      <Button
+        variant='icon'
+        icon={<CaretLeftIcon size={28} />}
+        onClick={() => navigate(-1)}
+        title='Назад'
+      />
       <UserSearch />
 
       <div className='profile-container'>
@@ -401,6 +403,12 @@ function ProfilePage() {
                   {user.description || 'Опис відсутній'}
                 </span>
               )}
+            </div>
+            <div className='info-row bio'>
+              <strong>Час перегляду</strong>
+              <span className='description-text'>
+                {minutesToStr(user.totalWatchTime || 0)}
+              </span>
             </div>
           </div>
 
@@ -584,7 +592,7 @@ function ProfilePage() {
             )}
         </div>
       </div>
-    </div>
+    </>
   );
 }
 

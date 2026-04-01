@@ -18,6 +18,22 @@ interface ResetPaswordData {
   confirmPassword: string;
 }
 
+export const fetchMe = async () => {
+  const token = localStorage.getItem('token');
+  const response = await fetch(`${BASE_URL}users/me`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  if (!response.ok) {
+    const errorData = await response.json();
+    throw new Error(errorData.message || `Fetch Error: ${response.status}`);
+  }
+
+  return await response.json();
+};
+
 export const updateMe = async (data: UpdateMeData | FormData) => {
   const token = localStorage.getItem('token');
   const isFormData = data instanceof FormData;

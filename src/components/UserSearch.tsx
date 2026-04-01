@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { searchUsers } from '../services/user';
+import { searchUsers } from '../services/usersApi.ts';
 import {
   MagnifyingGlassIcon,
   UserMinusIcon,

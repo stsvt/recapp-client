@@ -1,20 +1,21 @@
-import { useEffect, useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
+import { useQuery } from '@tanstack/react-query';
 import { CaretLeftIcon } from '@phosphor-icons/react';
-import { getPersonContent, getPersonDetails } from '../services/person';
+import { getPersonContent, getPersonDetails } from '../services/personApi.ts';
 import type {
   PersonDetails,
   BaseWork,
   MovieSummary,
   ActorMovie,
 } from '../types';
-import MovieSection from '../components/MovieSection';
-import Dashboard from '../components/Dashboard';
-import Spinner from '../components/Spinner';
-import { Button } from '../components/Button.tsx';
+import MovieSection from '../components/movies/MovieSection.tsx';
+import Spinner from '../components/ui/Spinner.tsx';
+import { Button } from '../components/ui/Button.tsx';
 
-interface PersonState extends Partial<PersonDetails> {
-  isDirector?: boolean;
+interface PersonData extends PersonDetails {
+  isDirector: boolean;
+  displayWorks: (BaseWork | ActorMovie)[];
 }
 
 function PersonPage() {
@@ -23,72 +24,68 @@ function PersonPage() {
   const location = useLocation();
   const initialName = location.state?.name || '';
 
-  const [person, setPerson] = useState<PersonState | null>(
-    initialName ? { name: initialName } : null
-  );
-  const [loading, setLoading] = useState(true);
+  const [prevId, setPrevId] = useState(id);
   const [isImageLoading, setIsImageLoading] = useState(true);
 
-  useEffect(() => {
-    let isMounted = true;
-    window.scrollTo(0, 0);
+  if (id !== prevId) {
+    setPrevId(id);
     setIsImageLoading(true);
+  }
 
-    const fetchData = async () => {
-      if (!id) return;
-      try {
-        setLoading(true);
-        const [details, worksData] = await Promise.all([
-          getPersonDetails(id),
-          getPersonContent(id, 'works'),
-        ]);
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [id]);
 
-        if (isMounted) {
-          if (!details) {
-            navigate('/404');
-            return;
-          }
+  const {
+    data: person,
+    isLoading,
+    isError,
+  } = useQuery<PersonData>({
+    queryKey: ['person', id],
+    queryFn: async () => {
+      if (!id) throw new Error('ID is required');
 
-          const worksArray = Array.isArray(worksData) ? worksData : [];
-          const isDirector = worksArray.length > 0;
-          let movies = worksArray;
+      const [details, worksData] = await Promise.all([
+        getPersonDetails(id),
+        getPersonContent(id, 'works'),
+      ]);
 
-          if (!isDirector) {
-            const actorMovies = await getPersonContent(id, 'movies');
-            movies = Array.isArray(actorMovies) ? actorMovies : [];
-          }
-
-          setPerson({
-            ...details,
-            works: isDirector ? (movies as BaseWork[]) : undefined,
-            movies: !isDirector ? (movies as ActorMovie[]) : undefined,
-            isDirector,
-          });
-        }
-      } catch (error) {
-        console.error('Failed to load person data', error);
-        if (isMounted) navigate('/404');
-      } finally {
-        if (isMounted) setLoading(false);
+      if (!details) {
+        throw new Error('Person not found');
       }
-    };
 
-    fetchData();
-    return () => {
-      isMounted = false;
-    };
-  }, [id, navigate]);
+      const worksArray = Array.isArray(worksData) ? worksData : [];
+      const isDirector = worksArray.length > 0;
+      let displayWorks = worksArray;
+
+      if (!isDirector) {
+        const actorMovies = await getPersonContent(id, 'movies');
+        displayWorks = Array.isArray(actorMovies) ? actorMovies : [];
+      }
+
+      return {
+        ...details,
+        isDirector,
+        displayWorks,
+      };
+    },
+    enabled: Boolean(id),
+    retry: false,
+  });
+
+  useEffect(() => {
+    if (isError) {
+      navigate('/404', { replace: true });
+    }
+  }, [isError, navigate]);
 
   const displayMovies = useMemo((): MovieSummary[] => {
-    const rawMovies = person?.works || person?.movies || [];
-    if (!Array.isArray(rawMovies)) return [];
+    if (!person?.displayWorks) return [];
 
-    return rawMovies
+    return person.displayWorks
       .filter(
         (movie, index, self) =>
-          movie &&
-          movie.id &&
-          index === self.findIndex((m) => m.id === movie.id)
+          movie?.id && index === self.findIndex((m) => m.id === movie.id)
       )
       .map((movie) => ({
         id: movie.id,
@@ -97,12 +94,14 @@ function PersonPage() {
       }));
   }, [person]);
 
-  if (loading) return <Spinner />;
-  if (!person || !person.name) return null;
+  if (isLoading) return <Spinner />;
+
+  const displayName = person?.name || initialName;
+
+  if (!displayName && !isLoading) return null;
 
   return (
-    <div className='full-screen'>
-      <Dashboard />
+    <>
       <div className='movie-page-content'>
         <Button
           variant='icon'
@@ -113,102 +112,114 @@ function PersonPage() {
 
         <div className='content-wrapper'>
           <header className='movie-header'>
-            <h1>{person.name}</h1>
-            {person.name_en && (
+            <h1>{displayName}</h1>
+            {person?.name_en && (
               <p className='original-title'>{person.name_en}</p>
             )}
           </header>
 
-          <section className='main-info-grid'>
-            <div
-              className='poster-column'
-              style={{
-                position: 'relative',
-                width: '240px',
-                minHeight: '360px',
-                backgroundColor: '#1a1a1a',
-                borderRadius: '4px',
-                overflow: 'hidden',
-              }}
-            >
-              {isImageLoading && (
-                <div className='image-loader-overlay shimmer-wave'></div>
+          {person && (
+            <>
+              <section className='main-info-grid'>
+                <div
+                  className='poster-column'
+                  style={{
+                    position: 'relative',
+                    width: '240px',
+                    minHeight: '360px',
+                    backgroundColor: '#1a1a1a',
+                    borderRadius: '4px',
+                    overflow: 'hidden',
+                  }}
+                >
+                  {isImageLoading && (
+                    <div className='image-loader-overlay shimmer-wave'></div>
+                  )}
+                  <img
+                    src={`${import.meta.env.VITE_IMAGE_URL}${person.profile_path}`}
+                    alt={person.name}
+                    onLoad={() => setIsImageLoading(false)}
+                    style={{
+                      display: isImageLoading ? 'none' : 'block',
+                      width: '100%',
+                      height: '100%',
+                      objectFit: 'cover',
+                    }}
+                    onError={(e) => {
+                      e.currentTarget.src = '/placeholder-actor.png';
+                      setIsImageLoading(false);
+                    }}
+                  />
+                </div>
+
+                <div className='details-column'>
+                  <div className='cast-info'>
+                    <p className='cast-row'>
+                      <strong className='person-label'>Дата народження</strong>
+                      <span className='cast-value'>
+                        {person.birthday
+                          ? new Date(person.birthday).toLocaleDateString(
+                              'uk-UA'
+                            )
+                          : 'невідомо'}
+                      </span>
+                    </p>
+
+                    {person.place_of_birth && (
+                      <p className='cast-row'>
+                        <strong className='person-label'>
+                          Місце народження
+                        </strong>
+                        <span className='cast-value'>
+                          {person.place_of_birth}
+                        </span>
+                      </p>
+                    )}
+
+                    <p className='cast-row'>
+                      <strong className='person-label'>Кар'єра</strong>
+                      <span className='cast-value'>
+                        {person.isDirector ? 'Режисер, Сценарист' : 'Актор'}
+                      </span>
+                    </p>
+
+                    {person.birthday && !person.deathday && (
+                      <p className='cast-row'>
+                        <strong className='person-label'>Вік</strong>
+                        <span className='cast-value'>
+                          {Math.floor(
+                            (new Date().getTime() -
+                              new Date(person.birthday).getTime()) /
+                              31557600000
+                          )}{' '}
+                          років
+                        </span>
+                      </p>
+                    )}
+
+                    {person.deathday && (
+                      <p className='cast-row'>
+                        <strong className='person-label'>Дата смерті</strong>
+                        <span className='cast-value'>
+                          {new Date(person.deathday).toLocaleDateString(
+                            'uk-UA'
+                          )}
+                        </span>
+                      </p>
+                    )}
+                  </div>
+                </div>
+              </section>
+
+              {person.biography && (
+                <article className='description-section'>
+                  <h2 className='section-title'>Біографія</h2>
+                  <p style={{ color: '#ccc', lineHeight: '1.6' }}>
+                    {person.biography}
+                  </p>
+                </article>
               )}
-              <img
-                src={`${import.meta.env.VITE_IMAGE_URL}${person.profile_path}`}
-                alt={person.name}
-                onLoad={() => setIsImageLoading(false)}
-                style={{
-                  display: isImageLoading ? 'none' : 'block',
-                  width: '100%',
-                  height: '100%',
-                  objectFit: 'cover',
-                }}
-                onError={(e) => {
-                  e.currentTarget.src = '/placeholder-actor.png';
-                  setIsImageLoading(false);
-                }}
-              />
-            </div>
-
-            <div className='details-column'>
-              <div className='cast-info'>
-                <p className='cast-row'>
-                  <strong className='person-label'>Дата народження</strong>
-                  <span className='cast-value'>
-                    {person.birthday
-                      ? new Date(person.birthday).toLocaleDateString('uk-UA')
-                      : 'невідомо'}
-                  </span>
-                </p>
-
-                {person.place_of_birth && (
-                  <p className='cast-row'>
-                    <strong className='person-label'>Місце народження</strong>
-                    <span className='cast-value'>{person.place_of_birth}</span>
-                  </p>
-                )}
-
-                <p className='cast-row'>
-                  <strong className='person-label'>Кар'єра</strong>
-                  <span className='cast-value'>
-                    {person.isDirector ? 'Режисер, Сценарист' : 'Актор'}
-                  </span>
-                </p>
-
-                {person.birthday && !person.deathday && (
-                  <p className='cast-row'>
-                    <strong className='person-label'>Вік</strong>
-                    <span className='cast-value'>
-                      {Math.floor(
-                        (new Date().getTime() -
-                          new Date(person.birthday).getTime()) /
-                          31557600000
-                      )}{' '}
-                      років
-                    </span>
-                  </p>
-                )}
-
-                {person.deathday && (
-                  <p className='cast-row'>
-                    <strong className='person-label'>Дата смерті</strong>
-                    <span className='cast-value'>
-                      {new Date(person.deathday).toLocaleDateString('uk-UA')}
-                    </span>
-                  </p>
-                )}
-              </div>
-            </div>
-          </section>
-
-          {person.biography && (
-            <article className='description-section'>
-              <h2 className='section-title'>Біографія</h2>
-              <p style={{ color: '#ccc', lineHeight: '1.6' }}>
-                {person.biography}
-              </p>
-            </article>
+            </>
           )}
         </div>
 
@@ -216,7 +227,7 @@ function PersonPage() {
           <section className='similar-movies-full-width'>
             <div className='similar-title-container'>
               <h2 className='section-title'>
-                {person.isDirector
+                {person?.isDirector
                   ? 'Фільми зняті режисером'
                   : 'Фільми за участю актора'}
               </h2>
@@ -225,7 +236,7 @@ function PersonPage() {
           </section>
         )}
       </div>
-    </div>
+    </>
   );
 }
 

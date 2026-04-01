@@ -1,8 +1,7 @@
 import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import Dashboard from '../components/Dashboard';
 import PasswordField from '../components/PasswordField';
-import { resetPassword } from '../services/user';
+import { resetPassword } from '../services/usersApi.ts';
 import { useAuth } from '../context/AuthContext';
 
 function ResetPasswordPage() {
@@ -26,7 +25,7 @@ function ResetPasswordPage() {
     setLoading(true);
     try {
       const res = await resetPassword(token!, formData);
-      login(res.data.user, res.token);
+      login(res.token);
 
       alert('Пароль успішно змінено! Ви увійшли в систему.');
       navigate('/');
@@ -41,8 +40,7 @@ function ResetPasswordPage() {
   };
 
   return (
-    <div className='full-screen'>
-      <Dashboard />
+    <>
       <div className='auth-container'>
         <form className='auth-box' onSubmit={handleSubmit}>
           <h2>Новий пароль</h2>
@@ -73,7 +71,7 @@ function ResetPasswordPage() {
           </button>
         </form>
       </div>
-    </div>
+    </>
   );
 }
 

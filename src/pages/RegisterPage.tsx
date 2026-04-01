@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import PasswordField from '../components/PasswordField';
-import { register } from '../services/auth';
+import { register } from '../services/authApi.ts';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import Logo from '../components/Logo';
+import Logo from '../components/ui/Logo.tsx';
 
 function RegisterPage() {
   const { login } = useAuth();
@@ -33,7 +33,7 @@ function RegisterPage() {
 
     try {
       const res = await register(formData);
-      login(res.data.user, res.token);
+      login(res.token);
       console.log('Success', res);
       navigate('/');
     } catch (error: unknown) {

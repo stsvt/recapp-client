@@ -1,8 +1,8 @@
-import MovieCard from './MovieCard';
-import SkeletonCard from './SkeletonCard';
-import type { MovieSummary } from '../types/index';
+import MovieCard from './MovieCard.tsx';
+import SkeletonCard from '../SkeletonCard.tsx';
+import type { MovieSummary } from '../../types';
 import { useEffect, useRef, useState } from 'react';
-import { Button } from './Button';
+import { Button } from '../ui/Button.tsx';
 import { CaretLeftIcon, CaretRightIcon } from '@phosphor-icons/react';
 
 interface MovieSectionProps {

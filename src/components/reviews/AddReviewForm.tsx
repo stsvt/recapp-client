@@ -1,6 +1,7 @@
 import { useState } from 'react';
-import { createReview, updateReview } from '../services/reviews';
-import type { Review } from '../types';
+import { createReview, updateReview } from '../../services/reviewsApi.ts';
+import { useAuth } from '../../context/AuthContext.tsx';
+import type { Review } from '../../types';
 
 interface AddReviewFormProps {
   movieId: string;
@@ -20,9 +21,9 @@ const AddReviewForm: React.FC<AddReviewFormProps> = ({
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const isEditing = !!initialData;
+  const { user } = useAuth();
 
-  const token = localStorage.getItem('token');
+  const isEditing = !!initialData;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -53,7 +54,7 @@ const AddReviewForm: React.FC<AddReviewFormProps> = ({
     }
   };
 
-  if (!token) {
+  if (!user) {
     return <p>Будь ласка, увійдіть в акаунт, щоб залишити коментар</p>;
   }
 
