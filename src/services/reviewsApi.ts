@@ -21,7 +21,8 @@ export const createReview = async (movieId: string, data: ReviewData) => {
 export const fetchReviews = async (movieId: string) => {
   const response = await fetch(`${BASE_URL}reviews/${movieId}`);
   if (!response.ok) return null;
-  return response.json();
+  const result = await response.json();
+  return result.data.reviews;
 };
 
 export const updateReview = async (reviewId: string, data: ReviewData) => {

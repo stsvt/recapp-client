@@ -1,11 +1,11 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import PasswordField from '../components/PasswordField';
-import { login as loginApi } from '../services/auth';
+import { login as loginApi } from '../services/authApi.ts';
 import { useAuth } from '../context/AuthContext';
-import { forgotPassword } from '../services/user';
-import Logo from '../components/Logo';
-import { Button } from '../components/Button.tsx';
+import { forgotPassword } from '../services/usersApi.ts';
+import Logo from '../components/ui/Logo.tsx';
+import { Button } from '../components/ui/Button.tsx';
 
 function LoginPage() {
   const { login } = useAuth();
@@ -23,7 +23,7 @@ function LoginPage() {
     e.preventDefault();
     try {
       const res = await loginApi(formData);
-      login(res.data.user, res.token);
+      login(res.token);
       console.log('Success', res);
       navigate('/');
     } catch (error: unknown) {

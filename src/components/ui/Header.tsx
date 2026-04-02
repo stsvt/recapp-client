@@ -6,17 +6,17 @@ import {
 } from '@phosphor-icons/react';
 import { useState, useMemo, useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
-import { getIncomingRequests } from '../services/friends';
-import { Button } from './Button';
-import FilterModal from './FilterModal';
-import SearchModal from './SearchModal';
-import Logo from './Logo';
+import { useAuth } from '../../context/AuthContext.tsx';
+import { getIncomingRequests } from '../../services/friendsApi.ts';
+import { Button } from './Button.tsx';
+import FilterModal from '../FilterModal.tsx';
+import SearchModal from '../SearchModal.tsx';
+import Logo from './Logo.tsx';
 
 const DICEBEAR_BASE = import.meta.env.VITE_DICEBEAR_URL;
 const USERS_IMAGES_BASE = import.meta.env.VITE_USERS_IMAGES_BASE;
 
-function Dashboard() {
+function Header() {
   const { user, incomingRequestsCount, setIncomingRequestsCount } = useAuth();
   const [showFilters, setShowFilters] = useState(false);
   const [searchParams, setSearchParams] = useSearchParams();
@@ -68,29 +68,29 @@ function Dashboard() {
         <Logo />
         <nav className='section'>
           <li>
-            <Button variant='link' to='#upcoming' className='nav-link'>
+            <Button variant='link' to='/#upcoming' className='nav-link'>
               ФІЛЬМИ
             </Button>
           </li>
           <li>
-            <Button variant='link' to='#nowPlaying' className='nav-link'>
+            <Button variant='link' to='/#nowPlaying' className='nav-link'>
               СЕРІАЛИ
             </Button>
           </li>
           <li>
-            <Button variant='link' to='#topRated' className='nav-link'>
+            <Button variant='link' to='/#topRated' className='nav-link'>
               МУЛЬТФІЛЬМИ
             </Button>
           </li>
           <li>
-            <Button variant='link' to='#topRatedSeries' className='nav-link'>
+            <Button variant='link' to='/#topRatedSeries' className='nav-link'>
               ПІДБІРКИ
             </Button>
           </li>
           <li>
             <Button
               variant='link'
-              to='#topRatedAnimations'
+              to='/#topRatedAnimations'
               className='nav-link'
             >
               МОЇ СПИСКИ
@@ -150,4 +150,4 @@ function Dashboard() {
   );
 }
 
-export default Dashboard;
+export default Header;

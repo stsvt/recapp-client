@@ -2,7 +2,6 @@
   display: flex;
   justify-content: space-between;
   position: relative;
-  padding: 1rem 1.6rem;
 }
 
 .text-logo li:nth-child(2) {

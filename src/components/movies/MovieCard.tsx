@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import type { MovieSummary } from '../types/index';
+import type { MovieSummary } from '../../types';
 
 interface MovieCardProps {
   movie: MovieSummary;

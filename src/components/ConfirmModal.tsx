@@ -1,4 +1,4 @@
-import { Button } from './Button';
+import { Button } from './ui/Button.tsx';
 
 interface ConfirmModalProps {
   isOpen: boolean;

@@ -1,6 +1,5 @@
 .reviews-section {
-    background-color: #000;
-    color: #fff;
+    background-color: var(--color-text-black);
     font-family: 'Inter', sans-serif;
 }
 
@@ -10,7 +9,7 @@
     padding: 24px;
     margin-bottom: 20px;
     position: relative;
-    border: 1px solid #1f1f1f;
+    border: 1px solid var(--color-text-gray12);
 }
 
 .comment-header {
@@ -30,7 +29,7 @@
     width: 40px;
     height: 40px;
     border-radius: 50%;
-    background: #333;
+    background: var(--color-text-dark-900);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -45,7 +44,7 @@
 
 .comment-date {
     font-size: 13px;
-    color: #888;
+    color: var(--color-text-dark-500);
 }
 
 .comment-text {
@@ -65,15 +64,14 @@
     display: flex;
     gap: 10px;
     cursor: pointer;
-    background: #1a1a1a;
+    background: var(--color-bg-secondary);
     padding: 6px 12px;
     border-radius: 20px;
 }
 
 .add-comment-btn {
     background: #222;
-    color: #fff;
-    border: 1px solid #333;
+    border: 1px solid var(--color-text-dark-900);
     padding: 8px 16px;
     border-radius: 20px;
     display: flex;
@@ -84,7 +82,7 @@
 }
 
 .add-comment-btn:hover {
-    background: #333;
+    background: var(--color-text-dark-900);
 }
 
 .admin-actions {
@@ -95,18 +93,18 @@
 .admin-actions button {
     background: transparent;
     border: none;
-    color: #888;
+    color: var(--color-text-dark-500);
     cursor: pointer;
     font-size: 14px;
     transition: 0.2s;
 }
 
 .admin-actions .edit-btn:hover {
-    color: #fff;
+    color: var(--color-text-white);
 }
 
 .admin-actions .delete-btn:hover {
-    color: #ff4d4d;
+    color: var(--color-text-red-bright);
 }
 
 .comment-card .add-review-container {
@@ -130,7 +128,7 @@
 
 .add-review-container {
     background: #121212;
-    border: 1px solid #1f1f1f;
+    border: 1px solid var(--color-text-gray12);
     border-radius: 16px;
     padding: 24px;
     margin-bottom: 30px;
@@ -145,10 +143,9 @@
 
 .add-review-container textarea {
     width: 100%;
-    background: #1a1a1a;
-    border: 1px solid #333;
+    background: var(--color-bg-secondary);
+    border: 1px solid var(--color-text-dark-900);
     border-radius: 8px;
-    color: #fff;
     padding: 12px;
     font-family: inherit;
     resize: vertical;
@@ -157,13 +154,12 @@
 }
 
 .add-review-container textarea:focus {
-    border-color: #555;
+    border-color: var(--color-text-dark-55);
 }
 
 .add-review-container input[type='number'] {
-    background: #1a1a1a;
-    border: 1px solid #333;
-    color: #fff;
+    background: var(--color-bg-secondary);
+    border: 1px solid var(--color-text-dark-900);
     padding: 8px;
     border-radius: 8px;
     margin-bottom: 15px;
@@ -176,8 +172,7 @@
 }
 
 .form-actions button[type='submit'] {
-    background: #fff;
-    color: #000;
+    color: var(--color-text-black);
     border: none;
     padding: 10px 24px;
     border-radius: 20px;
@@ -192,14 +187,13 @@
 
 .form-actions .cancel-btn {
     background: transparent;
-    color: #888;
-    border: 1px solid #333;
+    color: var(--color-text-dark-500);
+    border: 1px solid var(--color-text-dark-900);
     padding: 10px 20px;
     border-radius: 20px;
     cursor: pointer;
 }
 
 .form-actions .cancel-btn:hover {
-    border-color: #555;
-    color: #fff;
+    border-color: var(--color-text-dark-55);
 }

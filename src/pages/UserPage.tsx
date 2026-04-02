@@ -9,10 +9,9 @@ import {
   UserPlusIcon,
 } from '@phosphor-icons/react';
 
-import Dashboard from '../components/Dashboard';
 import UserSearch from '../components/UserSearch';
 import { useAuth } from '../context/AuthContext';
-import { getUserById } from '../services/user';
+import { getUserById } from '../services/usersApi.ts';
 import {
   sendFriendRequest,
   acceptFriendRequest,
@@ -20,8 +19,9 @@ import {
   removeFriend,
   getFriends,
   getIncomingRequests,
-} from '../services/friends';
+} from '../services/friendsApi.ts';
 import type { Friend } from '../types/index.ts';
+import { Button } from '../components/ui/Button.tsx';
 
 const DICEBEAR_BASE = import.meta.env.VITE_DICEBEAR_URL;
 const USERS_IMAGES_BASE = import.meta.env.VITE_USERS_IMAGES_BASE;
@@ -51,7 +51,10 @@ const UserPage = () => {
   const [loading, setLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const isOwnProfile = useMemo(() => currentUser?._id === userId, [currentUser?._id, userId]);
+  const isOwnProfile = useMemo(
+    () => currentUser?._id === userId,
+    [currentUser?._id, userId]
+  );
 
   useEffect(() => {
     const fetchData = async () => {
@@ -89,7 +92,8 @@ const UserPage = () => {
     if (myFriends.some((f) => f._id === userId)) return 'friends';
 
     const hasReceivedRequest = incomingRequests.some((req) => {
-      const reqId = typeof req.requester === 'object' ? req.requester._id : req.requester;
+      const reqId =
+        typeof req.requester === 'object' ? req.requester._id : req.requester;
       return reqId === userId;
     });
 
@@ -97,46 +101,47 @@ const UserPage = () => {
     if (sentRequests.includes(userId)) return 'pending';
 
     return 'none';
-  }, [userData, isOwnProfile, userId, myFriends, incomingRequests, sentRequests]);
+  }, [
+    userData,
+    isOwnProfile,
+    userId,
+    myFriends,
+    incomingRequests,
+    sentRequests,
+  ]);
 
   const handleFriendshipAction = async () => {
-  if (!userId || isSubmitting) return;
+    if (!userId || isSubmitting) return;
 
-  setIsSubmitting(true);
-  try {
-    if (friendshipStatus === 'none') {
-      await sendFriendRequest(userId);
-      setSentRequests((prev) => [...prev, userId]);
-      toast.success('Запит надіслано');
-    } 
-    
-    else if (friendshipStatus === 'requested') {
-      await acceptFriendRequest(userId);
-      const friendsUpdate = await getFriends();
-      setMyFriends(friendsUpdate.data.friends);
-      toast.success('Запит прийнято!');
-    } 
-    
-    else if (friendshipStatus === 'pending') {
-      await rejectFriendRequest(userId); 
-      setSentRequests((prev) => prev.filter((id) => id !== userId));
-      toast.success('Запит скасовано');
-    } 
-    
-    else if (friendshipStatus === 'friends') {
-      if (window.confirm('Видалити користувача з друзів?')) {
-        await removeFriend(userId);
-        setMyFriends((prev) => prev.filter((f) => f._id !== userId));
-        toast.success('Видалено з друзів');
+    setIsSubmitting(true);
+    try {
+      if (friendshipStatus === 'none') {
+        await sendFriendRequest(userId);
+        setSentRequests((prev) => [...prev, userId]);
+        toast.success('Запит надіслано');
+      } else if (friendshipStatus === 'requested') {
+        await acceptFriendRequest(userId);
+        const friendsUpdate = await getFriends();
+        setMyFriends(friendsUpdate.data.friends);
+        toast.success('Запит прийнято!');
+      } else if (friendshipStatus === 'pending') {
+        await rejectFriendRequest(userId);
+        setSentRequests((prev) => prev.filter((id) => id !== userId));
+        toast.success('Запит скасовано');
+      } else if (friendshipStatus === 'friends') {
+        if (window.confirm('Видалити користувача з друзів?')) {
+          await removeFriend(userId);
+          setMyFriends((prev) => prev.filter((f) => f._id !== userId));
+          toast.success('Видалено з друзів');
+        }
       }
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : 'Сталася помилка';
+      toast.error(msg);
+    } finally {
+      setIsSubmitting(false);
     }
-  } catch (err) {
-    const msg = err instanceof Error ? err.message : 'Сталася помилка';
-    toast.error(msg);
-  } finally {
-    setIsSubmitting(false);
-  }
-};
+  };
 
   const avatarUrl = useMemo(() => {
     if (userData?.photo && userData.photo !== 'default.jpg') {
@@ -148,65 +153,67 @@ const UserPage = () => {
 
   if (loading) {
     return (
-      <div className="full-screen">
-        <Dashboard />
-        <div className="profile-container">
-          <div className="profile-card">Завантаження...</div>
+      <>
+        <div className='profile-container'>
+          <div className='profile-card'>Завантаження...</div>
         </div>
-      </div>
+      </>
     );
   }
 
   if (!userData && !isOwnProfile) return null;
 
   return (
-    <div className="full-screen">
-      <Dashboard />
-      
-      <button className="back-button" onClick={() => navigate(-1)} aria-label="Назад">
-        <CaretLeftIcon size={28} />
-      </button>
+    <>
+      <Button
+        variant='icon'
+        icon={<CaretLeftIcon size={28} />}
+        onClick={() => navigate(-1)}
+        title='Назад'
+      />
 
       <UserSearch />
 
-      <main className="profile-container">
-        <article className="profile-card">
-          <div className="avatar-section">
-            <img 
-              src={avatarUrl} 
-              alt={userData?.name || 'User'} 
-              className="profile-avatar" 
-              crossOrigin="anonymous" 
+      <main className='profile-container'>
+        <article className='profile-card'>
+          <div className='avatar-section'>
+            <img
+              src={avatarUrl}
+              alt={userData?.name || 'User'}
+              className='profile-avatar'
+              crossOrigin='anonymous'
             />
           </div>
 
           <h2>{isOwnProfile ? currentUser?.name : userData?.name}</h2>
 
-          <div className="profile-info">
-            <div className="info-row">
+          <div className='profile-info'>
+            <div className='info-row'>
               <strong>Ім'я</strong>
               <span>{isOwnProfile ? currentUser?.name : userData?.name}</span>
             </div>
-            <div className="info-row bio">
+            <div className='info-row bio'>
               <strong>Про мене</strong>
-              <span>{userData?.description || 'Користувач ще не додав опис.'}</span>
+              <span>
+                {userData?.description || 'Користувач ще не додав опис.'}
+              </span>
             </div>
           </div>
 
-          <footer className="profile-actions-group">
+          <footer className='profile-actions-group'>
             {isOwnProfile ? (
-              <p className="own-profile-tag">Це ваш профіль</p>
+              <p className='own-profile-tag'>Це ваш профіль</p>
             ) : (
-              <div className="friendship-controls">
+              <div className='friendship-controls'>
                 {friendshipStatus === 'friends' && (
                   <>
-                    <div className="friends-badge">
-                      <CheckCircleIcon size={26} color="#4caf50" />
+                    <div className='friends-badge'>
+                      <CheckCircleIcon size={26} color='#4caf50' />
                       <span>Ви друзі</span>
                     </div>
-                    <button 
-                      onClick={handleFriendshipAction} 
-                      className="remove-friend-btn" 
+                    <button
+                      onClick={handleFriendshipAction}
+                      className='remove-friend-btn'
                       disabled={isSubmitting}
                     >
                       <UserMinusIcon size={20} /> Видалити
@@ -216,13 +223,13 @@ const UserPage = () => {
 
                 {friendshipStatus === 'pending' && (
                   <>
-                    <div className="pending-badge">
+                    <div className='pending-badge'>
                       <ClockIcon size={24} />
                       <span>Запит надіслано</span>
                     </div>
-                    <button 
-                      onClick={handleFriendshipAction} 
-                      className="cancel-request-btn" 
+                    <button
+                      onClick={handleFriendshipAction}
+                      className='cancel-request-btn'
                       disabled={isSubmitting}
                     >
                       Скасувати
@@ -231,23 +238,23 @@ const UserPage = () => {
                 )}
 
                 {friendshipStatus === 'requested' && (
-                  <button 
-                    onClick={handleFriendshipAction} 
-                    className="accept-friend-btn" 
+                  <button
+                    onClick={handleFriendshipAction}
+                    className='accept-friend-btn'
                     disabled={isSubmitting}
                   >
-                    <CheckCircleIcon size={20} weight="bold" />
+                    <CheckCircleIcon size={20} weight='bold' />
                     Прийняти запит
                   </button>
                 )}
 
                 {friendshipStatus === 'none' && (
-                  <button 
-                    onClick={handleFriendshipAction} 
-                    className="add-friend-btn" 
+                  <button
+                    onClick={handleFriendshipAction}
+                    className='add-friend-btn'
                     disabled={isSubmitting}
                   >
-                    <UserPlusIcon size={20} weight="bold" />
+                    <UserPlusIcon size={20} weight='bold' />
                     Додати в друзі
                   </button>
                 )}
@@ -256,7 +263,7 @@ const UserPage = () => {
           </footer>
         </article>
       </main>
-    </div>
+    </>
   );
 };
 

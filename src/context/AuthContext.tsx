@@ -2,6 +2,7 @@
 import { createContext, useState, useContext, useEffect } from 'react';
 import { io } from 'socket.io-client';
 import toast from 'react-hot-toast';
+import { fetchMe } from '../services/usersApi.ts';
 
 interface User {
   _id: string;
@@ -10,11 +11,14 @@ interface User {
   photo: string;
   role: string;
   description: string;
+  totalWatchTime: number;
 }
 interface AuthContextType {
   user: User | null;
-  login: (userData: User, token: string) => void;
+  isLoading: boolean;
+  login: (token: string) => void;
   logout: () => void;
+  setUser: (user: User | null) => void;
   incomingRequestsCount: number;
   setIncomingRequestsCount: (count: number) => void;
   friendsUpdateTick: number;
@@ -23,22 +27,34 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
-  const [user, setUser] = useState<User | null>(() => {
-    const savedUser = localStorage.getItem('user');
-    if (savedUser) {
-      try {
-        return JSON.parse(savedUser);
-      } catch {
-        localStorage.removeItem('user');
-        localStorage.removeItem('token');
-        return null;
-      }
-    }
-    return null;
-  });
+  const [user, setUser] = useState<User | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   const [incomingRequestsCount, setIncomingRequestsCount] = useState(0);
   const [friendsUpdateTick, setFriendsUpdateTick] = useState(0);
+
+  useEffect(() => {
+    const fetchMeData = async () => {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        setIsLoading(false);
+        return;
+      }
+
+      try {
+        const data = await fetchMe();
+
+        setUser(data.data.user);
+      } catch (error) {
+        console.error('Error fetching user data:', error);
+        localStorage.removeItem('token');
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchMeData();
+  }, []);
 
   useEffect(() => {
     if (!user) return;
@@ -55,10 +71,13 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       });
     });
 
-    newSocket.on('friend_request_accepted', (data: { friend: { name: string } }) => {
-      toast.success(`${data.friend.name} прийняв ваш запит у друзі!`);
-      setFriendsUpdateTick(prev => prev + 1);
-    });
+    newSocket.on(
+      'friend_request_accepted',
+      (data: { friend: { name: string } }) => {
+        toast.success(`${data.friend.name} прийняв ваш запит у друзі!`);
+        setFriendsUpdateTick((prev) => prev + 1);
+      }
+    );
 
     return () => {
       newSocket.close();
@@ -76,29 +95,30 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     return () => window.removeEventListener('storage', handleStorageChange);
   }, []);
 
-  const login = (userData: User, token: string) => {
+  const login = (token: string) => {
     localStorage.setItem('token', token);
-    localStorage.setItem('user', JSON.stringify(userData));
-    setUser(userData);
+    window.location.href = '/';
   };
 
   const logout = () => {
     localStorage.removeItem('token');
-    localStorage.removeItem('user');
     setUser(null);
     setIncomingRequestsCount(0);
     window.location.href = '/login';
   };
 
+  console.log('CONTEXT', user);
   return (
     <AuthContext.Provider
       value={{
+        isLoading,
         user,
         login,
         logout,
+        setUser,
         incomingRequestsCount,
         setIncomingRequestsCount,
-        friendsUpdateTick
+        friendsUpdateTick,
       }}
     >
       {children}

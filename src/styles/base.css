@@ -118,4 +118,5 @@ html {
   min-height: 100vh;
   font-family: 'Verdana', sans-serif;
   color: var(--color-text);
+  padding: 1rem 1.6rem;
 }

@@ -3,12 +3,12 @@ import {
   getIncomingRequests,
   acceptFriendRequest,
   rejectFriendRequest,
-} from '../services/friends';
+} from '../services/friendsApi.ts';
 import { useAuth } from '../context/AuthContext';
-import Dashboard from '../components/Dashboard';
 import { CheckIcon, XIcon, CaretLeftIcon } from '@phosphor-icons/react';
 import { useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
+import { Button } from '../components/ui/Button.tsx';
 
 interface RequestItem {
   _id: string;
@@ -57,23 +57,24 @@ function FriendRequestsPage() {
         toast.success('Запит відхилено');
       }
       setRequests((prev) => {
-      const updatedList = prev.filter((req) => req.requester._id !== userId);
-      setIncomingRequestsCount(updatedList.length);
-      return updatedList;
-    });
-
-  } catch (err: unknown) {
-    const msg = err instanceof Error ? err.message : 'Помилка операції';
-    toast.error(msg);
-  }
-};
+        const updatedList = prev.filter((req) => req.requester._id !== userId);
+        setIncomingRequestsCount(updatedList.length);
+        return updatedList;
+      });
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : 'Помилка операції';
+      toast.error(msg);
+    }
+  };
 
   return (
-    <div className='full-screen'>
-      <Dashboard />
-      <button className='back-button' onClick={() => navigate(-1)}>
-        <CaretLeftIcon size={28} weight='bold' />
-      </button>
+    <>
+      <Button
+        variant='icon'
+        icon={<CaretLeftIcon size={28} />}
+        onClick={() => navigate(-1)}
+        title='Назад'
+      />
 
       <div className='profile-container'>
         <div className='profile-card requests-card'>
@@ -130,7 +131,7 @@ function FriendRequestsPage() {
           )}
         </div>
       </div>
-    </div>
+    </>
   );
 }
 
