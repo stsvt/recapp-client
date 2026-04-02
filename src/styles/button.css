@@ -160,7 +160,9 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: color 0.2s ease, transform 0.1s active;
+  transition:
+    color 0.2s ease,
+    transform 0.1s active;
   outline: none;
   padding: 0;
 }
@@ -190,7 +192,7 @@
   color: var(--color-accent);
 }
 
-.movie-page-content .back-button {
+.back-button {
   margin: 0 15px;
   position: absolute;
 }
@@ -220,7 +222,9 @@
   flex-direction: column;
   align-items: center;
   cursor: pointer;
-  transition: opacity 0.2s ease, filter 0.2s ease;
+  transition:
+    opacity 0.2s ease,
+    filter 0.2s ease;
 }
 
 .icon-wrapper {
@@ -231,7 +235,9 @@
   height: 50px;
   border-radius: 50%;
   background: var(--color-text-white0);
-  transition: background 0.3s ease, box-shadow 0.3s ease;
+  transition:
+    background 0.3s ease,
+    box-shadow 0.3s ease;
   position: relative;
 }
 

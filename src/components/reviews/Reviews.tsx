@@ -46,18 +46,10 @@ export function Reviews({ movieId, userId }: ReviewsProps) {
 
   return (
     <div className='content-wrapper'>
-      <section className='reviews-section' style={{ marginTop: '40px' }}>
-        <div
-          className='reviews-header'
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: '20px',
-            marginBottom: '30px',
-          }}
-        >
+      <section className='reviews-section'>
+        <div className='reviews-header'>
           {reviews && (
-            <h2 className='section-title'>Коментарі ({reviews.length})</h2>
+            <h2 className='sub-section-title'>Коментарі ({reviews.length})</h2>
           )}
 
           {!editingReviewId && (

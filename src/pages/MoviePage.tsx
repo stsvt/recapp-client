@@ -14,6 +14,7 @@ import toast from 'react-hot-toast';
 import { useQuery } from '@tanstack/react-query';
 import { Reviews } from '../components/reviews/Reviews.tsx';
 import { MovieDetails } from '../components/movies/MovieDetails.tsx';
+import { useEffect } from 'react';
 
 function MoviePage() {
   const { user } = useAuth();
@@ -32,6 +33,10 @@ function MoviePage() {
     queryFn: () => getMovieStatus(movieId!),
     enabled: Boolean(movieId) && Boolean(user),
   });
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [movieId]);
 
   const isLiked = statusData?.liked || false;
   const isWatched = statusData?.watched || false;
@@ -69,41 +74,41 @@ function MoviePage() {
   return (
     <>
       <MovieDetails movie={movie} />
-      <div className='movie-page-content'>
-        <div className='content-wrapper'>
-          <div className='check-buttons'>
-            <MovieStatusButton
-              label='Хочу переглянути'
-              isActive={isLiked}
-              onClick={() => handleToggleActivity('liked')}
-              Icon={HeartIcon}
-            />
-            <MovieStatusButton
-              label='Переглянуто'
-              isActive={isWatched}
-              onClick={() => handleToggleActivity('watched')}
-              Icon={BookmarkSimpleIcon}
-              activeColor='#fff'
-            />
-          </div>
+      <div className='content-wrapper'>
+        <div className='check-buttons'>
+          <MovieStatusButton
+            label='Хочу переглянути'
+            isActive={isLiked}
+            onClick={() => handleToggleActivity('liked')}
+            Icon={HeartIcon}
+          />
+          <MovieStatusButton
+            label='Переглянуто'
+            isActive={isWatched}
+            onClick={() => handleToggleActivity('watched')}
+            Icon={BookmarkSimpleIcon}
+            activeColor='#fff'
+          />
         </div>
-
-        {movie.recommendations?.results?.length > 0 && (
-          <section className='similar-movies-full-width'>
-            <div className='similar-title-container'>
-              <h2 className='section-title'>Фільми схожі на "{movie.title}"</h2>
-            </div>
-            <MovieSection
-              key={`recommendations-${movie.id}`}
-              title=''
-              movies={movie.recommendations.results}
-              loading={false}
-            />
-          </section>
-        )}
-
-        <Reviews movieId={movieId} userId={user?._id} />
       </div>
+
+      {movie.recommendations?.results?.length > 0 && (
+        <>
+          <div className='content-wrapper'>
+            <h2 className='sub-section-title'>
+              Фільми схожі на "{movie.title}"
+            </h2>
+          </div>
+          <MovieSection
+            key={`recommendations-${movie.id}`}
+            title=''
+            movies={movie.recommendations.results}
+            loading={false}
+          />
+        </>
+      )}
+
+      <Reviews movieId={movieId} userId={user?._id} />
     </>
   );
 }

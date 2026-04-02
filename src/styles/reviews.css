@@ -1,199 +1,199 @@
 .reviews-section {
-    background-color: var(--color-text-black);
-    font-family: 'Inter', sans-serif;
+  background-color: var(--color-bg);
+  font-family: 'Inter', sans-serif;
 }
 
 .comment-card {
-    background: #121212;
-    border-radius: 16px;
-    padding: 24px;
-    margin-bottom: 20px;
-    position: relative;
-    border: 1px solid var(--color-text-gray12);
+  background: var(--color-bg-dark);
+  border-radius: 16px;
+  padding: 20px;
+  margin-bottom: 20px;
+  position: relative;
+  border: 1px solid var(--color-text-gray12);
 }
 
 .comment-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
 }
 
 .user-info {
-    display: flex;
-    align-items: center;
-    gap: 12px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
 }
 
 .avatar {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    background: var(--color-text-dark-900);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: bold;
-    font-size: 14px;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--color-text-dark-900);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 14px;
 }
 
 .username {
-    font-weight: 600;
-    color: #efefef;
+  font-weight: 600;
+  color: var(--color-pearl-gray);
 }
 
 .comment-date {
-    font-size: 13px;
-    color: var(--color-text-dark-500);
+  font-size: 13px;
+  color: var(--color-text-dark-500);
 }
 
 .comment-text {
-    line-height: 1.6;
-    color: #d1d1d1;
-    font-size: 15px;
-    margin-bottom: 20px;
+  line-height: 1.6;
+  color: var(--color-light-gray);
+  font-size: 15px;
+  margin-bottom: 20px;
 }
 
 .comment-footer {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .reactions {
-    display: flex;
-    gap: 10px;
-    cursor: pointer;
-    background: var(--color-bg-secondary);
-    padding: 6px 12px;
-    border-radius: 20px;
+  display: flex;
+  gap: 10px;
+  cursor: pointer;
+  background: var(--color-bg-secondary);
+  padding: 6px 12px;
+  border-radius: 20px;
 }
 
 .add-comment-btn {
-    background: #222;
-    border: 1px solid var(--color-text-dark-900);
-    padding: 8px 16px;
-    border-radius: 20px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    cursor: pointer;
-    transition: 0.3s;
+  background: var(--color-hex-2222228d);
+  border: 1px solid var(--color-text-dark-900);
+  padding: 8px 16px;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  transition: 0.3s;
+  margin: 90px 0 30px 0;
 }
 
 .add-comment-btn:hover {
-    background: var(--color-text-dark-900);
+  background: var(--color-text-dark-900);
 }
 
 .admin-actions {
-    display: flex;
-    gap: 12px;
+  display: flex;
+  gap: 12px;
 }
 
 .admin-actions button {
-    background: transparent;
-    border: none;
-    color: var(--color-text-dark-500);
-    cursor: pointer;
-    font-size: 14px;
-    transition: 0.2s;
+  background: transparent;
+  border: none;
+  color: var(--color-text-dark-500);
+  cursor: pointer;
+  font-size: 14px;
+  transition: 0.2s;
 }
 
 .admin-actions .edit-btn:hover {
-    color: var(--color-text-white);
+  color: var(--color-text-white);
 }
 
 .admin-actions .delete-btn:hover {
-    color: var(--color-text-red-bright);
+  color: var(--color-text-red-bright);
 }
 
 .comment-card .add-review-container {
-    background: transparent;
-    padding: 0;
-    border: none;
+  background: transparent;
+  padding: 0;
+  border: none;
 }
 
 .reviews-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 
 .reviews-title {
-    font-size: 24px;
-    font-weight: 700;
-    margin: 0;
+  font-size: 24px;
+  font-weight: 700;
+  margin: 0;
 }
 
 .add-review-container {
-    background: #121212;
-    border: 1px solid var(--color-text-gray12);
-    border-radius: 16px;
-    padding: 24px;
-    margin-bottom: 30px;
+  background: var(--color-bg-dark);
+  border: 1px solid var(--color-text-gray12);
+  border-radius: 16px;
+  padding: 24px;
+  margin-bottom: 30px;
 }
 
 .add-review-container h3 {
-    margin-top: 0;
-    font-size: 18px;
-    margin-bottom: 15px;
-    color: #efefef;
+  margin-top: 0;
+  font-size: 18px;
+  margin-bottom: 15px;
+  color: var(--color-text);
 }
 
 .add-review-container textarea {
-    width: 100%;
-    background: var(--color-bg-secondary);
-    border: 1px solid var(--color-text-dark-900);
-    border-radius: 8px;
-    padding: 12px;
-    font-family: inherit;
-    resize: vertical;
-    margin-bottom: 15px;
-    outline: none;
+  width: 100%;
+  background: var(--color-bg-secondary);
+  border: 1px solid var(--color-text-dark-900);
+  border-radius: 8px;
+  padding: 12px;
+  font-family: inherit;
+  resize: vertical;
+  margin-bottom: 15px;
+  outline: none;
 }
 
 .add-review-container textarea:focus {
-    border-color: var(--color-text-dark-55);
+  border-color: var(--color-text-dark-55);
 }
 
 .add-review-container input[type='number'] {
-    background: var(--color-bg-secondary);
-    border: 1px solid var(--color-text-dark-900);
-    padding: 8px;
-    border-radius: 8px;
-    margin-bottom: 15px;
-    width: 60px;
+  background: var(--color-bg-secondary);
+  border: 1px solid var(--color-text-dark-900);
+  padding: 8px;
+  border-radius: 8px;
+  margin-bottom: 15px;
+  width: 60px;
 }
 
 .form-actions {
-    display: flex;
-    gap: 12px;
+  display: flex;
+  gap: 12px;
 }
 
 .form-actions button[type='submit'] {
-    color: var(--color-text-black);
-    border: none;
-    padding: 10px 24px;
-    border-radius: 20px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: 0.2s;
+  color: var(--color-text-black);
+  border: none;
+  padding: 10px 24px;
+  border-radius: 20px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.2s;
 }
 
 .form-actions button[type='submit']:hover {
-    background: #e0e0e0;
+  background: var(--color-bg-grey-300);
 }
 
 .form-actions .cancel-btn {
-    background: transparent;
-    color: var(--color-text-dark-500);
-    border: 1px solid var(--color-text-dark-900);
-    padding: 10px 20px;
-    border-radius: 20px;
-    cursor: pointer;
+  background: transparent;
+  color: var(--color-text-dark-500);
+  border: 1px solid var(--color-text-dark-900);
+  padding: 10px 20px;
+  border-radius: 20px;
+  cursor: pointer;
 }
 
 .form-actions .cancel-btn:hover {
-    border-color: var(--color-text-dark-55);
+  border-color: var(--color-text-dark-55);
 }

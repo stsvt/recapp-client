@@ -102,140 +102,117 @@ function PersonPage() {
 
   return (
     <>
-      <div className='movie-page-content'>
-        <Button
-          variant='icon'
-          icon={<CaretLeftIcon size={28} />}
-          onClick={() => navigate(-1)}
-          title='Назад'
-        />
+      <Button
+        variant='icon'
+        icon={<CaretLeftIcon size={28} />}
+        onClick={() => navigate(-1)}
+        title='Назад'
+        className='back-button'
+      />
 
-        <div className='content-wrapper'>
-          <header className='movie-header'>
-            <h1>{displayName}</h1>
-            {person?.name_en && (
-              <p className='original-title'>{person.name_en}</p>
-            )}
-          </header>
-
-          {person && (
-            <>
-              <section className='main-info-grid'>
-                <div
-                  className='poster-column'
-                  style={{
-                    position: 'relative',
-                    width: '240px',
-                    minHeight: '360px',
-                    backgroundColor: '#1a1a1a',
-                    borderRadius: '4px',
-                    overflow: 'hidden',
-                  }}
-                >
-                  {isImageLoading && (
-                    <div className='image-loader-overlay shimmer-wave'></div>
-                  )}
-                  <img
-                    src={`${import.meta.env.VITE_IMAGE_URL}${person.profile_path}`}
-                    alt={person.name}
-                    onLoad={() => setIsImageLoading(false)}
-                    style={{
-                      display: isImageLoading ? 'none' : 'block',
-                      width: '100%',
-                      height: '100%',
-                      objectFit: 'cover',
-                    }}
-                    onError={(e) => {
-                      e.currentTarget.src = '/placeholder-actor.png';
-                      setIsImageLoading(false);
-                    }}
-                  />
-                </div>
-
-                <div className='details-column'>
-                  <div className='cast-info'>
-                    <p className='cast-row'>
-                      <strong className='person-label'>Дата народження</strong>
-                      <span className='cast-value'>
-                        {person.birthday
-                          ? new Date(person.birthday).toLocaleDateString(
-                              'uk-UA'
-                            )
-                          : 'невідомо'}
-                      </span>
-                    </p>
-
-                    {person.place_of_birth && (
-                      <p className='cast-row'>
-                        <strong className='person-label'>
-                          Місце народження
-                        </strong>
-                        <span className='cast-value'>
-                          {person.place_of_birth}
-                        </span>
-                      </p>
-                    )}
-
-                    <p className='cast-row'>
-                      <strong className='person-label'>Кар'єра</strong>
-                      <span className='cast-value'>
-                        {person.isDirector ? 'Режисер, Сценарист' : 'Актор'}
-                      </span>
-                    </p>
-
-                    {person.birthday && !person.deathday && (
-                      <p className='cast-row'>
-                        <strong className='person-label'>Вік</strong>
-                        <span className='cast-value'>
-                          {Math.floor(
-                            (new Date().getTime() -
-                              new Date(person.birthday).getTime()) /
-                              31557600000
-                          )}{' '}
-                          років
-                        </span>
-                      </p>
-                    )}
-
-                    {person.deathday && (
-                      <p className='cast-row'>
-                        <strong className='person-label'>Дата смерті</strong>
-                        <span className='cast-value'>
-                          {new Date(person.deathday).toLocaleDateString(
-                            'uk-UA'
-                          )}
-                        </span>
-                      </p>
-                    )}
-                  </div>
-                </div>
-              </section>
-
-              {person.biography && (
-                <article className='description-section'>
-                  <h2 className='section-title'>Біографія</h2>
-                  <p style={{ color: '#ccc', lineHeight: '1.6' }}>
-                    {person.biography}
-                  </p>
-                </article>
-              )}
-            </>
+      <div className='content-wrapper'>
+        <header className='movie-header'>
+          <h1>{displayName}</h1>
+          {person?.name_en && (
+            <p className='original-title'>{person.name_en}</p>
           )}
-        </div>
+        </header>
 
-        {displayMovies.length > 0 && (
-          <section className='similar-movies-full-width'>
-            <div className='similar-title-container'>
-              <h2 className='section-title'>
-                {person?.isDirector
-                  ? 'Фільми зняті режисером'
-                  : 'Фільми за участю актора'}
-              </h2>
-            </div>
-            <MovieSection title='' movies={displayMovies} loading={false} />
-          </section>
+        {person && (
+          <>
+            <section className='main-info-grid'>
+              <div className='poster-column'>
+                {isImageLoading && (
+                  <div className='image-loader-overlay shimmer-wave'></div>
+                )}
+                <img
+                  src={`${import.meta.env.VITE_IMAGE_URL}${person.profile_path}`}
+                  alt={person.name}
+                  onLoad={() => setIsImageLoading(false)}
+                  onError={(e) => {
+                    e.currentTarget.src = '/placeholder-actor.png';
+                    setIsImageLoading(false);
+                  }}
+                />
+              </div>
+
+              <div className='details-column'>
+                <div className='cast-info'>
+                  <p className='cast-row'>
+                    <strong className='person-label'>Дата народження</strong>
+                    <span className='cast-value'>
+                      {person.birthday
+                        ? new Date(person.birthday).toLocaleDateString('uk-UA')
+                        : 'невідомо'}
+                    </span>
+                  </p>
+
+                  {person.place_of_birth && (
+                    <p className='cast-row'>
+                      <strong className='person-label'>Місце народження</strong>
+                      <span className='cast-value'>
+                        {person.place_of_birth}
+                      </span>
+                    </p>
+                  )}
+
+                  <p className='cast-row'>
+                    <strong className='person-label'>Кар'єра</strong>
+                    <span className='cast-value'>
+                      {person.isDirector ? 'Режисер, Сценарист' : 'Актор'}
+                    </span>
+                  </p>
+
+                  {person.birthday && !person.deathday && (
+                    <p className='cast-row'>
+                      <strong className='person-label'>Вік</strong>
+                      <span className='cast-value'>
+                        {Math.floor(
+                          (new Date().getTime() -
+                            new Date(person.birthday).getTime()) /
+                            31557600000
+                        )}{' '}
+                        років
+                      </span>
+                    </p>
+                  )}
+
+                  {person.deathday && (
+                    <p className='cast-row'>
+                      <strong className='person-label'>Дата смерті</strong>
+                      <span className='cast-value'>
+                        {new Date(person.deathday).toLocaleDateString('uk-UA')}
+                      </span>
+                    </p>
+                  )}
+                </div>
+              </div>
+            </section>
+
+            {person.biography && (
+              <article className='description-section'>
+                <h2 className='section-title'>Біографія</h2>
+                <p style={{ color: '#ccc', lineHeight: '1.6' }}>
+                  {person.biography}
+                </p>
+              </article>
+            )}
+          </>
         )}
       </div>
+
+      {displayMovies.length > 0 && (
+        <>
+          <div className='content-wrapper'>
+            <h2 className='sub-section-title'>
+              {person?.isDirector
+                ? 'Фільми зняті режисером'
+                : 'Фільми за участю актора'}
+            </h2>
+          </div>
+          <MovieSection title='' movies={displayMovies} loading={false} />
+        </>
+      )}
     </>
   );
 }
