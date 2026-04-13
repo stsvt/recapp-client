@@ -20,6 +20,8 @@
   /* ─── Backgrounds ─────────────────────────────────────── */
   --color-bg: #111;
   --color-bg-secondary: #1a1a1a;
+  --color-bg-dark: #121212;
+  --color-bg-grey-300: #e0e0e0;
   --color-surface: #141414;
   --color-surface-dark: #181818;
   --color-bg-dark-hex: #262626;
@@ -65,6 +67,8 @@
   /* ─── Text — Grays ────────────────────────────────────── */
   --color-text-gray12: #1f1f1f;
   --color-text-gray: #777;
+  --color-light-gray: #d1d1d1;
+  --color-pearl-gray: #efefef;
   --color-text-gray-400: #9ca3af;
   --color-text-dark-400: #444;
   --color-text-dark-500: #888;
