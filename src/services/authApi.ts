@@ -12,6 +12,22 @@ interface LoginUserData {
   password: string;
 }
 
+interface LoginResponse {
+  status: string;
+  token: string;
+  data: {
+    user: {
+      _id: string;
+      name: string;
+      email: string;
+      photo: string;
+      role: string;
+      description: string;
+      totalWatchTime: number;
+    };
+  };
+}
+
 export const register = async (userData: RegisterUserData) => {
   const response = await fetch(`${BASE_URL}users/signup`, {
     method: 'POST',
@@ -30,7 +46,9 @@ export const register = async (userData: RegisterUserData) => {
   return res;
 };
 
-export const login = async (userData: LoginUserData) => {
+export const login = async (
+  userData: LoginUserData
+): Promise<LoginResponse> => {
   const response = await fetch(`${BASE_URL}users/login`, {
     method: 'POST',
     headers: {
@@ -44,8 +62,23 @@ export const login = async (userData: LoginUserData) => {
     throw new Error(errorData.message || 'Login error');
   }
 
-  const res = await response.json();
-  return res;
+  return await response.json();
+};
+
+export const forgotPassword = async (email: string) => {
+  const response = await fetch(`${BASE_URL}users/forgotPassword`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ email }),
+  });
+
+  if (!response.ok) {
+    const errorData = await response.json();
+    throw new Error(errorData.message || 'Failed to send recovery email');
+  }
+  return await response.json();
 };
 
 export const logout = () => {

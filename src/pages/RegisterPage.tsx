@@ -1,41 +1,32 @@
 import { useState } from 'react';
-import PasswordField from '../components/PasswordField';
-import { register } from '../services/authApi.ts';
+import { register as registerService } from '../services/authApi.ts';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
-import Logo from '../components/ui/Logo.tsx';
+import { Button } from '../components/ui/Button.tsx';
+import { type SubmitHandler, useForm } from 'react-hook-form';
+import { EyeIcon, EyeSlashIcon } from '@phosphor-icons/react';
+
+interface Inputs {
+  name: string;
+  email: string;
+  password: string;
+  confirmPassword: string;
+}
 
 function RegisterPage() {
-  const { login } = useAuth();
   const navigate = useNavigate();
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    password: '',
-    confirmPassword: '',
-  });
+  const {
+    register,
+    handleSubmit,
+    getValues,
+    formState: { errors, isLoading },
+  } = useForm<Inputs>();
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
-
-  const handleGoogleAuth = () => {
-    window.location.href = `${import.meta.env.VITE_API_URL}users/auth/google`;
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-
-    if (formData.password !== formData.confirmPassword) {
-      alert('Passwords do not match.');
-      return;
-    }
-
+  const onSubmit: SubmitHandler<Inputs> = async (data) => {
     try {
-      const res = await register(formData);
-      login(res.token);
-      console.log('Success', res);
-      navigate('/');
+      await registerService(data);
+      navigate('/login');
     } catch (error: unknown) {
       if (error instanceof Error) {
         alert(error.message);
@@ -45,77 +36,140 @@ function RegisterPage() {
     }
   };
 
+  const handleGoogleAuth = () => {
+    window.location.href = `${import.meta.env.VITE_API_URL}users/auth/google`;
+  };
+
   return (
-    <div className='full-screen'>
-      <Logo />
-      <div className='auth-container'>
-        <form className='auth-box' onSubmit={handleSubmit}>
-          <h2>Реєстрація</h2>
+    <>
+      <form className='auth-box' onSubmit={handleSubmit(onSubmit)}>
+        <h2>Реєстрація</h2>
 
-          <div className='input-group'>
-            <label>Ім'я</label>
-            <input
-              type='text'
-              name='name'
-              placeholder="Введіть ім'я"
-              value={formData.name}
-              onChange={handleChange}
-              required
-            />
-          </div>
-
-          <div className='input-group'>
-            <label>Email</label>
-            <input
-              type='email'
-              name='email'
-              placeholder='example@gmail.com'
-              value={formData.email}
-              onChange={handleChange}
-              required
-            />
-          </div>
-
-          <PasswordField
-            label='Пароль'
-            name='password'
-            value={formData.password}
-            onChange={handleChange}
+        <div className='input-group'>
+          <label htmlFor='name'>Ім'я</label>
+          <input
+            type='text'
+            placeholder="Введіть ім'я"
+            {...register('name', { required: "Це поле є обов'язковим" })}
           />
+          {errors && <span className='error-span'>{errors.name?.message}</span>}
+        </div>
 
-          <PasswordField
-            label='Підтвердіть пароль'
-            name='confirmPassword'
-            value={formData.confirmPassword}
-            onChange={handleChange}
+        <div className='input-group'>
+          <label htmlFor='email'>Email</label>
+          <input
+            type='email'
+            id='email'
+            placeholder='example@gmail.com'
+            {...register('email', {
+              required: "Це поле є обов'язковим",
+              pattern: {
+                value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                message: 'Недійсна адреса електронної пошти',
+              },
+            })}
           />
+          {errors && (
+            <span className='error-span'>{errors.email?.message}</span>
+          )}
+        </div>
 
-          <button type='submit' className='submit-btn'>
-            Зареєструватись
-          </button>
-          <div className='separator'>або</div>
-
-          <button
-            type='button'
-            className='google-btn'
-            onClick={handleGoogleAuth}
-          >
-            <img
-              src='https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg'
-              alt='Google'
+        <div className='input-group'>
+          <label htmlFor='password'>Пароль</label>
+          <div className='password-wrapper'>
+            <input
+              id='password'
+              type={showPassword ? 'text' : 'password'}
+              placeholder='••••••••'
+              {...register('password', {
+                required: "Це поле є обов'язковим",
+              })}
             />
-            Зареєструватись через Google
-          </button>
+            <button
+              type='button'
+              className='eye-button'
+              onClick={() => setShowPassword(!showPassword)}
+              tabIndex={-1}
+            >
+              {showPassword ? (
+                <EyeSlashIcon size={22} weight='regular' />
+              ) : (
+                <EyeIcon size={22} weight='regular' />
+              )}
+            </button>
+          </div>
+          {errors && (
+            <span className='error-span'>{errors.password?.message}</span>
+          )}
+        </div>
 
-          <p className='auth-footer'>
-            Вже маєте акаунт?{' '}
-            <span className='link' onClick={() => navigate('/login')}>
-              Увійти
+        <div className='input-group'>
+          <label htmlFor='confirmPassword'>Підтвердіть пароль</label>
+          <div className='password-wrapper'>
+            <input
+              id='confirmPassword'
+              type={showConfirmPassword ? 'text' : 'password'}
+              placeholder='••••••••'
+              {...register('confirmPassword', {
+                required: "Це поле є обов'язковим",
+                validate: (value: string) => {
+                  const { password } = getValues();
+                  return password === value || 'Паролі не збігаються';
+                },
+              })}
+            />
+            <button
+              type='button'
+              className='eye-button'
+              onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+              tabIndex={-1}
+            >
+              {showConfirmPassword ? (
+                <EyeSlashIcon size={22} weight='regular' />
+              ) : (
+                <EyeIcon size={22} weight='regular' />
+              )}
+            </button>
+          </div>
+          {errors && (
+            <span className='error-span'>
+              {errors.confirmPassword?.message}
             </span>
-          </p>
-        </form>
-      </div>
-    </div>
+          )}
+        </div>
+
+        <Button
+          type='submit'
+          className='submit-btn'
+          variant='primary'
+          disabled={isLoading}
+        >
+          {!isLoading ? 'Зареєструватись' : 'Реєстрація...'}
+        </Button>
+
+        <div className='separator'> або </div>
+
+        <Button
+          className='google-btn'
+          onClick={handleGoogleAuth}
+          variant='secondary'
+          size='md'
+        >
+          <img
+            src='https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg'
+            alt='Google'
+          />
+          Увійти через Google
+        </Button>
+
+        <p className='auth-footer'>
+          Вже маєте акаунт?{' '}
+          <span className='link' onClick={() => navigate('/login')}>
+            Увійти
+          </span>
+        </p>
+      </form>
+    </>
   );
 }
 

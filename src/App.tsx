@@ -10,10 +10,11 @@ import ResetPasswordPage from './pages/ResetPasswordPage';
 import MoviePage from './pages/MoviePage';
 import ProfilePage from './pages/ProfilePage';
 import PersonPage from './pages/PersonPage';
-import GoogleCallback from './pages/GoogleCallback';
+import GoogleCallbackPage from './pages/GoogleCallbackPage.tsx';
 import UserPage from './pages/UserPage';
 import FriendRequestsPage from './pages/FriendRequestsPage';
 import Layout from './components/ui/Layout.tsx';
+import AuthLayout from './components/ui/AuthLayout.tsx';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -26,9 +27,11 @@ function App() {
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
         <Routes>
-          <Route path='/google/callback' element={<GoogleCallback />} />
-          <Route path='/register' element={<RegisterPage />} />
-          <Route path='/login' element={<LoginPage />} />
+          <Route path='/google/callback' element={<GoogleCallbackPage />} />
+          <Route element={<AuthLayout />}>
+            <Route path='/register' element={<RegisterPage />} />
+            <Route path='/login' element={<LoginPage />} />
+          </Route>
           <Route element={<Layout />}>
             <Route path='/' element={<MainPage />} />
             <Route

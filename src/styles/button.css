@@ -278,7 +278,7 @@
 }
 
 .modal-btn.confirm {
-  background: var(--color-text-white);
+  background: var(--color-primary);
 }
 
 .modal-btn.confirm.danger-bg {
