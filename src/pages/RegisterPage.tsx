@@ -4,6 +4,8 @@ import { useNavigate } from 'react-router-dom';
 import { Button } from '../components/ui/Button.tsx';
 import { type SubmitHandler, useForm } from 'react-hook-form';
 import { EyeIcon, EyeSlashIcon } from '@phosphor-icons/react';
+import GoogleButton from '../components/GoogleButton.tsx';
+import Spinner from '../components/ui/Spinner.tsx';
 
 interface Inputs {
   name: string;
@@ -36,9 +38,9 @@ function RegisterPage() {
     }
   };
 
-  const handleGoogleAuth = () => {
-    window.location.href = `${import.meta.env.VITE_API_URL}users/auth/google`;
-  };
+  if (isLoading) {
+    return <Spinner />;
+  }
 
   return (
     <>
@@ -149,18 +151,7 @@ function RegisterPage() {
 
         <div className='separator'> або </div>
 
-        <Button
-          className='google-btn'
-          onClick={handleGoogleAuth}
-          variant='secondary'
-          size='md'
-        >
-          <img
-            src='https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg'
-            alt='Google'
-          />
-          Увійти через Google
-        </Button>
+        <GoogleButton />
 
         <p className='auth-footer'>
           Вже маєте акаунт?{' '}

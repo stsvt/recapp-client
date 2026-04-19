@@ -112,7 +112,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     window.location.href = '/';
   };
 
-  console.log('CONTEXT', user);
   return (
     <AuthContext.Provider
       value={{

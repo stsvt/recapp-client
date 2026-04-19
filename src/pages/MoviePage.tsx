@@ -11,13 +11,27 @@ import {
 } from '../services/activitiesApi.ts';
 import { useAuth } from '../context/AuthContext';
 import toast from 'react-hot-toast';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { Reviews } from '../components/reviews/Reviews.tsx';
 import { MovieDetails } from '../components/movies/MovieDetails.tsx';
 import { useEffect } from 'react';
 
+type Messages =
+  | 'Movie removed from liked list'
+  | 'Movie added to liked list'
+  | 'Movie added to watched list'
+  | 'Movie removed from watched list';
+
+const MESSAGE_MAP = {
+  'Movie removed from liked list': 'Фільм видалено зі списку вподобань',
+  'Movie added to liked list': 'Фільм додано до списку вподобань',
+  'Movie added to watched list': 'Фільм додано до переглянутих',
+  'Movie removed from watched list': 'Фільм видалено з переглянутих',
+};
+
 function MoviePage() {
   const { user } = useAuth();
+  const queryClient = useQueryClient();
   const { id: movieId } = useParams<{ id: string }>();
 
   const { data: movie, isLoading: isMovieLoading } = useQuery<Movie>({
@@ -37,9 +51,6 @@ function MoviePage() {
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [movieId]);
-
-  const isLiked = statusData?.liked || false;
-  const isWatched = statusData?.watched || false;
 
   if (isMovieLoading) {
     return <Spinner />;
@@ -62,8 +73,9 @@ function MoviePage() {
     }
 
     try {
-      await toggleActivityMovie(movieId!, type);
-      toast.success('Список оновлено');
+      const response = await toggleActivityMovie(movieId!, type);
+      await queryClient.invalidateQueries({ queryKey: ['movieStatus'] });
+      toast.success(MESSAGE_MAP[response.data.message as Messages]);
     } catch (error: unknown) {
       const msg =
         error instanceof Error ? error.message : 'Не вдалося оновити статус';
@@ -78,13 +90,13 @@ function MoviePage() {
         <div className='check-buttons'>
           <MovieStatusButton
             label='Хочу переглянути'
-            isActive={isLiked}
+            isActive={statusData?.liked}
             onClick={() => handleToggleActivity('liked')}
             Icon={HeartIcon}
           />
           <MovieStatusButton
             label='Переглянуто'
-            isActive={isWatched}
+            isActive={statusData?.watched}
             onClick={() => handleToggleActivity('watched')}
             Icon={BookmarkSimpleIcon}
             activeColor='#fff'

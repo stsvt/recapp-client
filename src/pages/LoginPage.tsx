@@ -7,6 +7,7 @@ import { type SubmitHandler, useForm } from 'react-hook-form';
 import { EyeIcon, EyeSlashIcon } from '@phosphor-icons/react';
 import Spinner from '../components/ui/Spinner.tsx';
 import ForgotPasswordForm from '../components/ForgotPasswordForm.tsx';
+import GoogleButton from '../components/GoogleButton.tsx';
 
 interface Inputs {
   email: string;
@@ -15,6 +16,7 @@ interface Inputs {
 
 function LoginPage() {
   const { login } = useAuth();
+
   const navigate = useNavigate();
   const {
     register,
@@ -37,10 +39,6 @@ function LoginPage() {
         alert('An unexpected error occurred');
       }
     }
-  };
-
-  const handleGoogleAuth = () => {
-    window.location.href = `${import.meta.env.VITE_API_URL}users/auth/google`;
   };
 
   if (isLoading) {
@@ -120,18 +118,7 @@ function LoginPage() {
 
         <div className='separator'>або</div>
 
-        <Button
-          className='google-btn'
-          onClick={handleGoogleAuth}
-          variant='secondary'
-          size='md'
-        >
-          <img
-            src='https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg'
-            alt='Google'
-          />
-          Увійти через Google
-        </Button>
+        <GoogleButton />
 
         <p className='auth-footer'>
           Немає акаунту?{' '}

@@ -1,6 +1,7 @@
 import { type SubmitHandler, useForm } from 'react-hook-form';
 import { forgotPassword as forgotPasswordService } from '../services/authApi.ts';
 import { Button } from './ui/Button.tsx';
+import Spinner from './ui/Spinner.tsx';
 
 interface Inputs {
   email: string;
@@ -30,6 +31,11 @@ export default function ForgotPasswordForm({
       );
     }
   };
+
+  if (isLoading) {
+    return <Spinner />;
+  }
+
   return (
     <>
       <form className='auth-box' onSubmit={handleSubmit(onSubmit)}>
