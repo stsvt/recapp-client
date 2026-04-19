@@ -25,8 +25,6 @@ function GoogleCallback() {
         hasLogged.current = true;
 
         login(token);
-
-        navigate('/', { replace: true });
       } catch (error) {
         console.error('Помилка під час входу через Google:', error);
         navigate('/login', { replace: true });

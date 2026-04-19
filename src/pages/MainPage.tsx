@@ -6,9 +6,13 @@ import {
   fetchNowPlayingMovies,
   fetchTopRatedSeries,
   fetchTopRatedAnimations,
+  fetchRecommendations,
 } from '../services/moviesApi.ts';
+import { useAuth } from '../context/AuthContext.tsx';
 
 function MainPage() {
+  const { user } = useAuth();
+
   const { data: sections, isLoading } = useQuery({
     queryKey: ['mainPageSections'],
     queryFn: async () => {
@@ -37,6 +41,14 @@ function MainPage() {
     staleTime: 1000 * 60 * 60 * 24 * 7, // 7 днів
   });
 
+  const { data: recommendations, isLoading: isRecommendationsLoading } =
+    useQuery({
+      queryKey: ['recommendations'],
+      queryFn: fetchRecommendations,
+      enabled: !!user,
+      // staleTime: 1000 * 60 * 60, // 1 hour
+    });
+
   const safeSections = sections || {
     upcoming: [],
     nowPlaying: [],
@@ -48,6 +60,14 @@ function MainPage() {
   return (
     <>
       <div className='recommendation-sections'>
+        {user && recommendations && recommendations.length > 0 && (
+          <MovieSection
+            id='recommendations'
+            title='Рекомендації для вас'
+            movies={recommendations}
+            loading={isRecommendationsLoading}
+          />
+        )}
         <MovieSection
           id='upcoming'
           title='Незабаром'

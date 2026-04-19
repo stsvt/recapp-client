@@ -97,7 +97,9 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   const login = (token: string) => {
     localStorage.setItem('token', token);
-    window.location.href = '/';
+    setTimeout(() => {
+      window.location.href = '/';
+    }, 100);
   };
 
   const logout = () => {
