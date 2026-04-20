@@ -2,7 +2,7 @@ import { useEffect, useRef } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
-function GoogleCallback() {
+function GoogleCallbackPage() {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const { user, login } = useAuth();
@@ -25,8 +25,6 @@ function GoogleCallback() {
         hasLogged.current = true;
 
         login(token);
-
-        navigate('/', { replace: true });
       } catch (error) {
         console.error('Помилка під час входу через Google:', error);
         navigate('/login', { replace: true });
@@ -50,4 +48,4 @@ function GoogleCallback() {
   );
 }
 
-export default GoogleCallback;
+export default GoogleCallbackPage;

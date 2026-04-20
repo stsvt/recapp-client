@@ -1,30 +1,36 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import PasswordField from '../components/PasswordField';
-import { login as loginApi } from '../services/authApi.ts';
+import { login as loginService } from '../services/authApi.ts';
 import { useAuth } from '../context/AuthContext';
-import { forgotPassword } from '../services/usersApi.ts';
-import Logo from '../components/ui/Logo.tsx';
 import { Button } from '../components/ui/Button.tsx';
+import { type SubmitHandler, useForm } from 'react-hook-form';
+import { EyeIcon, EyeSlashIcon } from '@phosphor-icons/react';
+import Spinner from '../components/ui/Spinner.tsx';
+import ForgotPasswordForm from '../components/ForgotPasswordForm.tsx';
+import GoogleButton from '../components/GoogleButton.tsx';
+
+interface Inputs {
+  email: string;
+  password: string;
+}
 
 function LoginPage() {
   const { login } = useAuth();
+
   const navigate = useNavigate();
-  const [formData, setFormData] = useState({ email: '', password: '' });
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isLoading },
+  } = useForm<Inputs>();
+
   const [showForgotForm, setShowForgotForm] = useState(false);
-  const [forgotEmail, setForgotEmail] = useState('');
-  const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const onSubmit: SubmitHandler<Inputs> = async (data) => {
     try {
-      const res = await loginApi(formData);
-      login(res.token);
-      console.log('Success', res);
+      const res = await loginService(data);
+      await login(res.token);
       navigate('/');
     } catch (error: unknown) {
       if (error instanceof Error) {
@@ -35,116 +41,93 @@ function LoginPage() {
     }
   };
 
-  const handleForgotPassword = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
-    try {
-      await forgotPassword(forgotEmail);
-      alert('Лист для відновлення надіслано на вашу пошту!');
-      setShowForgotForm(false);
-      setForgotEmail('');
-    } catch (error: unknown) {
-      alert(
-        error instanceof Error ? error.message : 'Помилка при відправці листа'
-      );
-    } finally {
-      setLoading(false);
-    }
-  };
+  if (isLoading) {
+    return <Spinner />;
+  }
 
-  const handleGoogleAuth = () => {
-    window.location.href = `${import.meta.env.VITE_API_URL}users/auth/google`;
-  };
+  if (showForgotForm) {
+    return <ForgotPasswordForm handleBack={() => setShowForgotForm(false)} />;
+  }
 
   return (
-    <div className='full-screen'>
-      <Logo />
-      <div className='auth-container'>
-        {!showForgotForm ? (
-          <form className='auth-box' onSubmit={handleSubmit}>
-            <h2>Вхід</h2>
-            <div className='input-group'>
-              <label>Email</label>
-              <input
-                type='email'
-                name='email'
-                placeholder='example@gmail.com'
-                value={formData.email}
-                onChange={handleChange}
-                required
-              />
-            </div>
-            <PasswordField
-              label='Пароль'
-              name='password'
-              value={formData.password}
-              onChange={handleChange}
+    <>
+      <form className='auth-box' onSubmit={handleSubmit(onSubmit)}>
+        <h2>Вхід</h2>
+        <div className='input-group'>
+          <label htmlFor='email'>Email</label>
+          <input
+            type='email'
+            id='email'
+            placeholder='example@gmail.com'
+            {...register('email', {
+              required: "Це поле є обов'язковим",
+              pattern: {
+                value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                message: 'Недійсна адреса електронної пошти',
+              },
+            })}
+          />
+          {errors && (
+            <span className='error-span'>{errors.email?.message}</span>
+          )}
+        </div>
+
+        <div className='input-group'>
+          <label htmlFor='password'>Пароль</label>
+          <div className='password-wrapper'>
+            <input
+              id='password'
+              type={showPassword ? 'text' : 'password'}
               placeholder='••••••••'
+              {...register('password', {
+                required: "Це поле є обов'язковим",
+              })}
             />
-
-            <div className='forgot-password-link'>
-              <span
-                className='link-small'
-                onClick={() => setShowForgotForm(true)}
-              >
-                Забули пароль?
-              </span>
-            </div>
-
-            <Button type='submit' className='submit-btn' variant='primary'>
-              Увійти
-            </Button>
-            <div className='separator'>або</div>
-            <Button
-              className='google-btn'
-              onClick={handleGoogleAuth}
-              variant='secondary'
-              size='md'
+            <button
+              type='button'
+              className='eye-button'
+              onClick={() => setShowPassword(!showPassword)}
+              tabIndex={-1}
             >
-              <img
-                src='https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg'
-                alt='Google'
-              />
-              Увійти через Google
-            </Button>
-
-            <p className='auth-footer'>
-              Немає акаунту?{' '}
-              <span className='link' onClick={() => navigate('/register')}>
-                Зареєструватись
-              </span>
-            </p>
-          </form>
-        ) : (
-          <form className='auth-box' onSubmit={handleForgotPassword}>
-            <h2>Відновлення пароля</h2>
-            <p className='auth-subtitle'>
-              Введіть ваш email, щоб отримати посилання для скидання пароля
-            </p>
-            <div className='input-group'>
-              <label>Email</label>
-              <input
-                type='email'
-                placeholder='example@gmail.com'
-                value={forgotEmail}
-                onChange={(e) => setForgotEmail(e.target.value)}
-                required
-              />
-            </div>
-
-            <button type='submit' className='submit-btn' disabled={loading}>
-              {loading ? 'Надсилання...' : 'Надіслати інструкції'}
+              {showPassword ? (
+                <EyeSlashIcon size={22} weight='regular' />
+              ) : (
+                <EyeIcon size={22} weight='regular' />
+              )}
             </button>
+          </div>
+          {errors && (
+            <span className='error-span'>{errors.password?.message}</span>
+          )}
+        </div>
 
-            <p className='auth-footer'>
-              <span className='link' onClick={() => setShowForgotForm(false)}>
-                Повернутися до входу
-              </span>
-            </p>
-          </form>
-        )}
-      </div>
-    </div>
+        <div className='forgot-password-link'>
+          <span className='link-small' onClick={() => setShowForgotForm(true)}>
+            Забули пароль?
+          </span>
+        </div>
+
+        <Button
+          type='submit'
+          className='submit-btn'
+          variant='primary'
+          disabled={isLoading}
+        >
+          Увійти
+        </Button>
+
+        <div className='separator'>або</div>
+
+        <GoogleButton />
+
+        <p className='auth-footer'>
+          Немає акаунту?{' '}
+          <span className='link' onClick={() => navigate('/register')}>
+            Зареєструватись
+          </span>
+        </p>
+      </form>
+    </>
   );
 }
 

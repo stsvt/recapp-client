@@ -127,22 +127,6 @@ export const resetPassword = async (
   return result;
 };
 
-export const forgotPassword = async (email: string) => {
-  const response = await fetch(`${BASE_URL}users/forgotPassword`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({ email }),
-  });
-
-  if (!response.ok) {
-    const errorData = await response.json();
-    throw new Error(errorData.message || 'Failed to send recovery email');
-  }
-  return await response.json();
-};
-
 export const searchUsers = async (query: string) => {
   const token = localStorage.getItem('token');
   const response = await fetch(`${BASE_URL}users?search=${query}`, {

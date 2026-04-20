@@ -95,19 +95,23 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     return () => window.removeEventListener('storage', handleStorageChange);
   }, []);
 
-  const login = (token: string) => {
+  const login = async (token: string) => {
     localStorage.setItem('token', token);
-    window.location.href = '/';
+    try {
+      const data = await fetchMe();
+      setUser(data.data.user);
+    } catch {
+      localStorage.removeItem('token');
+    }
   };
 
   const logout = () => {
     localStorage.removeItem('token');
     setUser(null);
     setIncomingRequestsCount(0);
-    window.location.href = '/login';
+    window.location.href = '/';
   };
 
-  console.log('CONTEXT', user);
   return (
     <AuthContext.Provider
       value={{
