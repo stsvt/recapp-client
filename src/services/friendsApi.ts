@@ -12,7 +12,7 @@ const getHeaders = () => {
 };
 
 export const sendFriendRequest = async (userId: string) => {
-  const response = await fetch(`${BASE_URL}friends/sendRequest/${userId}`, {
+  const response = await fetch(`${BASE_URL}users/${userId}/friends`, {
     method: 'POST',
     headers: getHeaders(),
   });
@@ -25,11 +25,11 @@ export const sendFriendRequest = async (userId: string) => {
 };
 
 export const acceptFriendRequest = async (userId: string) => {
-  const response = await fetch(`${BASE_URL}friends/acceptRequest/${userId}`, {
+  const response = await fetch(`${BASE_URL}users/${userId}/friends`, {
     method: 'PATCH',
     headers: getHeaders(),
   });
-  
+
   const data = await response.json();
   if (!response.ok) {
     throw new Error(data.message || 'Помилка запиту');
@@ -38,7 +38,7 @@ export const acceptFriendRequest = async (userId: string) => {
 };
 
 export const rejectFriendRequest = async (userId: string) => {
-  const response = await fetch(`${BASE_URL}friends/rejectRequest/${userId}`, {
+  const response = await fetch(`${BASE_URL}users/${userId}/friends`, {
     method: 'DELETE',
     headers: getHeaders(),
   });
@@ -53,7 +53,7 @@ export const rejectFriendRequest = async (userId: string) => {
 };
 
 export const removeFriend = async (userId: string) => {
-  const response = await fetch(`${BASE_URL}friends/removeFriend/${userId}`, {
+  const response = await fetch(`${BASE_URL}users/${userId}/friends/remove`, {
     method: 'DELETE',
     headers: getHeaders(),
   });
@@ -85,7 +85,7 @@ export const getFriends = async () => {
     headers: getHeaders(),
   });
   const data = await response.json();
-    
+
   if (!response.ok) {
     throw new Error(data.message || 'Помилка запиту');
   }
