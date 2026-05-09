@@ -57,6 +57,9 @@ export const fetchTopRatedSeries = () =>
 export const fetchTopRatedAnimations = () =>
   getMoviesData(`${BASE_URL}tmdb/topRatedAnimations`);
 
+export const fetchSimilarMovies = (movieId: string) =>
+  getMoviesData(`${BASE_URL}collaborative-filtering/similar/${movieId}`);
+
 export const searchMovies = async (query: string, page: number = 1) => {
   try {
     const response = await fetch(
