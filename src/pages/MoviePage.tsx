@@ -9,6 +9,7 @@ import {
   getMovieStatus,
   toggleActivityMovie,
 } from '../services/activitiesApi.ts';
+import { fetchSimilarMovies } from '../services/moviesApi.ts';
 import { useAuth } from '../context/AuthContext';
 import toast from 'react-hot-toast';
 import { useQuery } from '@tanstack/react-query';
@@ -25,6 +26,12 @@ function MoviePage() {
     queryFn: async () => {
       return await fetchMovieDetails(movieId!);
     },
+    enabled: Boolean(movieId),
+  });
+
+  const { data: recommendations, isLoading: isRecsLoading } = useQuery({
+    queryKey: ['similarMovies', movieId],
+    queryFn: () => fetchSimilarMovies(movieId!),
     enabled: Boolean(movieId),
   });
 
@@ -96,15 +103,20 @@ function MoviePage() {
         <>
           <div className='content-wrapper'>
             <h2 className='sub-section-title'>
-              Фільми схожі на "{movie.title}"
+              З цим фільмом також дивляться:
             </h2>
           </div>
           <MovieSection
+            title=''
+            movies={recommendations}
+            loading={isRecsLoading}
+          />
+          {/* <MovieSection
             key={`recommendations-${movie.id}`}
             title=''
             movies={movie.recommendations.results}
             loading={false}
-          />
+          /> */}
         </>
       )}
 

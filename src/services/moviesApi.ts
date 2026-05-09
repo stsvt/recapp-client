@@ -22,7 +22,9 @@ const getMoviesData = async (url: string) => {
   const data = result?.data;
   if (!data) return [];
 
-  const dynamicKey = Object.keys(data).find(key => data[key] && data[key].results);
+  const dynamicKey = Object.keys(data).find(
+    (key) => data[key] && data[key].results
+  );
 
   return dynamicKey ? data[dynamicKey].results : [];
 };
@@ -49,11 +51,14 @@ export const fetchUpcomingMovies = () =>
 export const fetchNowPlayingMovies = () =>
   getMoviesData(`${BASE_URL}tmdb/nowPlaying`);
 
-export const fetchTopRatedSeries = () => 
+export const fetchTopRatedSeries = () =>
   getMoviesData(`${BASE_URL}tmdb/topRatedSeries`);
 
-export const fetchTopRatedAnimations = () => 
+export const fetchTopRatedAnimations = () =>
   getMoviesData(`${BASE_URL}tmdb/topRatedAnimations`);
+
+export const fetchSimilarMovies = (movieId: string) =>
+  getMoviesData(`${BASE_URL}collaborative-filtering/similar/${movieId}`);
 
 export const searchMovies = async (query: string, page: number = 1) => {
   try {
