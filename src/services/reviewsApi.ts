@@ -2,7 +2,7 @@ import type { ReviewData } from '../types';
 const BASE_URL = import.meta.env.VITE_API_URL;
 
 export const createReview = async (movieId: string, data: ReviewData) => {
-  const response = await fetch(`${BASE_URL}reviews/${movieId}`, {
+  const response = await fetch(`${BASE_URL}movies/${movieId}/reviews`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -19,7 +19,7 @@ export const createReview = async (movieId: string, data: ReviewData) => {
 };
 
 export const fetchReviews = async (movieId: string) => {
-  const response = await fetch(`${BASE_URL}reviews/${movieId}`);
+  const response = await fetch(`${BASE_URL}movies/${movieId}/reviews`);
   if (!response.ok) return null;
   const result = await response.json();
   return result.data.reviews;
