@@ -1,0 +1,13 @@
+star-rating .on {color: #ffd700;}
+
+.star-rating .off {
+    color: #e4e5e9;
+}
+
+
+.star-rating {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+}

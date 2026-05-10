@@ -2,6 +2,8 @@ import { useState } from 'react';
 import { createReview, updateReview } from '../../services/reviewsApi.ts';
 import { useAuth } from '../../context/AuthContext.tsx';
 import type { Review } from '../../types';
+import { StarRating } from '../ui/StarRating.tsx';
+import { Button } from '../ui/Button.tsx';
 
 interface AddReviewFormProps {
   movieId: string;
@@ -17,7 +19,7 @@ const AddReviewForm: React.FC<AddReviewFormProps> = ({
   onCancel,
 }) => {
   const [text, setText] = useState(initialData?.review || '');
-  const [rating, setRating] = useState(initialData?.rating || 10);
+  const [rating, setRating] = useState(initialData?.rating || 0);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -62,13 +64,20 @@ const AddReviewForm: React.FC<AddReviewFormProps> = ({
     <div className={`add-review-container ${isEditing ? 'edit-mode' : ''}`}>
       <h3>{isEditing ? 'Редагувати відгук' : 'Ваш відгук'}</h3>
       <form onSubmit={handleSubmit}>
-        <input
-          type='number'
-          min='1'
-          max='10'
-          value={rating}
-          onChange={(e) => setRating(Number(e.target.value))}
-        />
+        <div
+          style={{
+            marginBottom: '14px',
+            display: 'flex',
+            gap: '16px',
+            alignItems: 'center',
+            justifySelf: 'start',
+          }}
+        >
+          <StarRating defaultRating={rating} onSetRating={setRating} />
+          <span
+            style={{ fontSize: 16, fontWeight: 'bold' }}
+          >{`${rating}/10`}</span>
+        </div>
         <textarea
           value={text}
           onChange={(e) => setText(e.target.value)}
@@ -83,13 +92,23 @@ const AddReviewForm: React.FC<AddReviewFormProps> = ({
         )}
 
         <div className='form-actions'>
-          <button type='submit' disabled={isSubmitting}>
+          <Button
+            type='submit'
+            disabled={isSubmitting}
+            variant='secondary'
+            style={{ backgroundColor: '#fff' }}
+          >
             {isSubmitting ? 'Збереження...' : isEditing ? 'Оновити' : 'Додати'}
-          </button>
+          </Button>
           {isEditing && (
-            <button type='button' onClick={onCancel} className='cancel-btn'>
+            <Button
+              type='button'
+              onClick={onCancel}
+              variant='secondary'
+              className='cancel-btn'
+            >
               Скасувати
-            </button>
+            </Button>
           )}
         </div>
       </form>
