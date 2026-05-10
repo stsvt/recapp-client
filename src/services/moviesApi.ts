@@ -1,6 +1,11 @@
 import genres from '../../data/genres.json';
 
-const BASE_URL = import.meta.env.VITE_API_URL;
+const API_URL = import.meta.env.VITE_API_URL || '';
+const BASE_URL = API_URL.endsWith('/') ? API_URL : `${API_URL}/`;
+
+if (!API_URL) {
+  console.error('VITE_API_URL is not defined! API calls will fail.');
+}
 
 export async function fetchMovies() {
   const genresString = genres.map((genre) => genre.id).join(',');
