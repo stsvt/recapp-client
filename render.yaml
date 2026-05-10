@@ -1,0 +1,18 @@
+services:
+  - type: web
+    name: recapp-client
+    runtime: static
+    buildCommand: npm install && npm run build
+    staticPublishPath: dist
+    pullRequestPreviewsEnabled: false
+    envVars:
+      - key: VITE_API_URL
+        sync: false   # https://<your-server>.onrender.com/api/v1/
+      - key: VITE_IMAGE_URL
+        value: https://image.tmdb.org/t/p/original/
+      - key: VITE_POSTER_URL
+        value: https://image.tmdb.org/t/p/w500/
+      - key: VITE_DICEBEAR_URL
+        value: https://api.dicebear.com/7.x/initials/svg
+      - key: VITE_USERS_IMAGES_BASE
+        sync: false   # https://<your-server>.onrender.com/img/users/
