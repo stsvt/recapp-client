@@ -1,5 +1,6 @@
 import { type SubmitHandler, useForm } from 'react-hook-form';
 import { forgotPassword as forgotPasswordService } from '../services/authApi.ts';
+import toast from 'react-hot-toast';
 import { Button } from './ui/Button.tsx';
 import Spinner from './ui/Spinner.tsx';
 
@@ -23,10 +24,10 @@ export default function ForgotPasswordForm({
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
     try {
       await forgotPasswordService(data.email);
-      alert('Лист для відновлення надіслано на вашу пошту!');
+      toast.success('Лист для відновлення надіслано на вашу пошту!');
       handleBack();
     } catch (error: unknown) {
-      alert(
+      toast.error(
         error instanceof Error ? error.message : 'Помилка при відправці листа'
       );
     }

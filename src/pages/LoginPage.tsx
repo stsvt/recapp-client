@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { login as loginService } from '../services/authApi.ts';
 import { useAuth } from '../context/AuthContext';
+import toast from 'react-hot-toast';
 import { Button } from '../components/ui/Button.tsx';
 import { type SubmitHandler, useForm } from 'react-hook-form';
 import { EyeIcon, EyeSlashIcon } from '@phosphor-icons/react';
@@ -34,9 +35,9 @@ function LoginPage() {
       navigate('/');
     } catch (error: unknown) {
       if (error instanceof Error) {
-        alert(error.message);
+        toast.error(error.message);
       } else {
-        alert('An unexpected error occurred');
+        toast.error('An unexpected error occurred');
       }
     }
   };

@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import toast from 'react-hot-toast';
 import PasswordField from '../components/PasswordField';
 import { resetPassword } from '../services/usersApi.ts';
 import { useAuth } from '../context/AuthContext';
@@ -19,7 +20,8 @@ function ResetPasswordPage() {
     e.preventDefault();
 
     if (formData.password !== formData.confirmPassword) {
-      return alert('Паролі не збігаються!');
+      toast.error('Паролі не збігаються!');
+      return;
     }
 
     setLoading(true);
@@ -27,13 +29,13 @@ function ResetPasswordPage() {
       const res = await resetPassword(token!, formData);
       login(res.token);
 
-      alert('Пароль успішно змінено! Ви увійшли в систему.');
+      toast.success('Пароль успішно змінено! Ви увійшли в систему.');
       navigate('/');
     } catch (err: unknown) {
       if (err instanceof Error) {
         console.error(err.message);
       }
-      alert('Посилання недійсне або термін дії закінчився');
+      toast.error('Посилання недійсне або термін дії закінчився');
     } finally {
       setLoading(false);
     }

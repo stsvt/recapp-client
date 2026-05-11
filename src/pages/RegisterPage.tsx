@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { register as registerService } from '../services/authApi.ts';
 import { useNavigate } from 'react-router-dom';
+import toast from 'react-hot-toast';
 import { Button } from '../components/ui/Button.tsx';
 import { type SubmitHandler, useForm } from 'react-hook-form';
 import { EyeIcon, EyeSlashIcon } from '@phosphor-icons/react';
@@ -31,9 +32,9 @@ function RegisterPage() {
       navigate('/login');
     } catch (error: unknown) {
       if (error instanceof Error) {
-        alert(error.message);
+        toast.error(error.message);
       } else {
-        alert('An unexpected error occurred');
+        toast.error('An unexpected error occurred');
       }
     }
   };
