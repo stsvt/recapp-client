@@ -63,7 +63,9 @@ export const fetchTopRatedAnimations = () =>
   getMoviesData(`${BASE_URL}tmdb/topRatedAnimations`);
 
 export const fetchSimilarMovies = (movieId: string) =>
-  getMoviesData(`${BASE_URL}collaborative-filtering/similar/${movieId}`);
+  getMoviesData(
+    `${BASE_URL}collaborative-filtering/item-based?movieId=${movieId}`
+  );
 
 export const searchMovies = async (query: string, page: number = 1) => {
   try {
@@ -79,7 +81,7 @@ export const searchMovies = async (query: string, page: number = 1) => {
   }
 };
 
-export const fetchRecommendations = async () => {
+export const fetchContentBasedRecommendations = async () => {
   const token = localStorage.getItem('token');
   const response = await fetch(`${BASE_URL}recommendations/contentBased`, {
     headers: {
@@ -95,4 +97,25 @@ export const fetchRecommendations = async () => {
 
   const result = await response.json();
   return result?.data?.recommendations || [];
+};
+
+export const fetchUserBasedRecommendations = async (userId: string) => {
+  const token = localStorage.getItem('token');
+  const response = await fetch(
+    `${BASE_URL}collaborative-filtering/user-based?userId=${userId}`,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+
+  if (!response.ok) {
+    throw new Error(
+      `Failed to fetch user-based recommendations. Status: ${response.status}`
+    );
+  }
+
+  const result = await response.json();
+  return result?.data?.recommendations?.results || [];
 };

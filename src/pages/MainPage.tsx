@@ -6,7 +6,8 @@ import {
   fetchNowPlayingMovies,
   fetchTopRatedSeries,
   fetchTopRatedAnimations,
-  fetchRecommendations,
+  fetchContentBasedRecommendations,
+  fetchUserBasedRecommendations,
 } from '../services/moviesApi.ts';
 import { useAuth } from '../context/AuthContext.tsx';
 
@@ -41,13 +42,18 @@ function MainPage() {
     staleTime: 1000 * 60 * 60 * 24 * 7, // 7 днів
   });
 
-  const { data: recommendations, isLoading: isRecommendationsLoading } =
-    useQuery({
-      queryKey: ['recommendations'],
-      queryFn: fetchRecommendations,
-      enabled: !!user,
-      // staleTime: 1000 * 60 * 60, // 1 hour
-    });
+  const { data: contentBasedRecs, isLoading: isContentLoading } = useQuery({
+    queryKey: ['recommendations-content'],
+    queryFn: fetchContentBasedRecommendations,
+    enabled: !!user,
+    // staleTime: 1000 * 60 * 60, // 1 hour
+  });
+
+  const { data: userBasedRecs, isLoading: isUserBasedLoading } = useQuery({
+    queryKey: ['recommendations-user', user?._id],
+    queryFn: () => fetchUserBasedRecommendations(user!._id),
+    enabled: !!user?._id,
+  });
 
   const safeSections = sections || {
     upcoming: [],
@@ -60,12 +66,20 @@ function MainPage() {
   return (
     <>
       <div className='recommendation-sections'>
-        {user && recommendations && recommendations.length > 0 && (
+        {user && userBasedRecs && userBasedRecs.length > 0 && (
           <MovieSection
-            id='recommendations'
-            title='Рекомендації для вас'
-            movies={recommendations}
-            loading={isRecommendationsLoading}
+            id='user-based-recs'
+            title='Персонально для вас'
+            movies={userBasedRecs}
+            loading={isUserBasedLoading}
+          />
+        )}
+        {user && contentBasedRecs && contentBasedRecs.length > 0 && (
+          <MovieSection
+            id='content-based-recs'
+            title='Вам може сподобатись'
+            movies={contentBasedRecs}
+            loading={isContentLoading}
           />
         )}
         <MovieSection
