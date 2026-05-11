@@ -2,6 +2,7 @@ import { Routes, Route } from 'react-router-dom';
 import { QueryClientProvider, QueryClient } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { Toaster } from 'react-hot-toast';
+import PageTransitionBar from './components/ui/PageTransitionBar.tsx';
 import { AuthProvider } from './context/AuthContext';
 import MainPage from './pages/MainPage';
 import RegisterPage from './pages/RegisterPage';
@@ -25,6 +26,7 @@ const queryClient = new QueryClient({
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
+      <PageTransitionBar />
       <AuthProvider>
         <Routes>
           <Route path='/google/callback' element={<GoogleCallbackPage />} />
