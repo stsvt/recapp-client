@@ -8,15 +8,13 @@ import {
 } from '@phosphor-icons/react';
 import { useDebounce } from '../hooks/useDebounce';
 import { useAuth } from '../context/AuthContext';
+import { Avatar } from './Avatar.tsx';
 
 interface SearchResult {
   _id: string;
   name: string;
   photo: string;
 }
-
-const USERS_IMAGES_BASE = import.meta.env.VITE_USERS_IMAGES_BASE;
-const DICEBEAR_BASE = import.meta.env.VITE_DICEBEAR_URL;
 
 function UserSearch() {
   const { user: currentUser } = useAuth();
@@ -74,14 +72,6 @@ function UserSearch() {
     navigate(`/user/${id}`);
   };
 
-  const getAvatarUrl = (user: SearchResult) => {
-    if (user.photo && user.photo !== `${USERS_IMAGES_BASE}default.jpg`) {
-      return `${USERS_IMAGES_BASE}${user.photo}`;
-    }
-    const seed = encodeURIComponent(user.name || 'User');
-    return `${DICEBEAR_BASE}?seed=${seed}&chars=1&backgroundColor=e50914`;
-  };
-
   return (
     <div className='us-wrapper' ref={searchRef}>
       <div className='us-input-field'>
@@ -108,16 +98,11 @@ function UserSearch() {
                 className='us-result-item'
                 onClick={() => handleSelectUser(user._id)}
               >
-                <img
-                  src={getAvatarUrl(user)}
-                  alt={user.name}
+                <Avatar
+                  userName={user.name}
+                  userPhoto={user.photo}
+                  size='md'
                   className='us-avatar'
-                  crossOrigin='anonymous'
-                  onError={(e) => {
-                    const target = e.target as HTMLImageElement;
-                    const seed = encodeURIComponent(user.name || 'User');
-                    target.src = `${DICEBEAR_BASE}?seed=${seed}&chars=1&backgroundColor=e50914`;
-                  }}
                 />
                 <div className='us-info'>
                   <span className='us-name'>{user.name}</span>

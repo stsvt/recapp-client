@@ -22,9 +22,7 @@ import {
 } from '../services/friendsApi.ts';
 import type { Friend } from '../types/index.ts';
 import { Button } from '../components/ui/Button.tsx';
-
-const DICEBEAR_BASE = import.meta.env.VITE_DICEBEAR_URL;
-const USERS_IMAGES_BASE = import.meta.env.VITE_USERS_IMAGES_BASE;
+import { Avatar } from '../components/Avatar.tsx';
 
 interface UserData {
   _id: string;
@@ -143,14 +141,6 @@ const UserPage = () => {
     }
   };
 
-  const avatarUrl = useMemo(() => {
-    if (userData?.photo && userData.photo !== 'default.jpg') {
-      return `${USERS_IMAGES_BASE}${userData.photo}`;
-    }
-    const seed = encodeURIComponent(userData?.name || 'User');
-    return `${DICEBEAR_BASE}?seed=${seed}&chars=1&backgroundColor=e50914`;
-  }, [userData]);
-
   if (loading) {
     return (
       <>
@@ -177,11 +167,11 @@ const UserPage = () => {
       <main className='profile-container'>
         <article className='profile-card'>
           <div className='avatar-section'>
-            <img
-              src={avatarUrl}
-              alt={userData?.name || 'User'}
+            <Avatar
+              userName={isOwnProfile ? currentUser?.name || 'User' : userData?.name || 'User'}
+              userPhoto={isOwnProfile ? currentUser?.photo : userData?.photo}
+              size='lg'
               className='profile-avatar'
-              crossOrigin='anonymous'
             />
           </div>
 

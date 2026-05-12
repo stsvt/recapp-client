@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect, useMemo } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import PasswordField from '../components/PasswordField';
@@ -24,9 +24,7 @@ import UserSearch from '../components/UserSearch';
 import type { Friend } from '../types';
 import { Button } from '../components/ui/Button.tsx';
 import { minutesToStr } from '../utils.ts';
-
-const DICEBEAR_BASE = import.meta.env.VITE_DICEBEAR_URL;
-const USERS_IMAGES_BASE = import.meta.env.VITE_USERS_IMAGES_BASE;
+import { Avatar } from '../components/Avatar.tsx';
 
 interface ActivityItem {
   movie: MovieSummary;
@@ -136,14 +134,6 @@ function ProfilePage() {
     };
     loadFriends();
   }, [user?._id, friendsUpdateTick]);
-
-  const avatarUrl = useMemo(() => {
-    if (user?.photo && user.photo !== `${USERS_IMAGES_BASE}default.jpg`) {
-      return `${USERS_IMAGES_BASE}${user.photo}?v=${imgVersion}`;
-    }
-    const seed = encodeURIComponent(user?.name || 'User');
-    return `${DICEBEAR_BASE}?seed=${seed}&chars=1&backgroundColor=e50914`;
-  }, [user?.name, user?.photo, imgVersion]);
 
   const handleUpdate = async () => {
     setLoading(true);
@@ -311,17 +301,12 @@ function ProfilePage() {
       <div className='profile-container'>
         <div className='profile-card'>
           <div className='avatar-section'>
-            <img
-              key={imgVersion}
-              src={avatarUrl}
-              alt={user.name}
+            <Avatar
+              userName={user.name}
+              userPhoto={user.photo}
+              size='lg'
               className={`profile-avatar ${isEditing ? 'editing' : ''}`}
-              crossOrigin='anonymous'
-              onError={(e) => {
-                const target = e.target as HTMLImageElement;
-                const fallbackSeed = encodeURIComponent(user?.name || 'User');
-                target.src = `${DICEBEAR_BASE}?seed=${fallbackSeed}&chars=1&backgroundColor=e50914`;
-              }}
+              cacheVersion={imgVersion}
             />
             {isEditing && (
               <div className='avatar-edit-overlay'>
@@ -545,14 +530,11 @@ function ProfilePage() {
                 className='friend-item'
                 onClick={() => navigate(`/user/${friend._id}`)}
               >
-                <img
-                  src={
-                    friend.photo !== 'default.jpg'
-                      ? `${USERS_IMAGES_BASE}${friend.photo}`
-                      : `${DICEBEAR_BASE}?seed=${friend.name}`
-                  }
-                  alt={friend.name}
-                  crossOrigin='anonymous'
+                <Avatar
+                  userName={friend.name}
+                  userPhoto={friend.photo}
+                  size='md'
+                  className='friend-avatar'
                 />
                 <span>{friend.name}</span>
               </div>

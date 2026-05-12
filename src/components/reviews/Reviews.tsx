@@ -4,6 +4,7 @@ import toast from 'react-hot-toast';
 import { deleteReview, fetchReviews } from '../../services/reviewsApi.ts';
 import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
+import { Avatar } from '../Avatar.tsx';
 
 interface ReviewsProps {
   movieId: string | undefined;
@@ -102,12 +103,22 @@ export function Reviews({ movieId, userId }: ReviewsProps) {
                     <>
                       <div className='comment-header'>
                         <div className='user-info'>
-                          <div className='avatar'>
-                            {typeof rev.user === 'object' && rev.user !== null
-                              ? rev.user.name?.charAt(0).toUpperCase() || 'U'
-                              : rev.user?.toString().slice(-1).toUpperCase() ||
-                                'U'}
-                          </div>
+                          <Avatar
+                            userName={
+                              typeof rev.user === 'object' && rev.user !== null
+                                ? rev.user.name || rev.user.username || 'User'
+                                : 'User'
+                            }
+                            userPhoto={
+                              typeof rev.user === 'object' &&
+                              rev.user !== null &&
+                              'photo' in rev.user
+                                ? (rev.user as Record<string, string>).photo
+                                : undefined
+                            }
+                            size='sm'
+                            className='avatar'
+                          />
                           <span className='username'>
                             {typeof rev.user === 'object' && rev.user !== null
                               ? rev.user.username ||
@@ -127,10 +138,6 @@ export function Reviews({ movieId, userId }: ReviewsProps) {
                       <p className='comment-text'>{rev.review}</p>
 
                       <div className='comment-footer'>
-                        <div className='reactions'>
-                          <span>👍 ❤️</span>
-                        </div>
-
                         {userId ===
                           (typeof rev.user === 'object'
                             ? rev.user?._id

@@ -4,7 +4,7 @@ import {
   UserIcon,
   FunnelIcon,
 } from '@phosphor-icons/react';
-import { useState, useMemo, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext.tsx';
 import { getIncomingRequests } from '../../services/friendsApi.ts';
@@ -12,9 +12,7 @@ import { Button } from './Button.tsx';
 import FilterModal from '../FilterModal.tsx';
 import SearchModal from '../SearchModal.tsx';
 import Logo from './Logo.tsx';
-
-const DICEBEAR_BASE = import.meta.env.VITE_DICEBEAR_URL;
-const USERS_IMAGES_BASE = import.meta.env.VITE_USERS_IMAGES_BASE;
+import { Avatar } from '../Avatar.tsx';
 
 function Header() {
   const { user, incomingRequestsCount, setIncomingRequestsCount } = useAuth();
@@ -53,14 +51,6 @@ function Header() {
     searchParams.delete('search');
     setSearchParams(searchParams);
   };
-
-  const avatarUrl = useMemo(() => {
-    if (user?.photo && user.photo !== 'default.jpg') {
-      return `${USERS_IMAGES_BASE}${user.photo}`;
-    }
-    const seed = encodeURIComponent(user?.name || 'User');
-    return `${DICEBEAR_BASE}?seed=${seed}&chars=1&backgroundColor=e50914`;
-  }, [user]);
 
   return (
     <>
@@ -131,11 +121,11 @@ function Header() {
             aria-label={user ? 'View profile' : 'Login'}
             icon={
               user ? (
-                <img
-                  src={avatarUrl}
-                  alt={user.name}
+                <Avatar
+                  userName={user.name}
+                  userPhoto={user.photo}
+                  size='sm'
                   className='dashboard-avatar'
-                  crossOrigin='anonymous'
                 />
               ) : (
                 <UserIcon className='icon last-icon' size={40} />
