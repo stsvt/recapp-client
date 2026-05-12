@@ -9,6 +9,7 @@ import { CheckIcon, XIcon, CaretLeftIcon } from '@phosphor-icons/react';
 import { useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import { Button } from '../components/ui/Button.tsx';
+import { Avatar } from '../components/Avatar.tsx';
 
 interface RequestItem {
   _id: string;
@@ -19,9 +20,6 @@ interface RequestItem {
     email: string;
   };
 }
-
-const DICEBEAR_BASE = import.meta.env.VITE_DICEBEAR_URL;
-const USERS_IMAGES_BASE = import.meta.env.VITE_USERS_IMAGES_BASE;
 
 function FriendRequestsPage() {
   const [requests, setRequests] = useState<RequestItem[]>([]);
@@ -94,13 +92,10 @@ function FriendRequestsPage() {
               {requests.map((req) => (
                 <div key={req._id} className='request-item-modern'>
                   <div className='user-info-main'>
-                    <img
-                      src={
-                        req.requester.photo !== 'default.jpg'
-                          ? `${USERS_IMAGES_BASE}${req.requester.photo}`
-                          : `${DICEBEAR_BASE}?seed=${req.requester.name}`
-                      }
-                      alt={req.requester.name}
+                    <Avatar
+                      userName={req.requester.name}
+                      userPhoto={req.requester.photo}
+                      size='md'
                       className='request-avatar'
                     />
                     <div className='user-text'>

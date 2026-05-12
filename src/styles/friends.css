@@ -1,409 +1,408 @@
 /* USER SEARCH */
 .us-wrapper {
-    position: relative;
-    width: 100%;
-    max-width: 320px;
-    margin: 10px auto 25px;
+  position: relative;
+  width: 100%;
+  max-width: 320px;
+  margin: 10px auto 25px;
 }
 
 .us-input-field {
-    display: flex;
-    align-items: center;
-    background: var(--color-text-dark-gray80);
-    border: 1px solid var(--color-text-white10);
-    border-radius: 20px;
-    padding: 8px 16px;
-    transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  background: var(--color-text-dark-gray80);
+  border: 1px solid var(--color-text-white10);
+  border-radius: 20px;
+  padding: 8px 16px;
+  transition: all 0.3s ease;
 }
 
 .us-input-field:focus-within {
-    border-color: var(--color-primary);
-    background: var(--color-bg-secondary);
-    box-shadow: 0 0 10px var(--color-primary-20);
+  border-color: var(--color-primary);
+  background: var(--color-bg-secondary);
+  box-shadow: 0 0 10px var(--color-primary-20);
 }
 
 .us-icon {
-    color: var(--color-text-muted);
-    margin-right: 10px;
+  color: var(--color-text-muted);
+  margin-right: 10px;
 }
 
 .us-input-field input {
-    background: transparent;
-    border: none;
-    font-size: 14px;
-    width: 100%;
-    outline: none;
+  background: transparent;
+  border: none;
+  font-size: 14px;
+  width: 100%;
+  outline: none;
 }
 
 .us-input-field input::placeholder {
-    color: var(--color-text-muted);
+  color: var(--color-text-muted);
 }
 
 /* DROPDOWN */
 .us-dropdown {
-    position: absolute;
-    top: 100%;
-    left: 0;
-    right: 0;
-    width: 100%;
-    background: var(--color-text-gray12);
-    border: 1px solid var(--color-text-dark-900);
-    border-radius: 12px;
-    box-shadow: 0 10px 30px var(--color-bg-dark-80);
-    max-height: 280px;
-    overflow-y: auto;
-    z-index: 99999 !important;
-    display: block !important;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  width: 100%;
+  background: var(--color-text-gray12);
+  border: 1px solid var(--color-text-dark-900);
+  border-radius: 12px;
+  box-shadow: 0 10px 30px var(--color-bg-dark-80);
+  max-height: 280px;
+  overflow-y: auto;
+  z-index: 99999 !important;
+  display: block !important;
 }
 
 .us-result-item {
-    display: flex;
-    align-items: center;
-    padding: 10px 15px;
-    cursor: pointer;
-    border-bottom: 1px solid var(--color-text-white3);
-    transition: background 0.2s;
+  display: flex;
+  align-items: center;
+  padding: 10px 15px;
+  cursor: pointer;
+  border-bottom: 1px solid var(--color-text-white3);
+  transition: background 0.2s;
 }
 
 .us-result-item:last-child {
-    border-bottom: none;
+  border-bottom: none;
 }
 
 .us-result-item:hover {
-    background: var(--color-primary-10);
+  background: var(--color-primary-10);
 }
 
 .us-avatar {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    object-fit: cover;
-    margin-right: 12px;
-    border: 1px solid var(--color-text-white10);
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-right: 12px;
+  border: 1px solid var(--color-text-white10);
 }
 
 .us-info {
-    display: flex;
-    flex-direction: column;
+  display: flex;
+  flex-direction: column;
 }
 
 .us-name {
-    font-size: 14px;
-    font-weight: 500;
+  font-size: 14px;
+  font-weight: 500;
 }
 
 .us-subtext {
-    color: var(--color-text-muted);
-    font-size: 11px;
+  color: var(--color-text-muted);
+  font-size: 11px;
 }
 
 .us-dropdown::-webkit-scrollbar {
-    width: 6px;
+  width: 6px;
 }
 
 .us-dropdown::-webkit-scrollbar-thumb {
-    background: var(--color-text-dark-900);
-    border-radius: 10px;
+  background: var(--color-text-dark-900);
+  border-radius: 10px;
 }
 
 .us-no-results {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 25px 15px;
-    color: var(--color-text-muted);
-    gap: 8px;
-    text-align: center;
-    font-size: 14px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 25px 15px;
+  color: var(--color-text-muted);
+  gap: 8px;
+  text-align: center;
+  font-size: 14px;
 }
 
 .us-no-results svg {
-    opacity: 0.5;
-    color: var(--color-primary);
+  opacity: 0.5;
+  color: var(--color-primary);
 }
 
 /* FRIEND REQUESTS */
 .requests-card {
-    max-width: 600px !important;
-    width: 95%;
+  max-width: 600px !important;
+  width: 95%;
 }
 
 .card-header {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-    margin-bottom: 30px;
-    border-bottom: 1px solid var(--color-text-white10);
-    padding-bottom: 15px;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 30px;
+  border-bottom: 1px solid var(--color-text-white10);
+  padding-bottom: 15px;
 }
 
 .request-badge {
-    background: var(--color-primary);
-    padding: 2px 10px;
-    border-radius: 20px;
-    font-size: 0.8rem;
-    font-weight: bold;
+  background: var(--color-primary);
+  padding: 2px 10px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: bold;
 }
 
 .requests-grid {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
 }
 
 .request-item-modern {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 15px;
-    background: var(--color-text-white3);
-    border: 1px solid var(--color-text-white5);
-    border-radius: 12px;
-    transition: all 0.3s ease;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px;
+  background: var(--color-text-white3);
+  border: 1px solid var(--color-text-white5);
+  border-radius: 12px;
+  transition: all 0.3s ease;
 }
 
 .request-item-modern:hover {
-    background: var(--color-text-white7);
-    transform: translateY(-2px);
-    border-color: var(--color-text-white10);
+  background: var(--color-text-white7);
+  transform: translateY(-2px);
+  border-color: var(--color-text-white10);
 }
 
 .user-info-main {
-    display: flex;
-    align-items: center;
-    gap: 15px;
+  display: flex;
+  align-items: center;
+  gap: 15px;
 }
 
 .request-avatar {
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 2px solid var(--color-primary-50);
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid var(--color-primary-50);
 }
 
 .user-text {
-    display: flex;
-    flex-direction: column;
+  display: flex;
+  flex-direction: column;
 }
 
 .user-name {
-    font-weight: 600;
-    font-size: 1.05rem;
+  font-weight: 600;
+  font-size: 1.05rem;
 }
 
 .user-email {
-    font-size: 0.85rem;
-    margin-right: 10px;
+  font-size: 0.85rem;
+  margin-right: 10px;
 }
 
 .action-buttons {
-    display: flex;
-    gap: 10px;
+  display: flex;
+  gap: 10px;
 }
 
 .action-buttons button {
-    width: 32px;
-    height: 32px;
-    border-radius: 10px;
-    border: none;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    transition: all 0.2s ease;
+  width: 32px;
+  height: 32px;
+  border-radius: 10px;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
 }
 
 .btn-accept {
-    background: var(--color-text-light-green-10);
-    color: var(--color-text-green-400);
+  background: var(--color-text-light-green-10);
+  color: var(--color-text-green-400);
 }
 
 .btn-accept:hover {
-    background: var(--color-text-green-800);
-    color: var(--color-text-black);
+  background: var(--color-text-green-800);
+  color: var(--color-text-black);
 }
 
 .btn-reject {
-    background: var(--color-text-light-red50);
-    color: var(--color-text-light-red);
+  background: var(--color-text-light-red50);
+  color: var(--color-text-light-red);
 }
 
 .btn-reject:hover {
-    background: var(--color-text-red-dark);
-    color: var(--color-text-white);
+  background: var(--color-text-red-dark);
+  color: var(--color-text-white);
 }
 
 .empty-state {
-    text-align: center;
-    padding: 40px 0;
-    color: var(--color-text-gray);
+  text-align: center;
+  padding: 40px 0;
+  color: var(--color-text-gray);
 }
 
 /* FRIENDS LIST */
 .friends-section {
-    margin: 20px 0;
-    padding: 0 20px;
+  margin: 20px 0;
+  padding: 0 20px;
 }
 
 .friends-list-horizontal {
-    display: flex;
-    gap: 15px;
-    overflow-x: auto;
-    padding: 10px 5px;
-    scrollbar-width: thin;
+  display: flex;
+  gap: 15px;
+  overflow-x: auto;
+  padding: 10px 5px;
+  scrollbar-width: thin;
 }
 
 .friend-item {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 8px;
-    cursor: pointer;
-    transition: transform 0.2s;
-    min-width: 80px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  transition: transform 0.2s;
+  min-width: 80px;
 }
 
 .friend-item:hover {
-    transform: translateY(-5px);
+  transform: translateY(-5px);
 }
 
 .friend-item img {
-    width: 60px;
-    height: 60px;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 2px solid var(--color-primary);
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  object-fit: cover;
 }
 
 .friend-item span {
-    font-size: 0.85rem;
-    color: white;
-    text-align: center;
-    max-width: 80px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+  font-size: 0.85rem;
+  color: white;
+  text-align: center;
+  max-width: 80px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 /* FRIENDSHIP CONTROLS */
 .friendship-controls {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 16px;
-    width: 100%;
-    padding-top: 10px;
-    padding: 15px 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  width: 100%;
+  padding-top: 10px;
+  padding: 15px 0;
 }
 
 .friends-badge,
 .pending-badge {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    font-weight: 600;
-    font-size: 0.95rem;
-    padding: 10px 20px;
-    border-radius: 50px;
-    background: var(--color-text-white3);
-    backdrop-filter: blur(5px);
-    transition: all 0.3s ease;
-    letter-spacing: 0.3px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  padding: 10px 20px;
+  border-radius: 50px;
+  background: var(--color-text-white3);
+  backdrop-filter: blur(5px);
+  transition: all 0.3s ease;
+  letter-spacing: 0.3px;
 }
 
 .friends-badge {
-    color: var(--color-text-green-400);
-    border: 1px solid var(--color-text-green-20);
-    box-shadow: 0 0 15px var(--color-text-green-05);
+  color: var(--color-text-green-400);
+  border: 1px solid var(--color-text-green-20);
+  box-shadow: 0 0 15px var(--color-text-green-05);
 }
 
 .friends-badge svg {
-    filter: drop-shadow(0 0 5px var(--color-text-green-50));
+  filter: drop-shadow(0 0 5px var(--color-text-green-50));
 }
 
 .pending-badge {
-    color: var(--color-text-amber-400);
-    border: 1px solid var(--color-text-amber-20);
-    box-shadow: 0 0 15px var(--color-text-amber-05);
+  color: var(--color-text-amber-400);
+  border: 1px solid var(--color-text-amber-20);
+  box-shadow: 0 0 15px var(--color-text-amber-05);
 }
 
 .remove-friend-btn,
 .cancel-request-btn {
-    background: none;
-    border: none;
-    color: var(--color-text-white40);
-    font-size: 0.85rem;
-    font-weight: 500;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    cursor: pointer;
-    padding: 5px 10px;
-    border-radius: 6px;
-    transition: all 0.2s ease;
-    text-transform: lowercase;
+  background: none;
+  border: none;
+  color: var(--color-text-white40);
+  font-size: 0.85rem;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  padding: 5px 10px;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+  text-transform: lowercase;
 }
 
 .remove-friend-btn {
-    color: var(--color-text-gray-400);
+  color: var(--color-text-gray-400);
 }
 
 .remove-friend-btn:hover {
-    color: var(--color-text-red-bright);
-    background: var(--color-text-red-bright-05);
+  color: var(--color-text-red-bright);
+  background: var(--color-text-red-bright-05);
 }
 
 .cancel-request-btn:hover {
-    color: var(--color-text-white);
-    background: var(--color-text-white5);
+  color: var(--color-text-white);
+  background: var(--color-text-white5);
 }
 
 .add-friend-btn,
 .accept-friend-btn {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    width: 100%;
-    max-width: 280px;
-    padding: 12px 24px;
-    border-radius: 50px;
-    font-weight: 500;
-    font-size: 0.95rem;
-    cursor: pointer;
-    letter-spacing: 0.3px;
-    background: var(--color-bg-gray-light-05);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  max-width: 280px;
+  padding: 12px 24px;
+  border-radius: 50px;
+  font-weight: 500;
+  font-size: 0.95rem;
+  cursor: pointer;
+  letter-spacing: 0.3px;
+  background: var(--color-bg-gray-light-05);
 }
 
 .add-friend-btn {
-    color: var(--color-text-red-bright);
-    border: 1px solid var(--color-text-red-bright-30);
+  color: var(--color-text-red-bright);
+  border: 1px solid var(--color-text-red-bright-30);
 }
 
 .add-friend-btn:hover:not(:disabled) {
-    border-color: var(--color-text-red-bright-60);
-    color: var(--color-text-red-hover);
-    background: var(--color-bg-gray-light-05);
+  border-color: var(--color-text-red-bright-60);
+  color: var(--color-text-red-hover);
+  background: var(--color-bg-gray-light-05);
 }
 
 .accept-friend-btn {
-    color: var(--color-text-green-400);
-    border: 1px solid var(--color-text-green-light-30);
+  color: var(--color-text-green-400);
+  border: 1px solid var(--color-text-green-light-30);
 }
 
 .accept-friend-btn:hover:not(:disabled) {
-    background: var(--color-bg-gray-neutral-10);
-    border-color: var(--color-text-green-60);
-    color: var(--color-text-green-400);
+  background: var(--color-bg-gray-neutral-10);
+  border-color: var(--color-text-green-60);
+  color: var(--color-text-green-400);
 }
 
 .add-friend-btn:active,
 .accept-friend-btn:active {
-    opacity: 0.8;
+  opacity: 0.8;
 }
 
 .friend-btn:hover .state-default {
-    display: none;
+  display: none;
 }

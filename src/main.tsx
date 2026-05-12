@@ -11,6 +11,7 @@ import './styles/search.css';
 import './styles/profile.css';
 import './styles/friends.css';
 import './styles/modal.css';
+import './styles/avatar.css';
 import App from './App.tsx';
 
 createRoot(document.getElementById('root')!).render(
