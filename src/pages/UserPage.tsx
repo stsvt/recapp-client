@@ -168,7 +168,11 @@ const UserPage = () => {
         <article className='profile-card'>
           <div className='avatar-section'>
             <Avatar
-              userName={isOwnProfile ? currentUser?.name || 'User' : userData?.name || 'User'}
+              userName={
+                isOwnProfile
+                  ? currentUser?.name || 'User'
+                  : userData?.name || 'User'
+              }
               userPhoto={isOwnProfile ? currentUser?.photo : userData?.photo}
               size='lg'
               className='profile-avatar'
@@ -177,80 +181,82 @@ const UserPage = () => {
 
           <h2>{isOwnProfile ? currentUser?.name : userData?.name}</h2>
 
-          <div className='profile-info'>
-            <div className='info-row'>
-              <strong>Ім'я</strong>
-              <span>{isOwnProfile ? currentUser?.name : userData?.name}</span>
-            </div>
-            <div className='info-row bio'>
-              <strong>Про мене</strong>
-              <span>
-                {userData?.description || 'Користувач ще не додав опис.'}
-              </span>
-            </div>
-          </div>
-
-          <footer className='profile-actions-group'>
-            {isOwnProfile ? (
-              <p className='own-profile-tag'>Це ваш профіль</p>
-            ) : (
-              <div className='friendship-controls'>
-                {friendshipStatus === 'friends' && (
-                  <>
-                    <div className='friends-badge'>
-                      <CheckCircleIcon size={26} color='#4caf50' />
-                      <span>Ви друзі</span>
-                    </div>
-                    <button
-                      onClick={handleFriendshipAction}
-                      className='remove-friend-btn'
-                      disabled={isSubmitting}
-                    >
-                      <UserMinusIcon size={20} /> Видалити
-                    </button>
-                  </>
-                )}
-
-                {friendshipStatus === 'pending' && (
-                  <>
-                    <div className='pending-badge'>
-                      <ClockIcon size={24} />
-                      <span>Запит надіслано</span>
-                    </div>
-                    <button
-                      onClick={handleFriendshipAction}
-                      className='cancel-request-btn'
-                      disabled={isSubmitting}
-                    >
-                      Скасувати
-                    </button>
-                  </>
-                )}
-
-                {friendshipStatus === 'requested' && (
-                  <button
-                    onClick={handleFriendshipAction}
-                    className='accept-friend-btn'
-                    disabled={isSubmitting}
-                  >
-                    <CheckCircleIcon size={20} weight='bold' />
-                    Прийняти запит
-                  </button>
-                )}
-
-                {friendshipStatus === 'none' && (
-                  <button
-                    onClick={handleFriendshipAction}
-                    className='add-friend-btn'
-                    disabled={isSubmitting}
-                  >
-                    <UserPlusIcon size={20} weight='bold' />
-                    Додати в друзі
-                  </button>
-                )}
+          <div className='user-info-actions-row'>
+            <div className='profile-info'>
+              <div className='info-row'>
+                <strong>Ім'я</strong>
+                <span>{isOwnProfile ? currentUser?.name : userData?.name}</span>
               </div>
-            )}
-          </footer>
+              <div className='info-row bio'>
+                <strong>Про мене</strong>
+                <span>
+                  {userData?.description || 'Користувач ще не додав опис.'}
+                </span>
+              </div>
+            </div>
+
+            <footer className='profile-actions-group friendship-actions-group'>
+              {isOwnProfile ? (
+                <p className='own-profile-tag'>Це ваш профіль</p>
+              ) : (
+                <div className='friendship-controls'>
+                  {friendshipStatus === 'friends' && (
+                    <>
+                      <div className='friends-badge'>
+                        <CheckCircleIcon size={26} color='#4caf50' />
+                        <span>Ви друзі</span>
+                      </div>
+                      <button
+                        onClick={handleFriendshipAction}
+                        className='remove-friend-btn'
+                        disabled={isSubmitting}
+                      >
+                        <UserMinusIcon size={20} /> Видалити
+                      </button>
+                    </>
+                  )}
+
+                  {friendshipStatus === 'pending' && (
+                    <>
+                      <div className='pending-badge'>
+                        <ClockIcon size={24} />
+                        <span>Запит надіслано</span>
+                      </div>
+                      <button
+                        onClick={handleFriendshipAction}
+                        className='cancel-request-btn'
+                        disabled={isSubmitting}
+                      >
+                        Скасувати
+                      </button>
+                    </>
+                  )}
+
+                  {friendshipStatus === 'requested' && (
+                    <button
+                      onClick={handleFriendshipAction}
+                      className='accept-friend-btn'
+                      disabled={isSubmitting}
+                    >
+                      <CheckCircleIcon size={20} weight='bold' />
+                      Прийняти запит
+                    </button>
+                  )}
+
+                  {friendshipStatus === 'none' && (
+                    <button
+                      onClick={handleFriendshipAction}
+                      className='add-friend-btn'
+                      disabled={isSubmitting}
+                    >
+                      <UserPlusIcon size={20} weight='bold' />
+                      Додати в друзі
+                    </button>
+                  )}
+                </div>
+              )}
+            </footer>
+          </div>
         </article>
       </main>
     </>

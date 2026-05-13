@@ -101,7 +101,7 @@ function UserSearch() {
                 <Avatar
                   userName={user.name}
                   userPhoto={user.photo}
-                  size='md'
+                  size='sm'
                   className='us-avatar'
                 />
                 <div className='us-info'>

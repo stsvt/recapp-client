@@ -7,7 +7,9 @@ import {
   CaretLeftIcon,
   CameraIcon,
   TrashIcon,
-  WarningCircleIcon,
+  PencilIcon,
+  SignOutIcon,
+  LockIcon,
 } from '@phosphor-icons/react';
 import {
   updateMe,
@@ -414,24 +416,24 @@ function ProfilePage() {
             ) : (
               <>
                 <button onClick={() => setIsEditing(true)} className='edit-btn'>
+                  <PencilIcon size={18} weight='bold' />
                   Редагувати профіль
                 </button>
                 <button
                   onClick={handleLogoutAction}
                   className='logout-link-btn'
                 >
+                  <SignOutIcon size={18} weight='bold' />
                   Вийти з акаунта
                 </button>
 
-                <Button
-                  className='delete-account-btn'
-                  variant='secondary'
-                  size='sm'
+                <button
                   onClick={handleDeleteAccountAction}
-                  icon={<WarningCircleIcon size={16} />}
+                  className='delete-account-btn'
                 >
+                  <TrashIcon size={18} weight='bold' />
                   Видалити акаунт
-                </Button>
+                </button>
               </>
             )}
 
@@ -453,6 +455,7 @@ function ProfilePage() {
                 onClick={() => setIsChangingPassword(true)}
                 className='change-password-btn'
               >
+                <LockIcon size={18} weight='bold' />
                 Змінити пароль
               </button>
             )}
