@@ -119,3 +119,22 @@ export const fetchUserBasedRecommendations = async (userId: string) => {
   const result = await response.json();
   return result?.data?.recommendations?.results || [];
 };
+
+export const fetchHybridRecommendations = async () => {
+  const token = localStorage.getItem('token');
+
+  const response = await fetch(`${BASE_URL}recommendations/hybrid`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error(
+      `Failed to fetch hybrid recommendations. Status: ${response.status}`
+    );
+  }
+
+  const result = await response.json();
+  return result?.data?.recommendations || [];
+};

@@ -178,9 +178,7 @@ const UserPage = () => {
               className='profile-avatar'
             />
           </div>
-
-          <h2>{isOwnProfile ? currentUser?.name : userData?.name}</h2>
-
+          <h2>{isOwnProfile ? currentUser?.name : userData?.name}</h2>r{' '}
           <div className='user-info-actions-row'>
             <div className='profile-info'>
               <div className='info-row'>

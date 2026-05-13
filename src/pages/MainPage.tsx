@@ -8,6 +8,7 @@ import {
   fetchTopRatedAnimations,
   fetchContentBasedRecommendations,
   fetchUserBasedRecommendations,
+  fetchHybridRecommendations,
 } from '../services/moviesApi.ts';
 import { useAuth } from '../context/AuthContext.tsx';
 
@@ -55,6 +56,12 @@ function MainPage() {
     enabled: !!user?._id,
   });
 
+  const { data: hybridRecs, isLoading: isHybridLoading } = useQuery({
+    queryKey: ['recommendations-hybrid', user?._id],
+    queryFn: fetchHybridRecommendations,
+    enabled: !!user?._id,
+  });
+
   const safeSections = sections || {
     upcoming: [],
     nowPlaying: [],
@@ -66,6 +73,15 @@ function MainPage() {
   return (
     <>
       <div className='recommendation-sections'>
+        {user && hybridRecs && hybridRecs.length > 0 && (
+          <MovieSection
+            id='hybrid-recs'
+            title='Ваш ідеальний вибір'
+            movies={hybridRecs}
+            loading={isHybridLoading}
+          />
+        )}
+
         {user && userBasedRecs && userBasedRecs.length > 0 && (
           <MovieSection
             id='user-based-recs'
