@@ -1,22 +1,15 @@
-import {
-  BellIcon,
-  MagnifyingGlassIcon,
-  UserIcon,
-  FunnelIcon,
-} from '@phosphor-icons/react';
-import { useState, useEffect } from 'react';
+import { BellIcon, MagnifyingGlassIcon, UserIcon } from '@phosphor-icons/react';
+import { useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext.tsx';
 import { getIncomingRequests } from '../../services/friendsApi.ts';
 import { Button } from './Button.tsx';
-import FilterModal from '../FilterModal.tsx';
 import SearchModal from '../SearchModal.tsx';
 import Logo from './Logo.tsx';
 import { Avatar } from '../Avatar.tsx';
 
 function Header() {
   const { user, incomingRequestsCount, setIncomingRequestsCount } = useAuth();
-  const [showFilters, setShowFilters] = useState(false);
   const [searchParams, setSearchParams] = useSearchParams();
   const showSearch = searchParams.get('search') === 'true';
   const navigate = useNavigate();
@@ -58,23 +51,13 @@ function Header() {
         <Logo />
         <nav className='section'>
           <li>
-            <Button variant='link' to='/#upcoming' className='nav-link'>
+            <Button variant='link' to='/#topRated' className='nav-link'>
               ФІЛЬМИ
             </Button>
           </li>
           <li>
-            <Button variant='link' to='/#nowPlaying' className='nav-link'>
-              СЕРІАЛИ
-            </Button>
-          </li>
-          <li>
-            <Button variant='link' to='/#topRated' className='nav-link'>
-              МУЛЬТФІЛЬМИ
-            </Button>
-          </li>
-          <li>
             <Button variant='link' to='/#topRatedSeries' className='nav-link'>
-              ПІДБІРКИ
+              СЕРІАЛИ
             </Button>
           </li>
           <li>
@@ -83,7 +66,7 @@ function Header() {
               to='/#topRatedAnimations'
               className='nav-link'
             >
-              МОЇ СПИСКИ
+              МУЛЬТФІЛЬМИ
             </Button>
           </li>
         </nav>
@@ -107,13 +90,6 @@ function Header() {
                 <span className='badge'>{incomingRequestsCount}</span>
               )}
             </Button>
-            <Button
-              variant='icon'
-              className='icon'
-              onClick={() => setShowFilters(!showFilters)}
-              icon={<FunnelIcon size={24} />}
-              aria-label='Filter movies'
-            />
           </div>
           <Button
             variant='icon'
@@ -134,7 +110,6 @@ function Header() {
           />
         </div>
       </header>
-      <FilterModal isOpen={showFilters} onClose={() => setShowFilters(false)} />
       <SearchModal isOpen={showSearch} onClose={closeSearch} />
     </>
   );
