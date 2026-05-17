@@ -82,19 +82,25 @@ function MoviePage() {
     }
 
     const queryKey = ['movieStatus', movieId];
-    const previousStatus = queryClient.getQueryData<{ liked?: boolean; watched?: boolean }>(queryKey);
+    const previousStatus = queryClient.getQueryData<{
+      liked?: boolean;
+      watched?: boolean;
+    }>(queryKey);
 
-    queryClient.setQueryData(queryKey, (old: { liked?: boolean; watched?: boolean } | undefined) => {
-      if (!old) return { [type]: true };
-      return {
-        ...old,
-        [type]: !old[type],
-      };
-    });
+    queryClient.setQueryData(
+      queryKey,
+      (old: { liked?: boolean; watched?: boolean } | undefined) => {
+        if (!old) return { [type]: true };
+        return {
+          ...old,
+          [type]: !old[type],
+        };
+      }
+    );
 
     try {
       const response = await toggleActivityMovie(movieId!, type);
-    
+
       toast.success(MESSAGE_MAP[response.data.message as Messages]);
     } catch (error: unknown) {
       queryClient.setQueryData(queryKey, previousStatus);
@@ -127,7 +133,7 @@ function MoviePage() {
 
       <div className='content-wrapper'>
         <h2 className='sub-section-title'>З цим фільмом також дивляться:</h2>
-        {recommendations.length > 0 ? (
+        {recommendations && recommendations.length > 0 ? (
           <MovieSection
             title=''
             movies={recommendations}
