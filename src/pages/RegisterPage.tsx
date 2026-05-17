@@ -6,7 +6,14 @@ import { Button } from '../components/ui/Button.tsx';
 import { type SubmitHandler, useForm } from 'react-hook-form';
 import { EyeIcon, EyeSlashIcon } from '@phosphor-icons/react';
 import GoogleButton from '../components/GoogleButton.tsx';
-import Spinner from '../components/ui/Spinner.tsx';
+
+interface ApiError {
+  response?: {
+    data?: {
+      message?: string;
+    };
+  };
+}
 
 interface Inputs {
   name: string;
@@ -21,7 +28,8 @@ function RegisterPage() {
     register,
     handleSubmit,
     getValues,
-    formState: { errors, isLoading },
+    setError,
+    formState: { errors, isSubmitting },
   } = useForm<Inputs>();
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -29,19 +37,25 @@ function RegisterPage() {
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
     try {
       await registerService(data);
+      toast.success('Реєстрація успішна! Увійдіть у свій акаунт.');
       navigate('/login');
     } catch (error: unknown) {
-      if (error instanceof Error) {
-        toast.error(error.message);
-      } else {
-        toast.error('An unexpected error occurred');
+      const apiError = error as ApiError;
+      let errorMessage = 'Виникла неочікувана помилка';
+
+      if (apiError.response?.data?.message) {
+        errorMessage = apiError.response.data.message;
+      } else if (error instanceof Error) {
+        errorMessage = error.message;
       }
+
+      if (errorMessage.includes('E11000') || errorMessage.includes('duplicate key')) {
+        errorMessage = 'Користувач з такою поштою вже зареєстрований';
+      }
+
+      setError('root', { type: 'manual', message: errorMessage });
     }
   };
-
-  if (isLoading) {
-    return <Spinner />;
-  }
 
   return (
     <>
@@ -141,13 +155,19 @@ function RegisterPage() {
           )}
         </div>
 
+        {errors.root && (
+          <div className='error-span' style={{ textAlign: 'center', marginBottom: '10px', display: 'block' }}>
+            {errors.root.message}
+          </div>
+        )}
+
         <Button
           type='submit'
           className='submit-btn'
           variant='primary'
-          disabled={isLoading}
+          disabled={isSubmitting}
         >
-          {!isLoading ? 'Зареєструватись' : 'Реєстрація...'}
+          {!isSubmitting ? 'Зареєструватись' : 'Реєстрація...'}
         </Button>
 
         <div className='separator'> або </div>

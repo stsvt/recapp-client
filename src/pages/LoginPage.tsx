@@ -6,9 +6,16 @@ import toast from 'react-hot-toast';
 import { Button } from '../components/ui/Button.tsx';
 import { type SubmitHandler, useForm } from 'react-hook-form';
 import { EyeIcon, EyeSlashIcon } from '@phosphor-icons/react';
-import Spinner from '../components/ui/Spinner.tsx';
 import ForgotPasswordForm from '../components/ForgotPasswordForm.tsx';
 import GoogleButton from '../components/GoogleButton.tsx';
+
+interface ApiError {
+  response?: {
+    data?: {
+      message?: string;
+    };
+  };
+}
 
 interface Inputs {
   email: string;
@@ -22,7 +29,7 @@ function LoginPage() {
   const {
     register,
     handleSubmit,
-    formState: { errors, isLoading },
+    formState: { errors, isSubmitting },
   } = useForm<Inputs>();
 
   const [showForgotForm, setShowForgotForm] = useState(false);
@@ -34,17 +41,16 @@ function LoginPage() {
       await login(res.token);
       navigate('/');
     } catch (error: unknown) {
-      if (error instanceof Error) {
+      const apiError = error as ApiError;
+      if (apiError.response?.data?.message) {
+        toast.error(apiError.response.data.message);
+      } else if (error instanceof Error) {
         toast.error(error.message);
       } else {
         toast.error('An unexpected error occurred');
       }
     }
   };
-
-  if (isLoading) {
-    return <Spinner />;
-  }
 
   if (showForgotForm) {
     return <ForgotPasswordForm handleBack={() => setShowForgotForm(false)} />;
@@ -112,9 +118,9 @@ function LoginPage() {
           type='submit'
           className='submit-btn'
           variant='primary'
-          disabled={isLoading}
+          disabled={isSubmitting}
         >
-          Увійти
+          {!isSubmitting ? 'Увійти' : 'Вхід...'}
         </Button>
 
         <div className='separator'>або</div>
