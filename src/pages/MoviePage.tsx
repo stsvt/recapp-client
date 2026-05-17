@@ -1,21 +1,23 @@
-import { fetchMovieDetails } from '../services/moviesApi.ts';
+import { BookmarkSimpleIcon, HeartIcon } from '@phosphor-icons/react';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useEffect } from 'react';
+import toast from 'react-hot-toast';
 import { useParams } from 'react-router-dom';
+import { MovieDetails } from '../components/movies/MovieDetails.tsx';
 import MovieSection from '../components/movies/MovieSection.tsx';
 import MovieStatusButton from '../components/movies/MovieStatusButton.tsx';
+import { Reviews } from '../components/reviews/Reviews.tsx';
 import Spinner from '../components/ui/Spinner.tsx';
-import type { Movie } from '../types';
-import { HeartIcon, BookmarkSimpleIcon } from '@phosphor-icons/react';
+import { useAuth } from '../context/AuthContext';
 import {
   getMovieStatus,
   toggleActivityMovie,
 } from '../services/activitiesApi.ts';
-import { fetchSimilarMovies } from '../services/moviesApi.ts';
-import { useAuth } from '../context/AuthContext';
-import toast from 'react-hot-toast';
-import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { Reviews } from '../components/reviews/Reviews.tsx';
-import { MovieDetails } from '../components/movies/MovieDetails.tsx';
-import { useEffect } from 'react';
+import {
+  fetchMovieDetails,
+  fetchSimilarMovies,
+} from '../services/moviesApi.ts';
+import type { Movie } from '../types';
 
 type Messages =
   | 'Movie removed from liked list'
@@ -79,11 +81,23 @@ function MoviePage() {
       return;
     }
 
+    const queryKey = ['movieStatus', movieId];
+    const previousStatus = queryClient.getQueryData<{ liked?: boolean; watched?: boolean }>(queryKey);
+
+    queryClient.setQueryData(queryKey, (old: { liked?: boolean; watched?: boolean } | undefined) => {
+      if (!old) return { [type]: true };
+      return {
+        ...old,
+        [type]: !old[type],
+      };
+    });
+
     try {
       const response = await toggleActivityMovie(movieId!, type);
-      await queryClient.invalidateQueries({ queryKey: ['movieStatus'] });
+    
       toast.success(MESSAGE_MAP[response.data.message as Messages]);
     } catch (error: unknown) {
+      queryClient.setQueryData(queryKey, previousStatus);
       const msg =
         error instanceof Error ? error.message : 'Не вдалося оновити статус';
       toast.error(msg);
@@ -111,26 +125,23 @@ function MoviePage() {
         </div>
       </div>
 
-      {movie.recommendations?.results?.length > 0 && (
-        <>
-          <div className='content-wrapper'>
-            <h2 className='sub-section-title'>
-              З цим фільмом також дивляться:
-            </h2>
-          </div>
+      <div className='content-wrapper'>
+        <h2 className='sub-section-title'>З цим фільмом також дивляться:</h2>
+        {recommendations.length > 0 ? (
           <MovieSection
             title=''
             movies={recommendations}
             loading={isRecsLoading}
           />
-          {/* <MovieSection
+        ) : (
+          <MovieSection
             key={`recommendations-${movie.id}`}
             title=''
             movies={movie.recommendations.results}
             loading={false}
-          /> */}
-        </>
-      )}
+          />
+        )}
+      </div>
 
       <Reviews movieId={movieId} userId={user?._id} />
     </>
