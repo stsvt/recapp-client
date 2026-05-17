@@ -51,6 +51,7 @@
   line-height: 1.6;
   color: var(--color-light-gray);
   font-size: 15px;
+  margin-bottom: 16px;
 }
 
 .comment-footer {
@@ -82,9 +83,9 @@
 }
 
 .admin-actions button {
-  background: transparent;
+  /* background: transparent; */
   border: none;
-  color: var(--color-text-dark-500);
+  /* color: var(--color-text-dark-500); */
   cursor: pointer;
   font-size: 14px;
   transition: 0.2s;
