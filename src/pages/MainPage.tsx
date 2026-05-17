@@ -42,19 +42,6 @@ function MainPage() {
     staleTime: 1000 * 60 * 60 * 24 * 7, // 7 днів
   });
 
-  // const { data: contentBasedRecs, isLoading: isContentLoading } = useQuery({
-  //   queryKey: ['recommendations-content'],
-  //   queryFn: fetchContentBasedRecommendations,
-  //   enabled: !!user,
-  //   // staleTime: 1000 * 60 * 60, // 1 hour
-  // });
-
-  // const { data: userBasedRecs, isLoading: isUserBasedLoading } = useQuery({
-  //   queryKey: ['recommendations-user', user?._id],
-  //   queryFn: () => fetchUserBasedRecommendations(user!._id),
-  //   enabled: !!user?._id,
-  // });
-
   const { data: hybridRecs, isLoading: isHybridLoading } = useQuery({
     queryKey: ['recommendations-hybrid', user?._id],
     queryFn: fetchHybridRecommendations,
@@ -89,7 +76,7 @@ function MainPage() {
         {!user && (
           <MovieSection
             id='guest-recs'
-            title='Ваш може сподобатись'
+            title='Вам може сподобатись'
             movies={guestRecs}
             loading={isGuestRecsLoading}
           />
