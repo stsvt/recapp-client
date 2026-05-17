@@ -3,10 +3,10 @@ import { useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext.tsx';
 import { getIncomingRequests } from '../../services/friendsApi.ts';
-import { Button } from './Button.tsx';
-import SearchModal from '../SearchModal.tsx';
-import Logo from './Logo.tsx';
 import { Avatar } from '../Avatar.tsx';
+import SearchModal from '../SearchModal.tsx';
+import { Button } from './Button.tsx';
+import Logo from './Logo.tsx';
 
 function Header() {
   const { user, incomingRequestsCount, setIncomingRequestsCount } = useAuth();
@@ -79,17 +79,19 @@ function Header() {
               icon={<MagnifyingGlassIcon size={24} />}
               aria-label='Search'
             />
-            <Button
-              variant='icon'
-              onClick={() => navigate('/friends/requests')}
-              className='icon notifications-icon'
-              icon={<BellIcon size={24} />}
-              aria-label='Friend requests'
-            >
-              {incomingRequestsCount > 0 && (
-                <span className='badge'>{incomingRequestsCount}</span>
-              )}
-            </Button>
+            {user ? (
+              <Button
+                variant='icon'
+                onClick={() => navigate('/friends/requests')}
+                className='icon notifications-icon'
+                icon={<BellIcon size={24} />}
+                aria-label='Friend requests'
+              >
+                {incomingRequestsCount > 0 && (
+                  <span className='badge'>{incomingRequestsCount}</span>
+                )}
+              </Button>
+            ) : null}
           </div>
           <Button
             variant='icon'

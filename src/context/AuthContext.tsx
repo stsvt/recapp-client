@@ -1,8 +1,15 @@
 /* eslint-disable react-refresh/only-export-components */
-import { createContext, useState, useContext, useEffect } from 'react';
-import { io } from 'socket.io-client';
+import { createContext, useContext, useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
+import { io } from 'socket.io-client';
 import { fetchMe } from '../services/usersApi.ts';
+
+const API_URL = import.meta.env.VITE_API_URL;
+const BASE_URL = new URL(API_URL).origin;
+
+if (!API_URL) {
+  console.error('VITE_API_URL is not defined! API calls will fail.');
+}
 
 interface User {
   _id: string;
@@ -59,7 +66,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   useEffect(() => {
     if (!user) return;
 
-    const newSocket = io('http://localhost:3000', {
+    const newSocket = io(BASE_URL, {
       auth: { token: localStorage.getItem('token') },
     });
 
