@@ -12,6 +12,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { Avatar } from '../components/Avatar.tsx';
 import { Button } from '../components/ui/Button.tsx';
 import UserSearch from '../components/UserSearch';
+import ConfirmModal from '../components/ConfirmModal.tsx';
 import { useAuth } from '../context/AuthContext';
 import {
   acceptFriendRequest,
@@ -51,6 +52,7 @@ const UserPage = () => {
   const [myFriends, setMyFriends] = useState<Friend[]>([]);
   const [incomingRequests, setIncomingRequests] = useState<FriendRequest[]>([]);
   const [sentRequests, setSentRequests] = useState<string[]>([]);
+  const [isConfirmOpen, setIsConfirmOpen] = useState(false);
 
   const [loading, setLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -120,8 +122,30 @@ const UserPage = () => {
     sentRequests,
   ]);
 
+  const confirmRemoveFriend = async () => {
+    if (!userId || isSubmitting) return;
+
+    setIsSubmitting(true);
+    try {
+      await removeFriend(userId);
+      setMyFriends((prev) => prev.filter((f) => f._id !== userId));
+      toast.success('Видалено з друзів');
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : 'Сталася помилка';
+      toast.error(msg);
+    } finally {
+      setIsSubmitting(false);
+      setIsConfirmOpen(false);
+    }
+  };
+
   const handleFriendshipAction = async () => {
     if (!userId || isSubmitting) return;
+
+    if (friendshipStatus === 'friends') {
+      setIsConfirmOpen(true);
+      return;
+    }
 
     setIsSubmitting(true);
     try {
@@ -138,12 +162,6 @@ const UserPage = () => {
         await rejectFriendRequest(userId);
         setSentRequests((prev) => prev.filter((id) => id !== userId));
         toast.success('Запит скасовано');
-      } else if (friendshipStatus === 'friends') {
-        if (window.confirm('Видалити користувача з друзів?')) {
-          await removeFriend(userId);
-          setMyFriends((prev) => prev.filter((f) => f._id !== userId));
-          toast.success('Видалено з друзів');
-        }
       }
     } catch (err) {
       const msg = err instanceof Error ? err.message : 'Сталася помилка';
@@ -262,6 +280,17 @@ const UserPage = () => {
           </div>
         </article>
       </main>
+
+      <ConfirmModal
+        isOpen={isConfirmOpen}
+        title="Видалити з друзів?"
+        message={`Ви впевнені, що хочете видалити користувача ${userData?.name || ''} з друзів?`}
+        onConfirm={confirmRemoveFriend}
+        onCancel={() => setIsConfirmOpen(false)}
+        type="danger"
+        confirmText="Видалити"
+        cancelText="Скасувати"
+      />
     </>
   );
 };

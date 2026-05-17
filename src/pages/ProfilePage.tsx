@@ -1,32 +1,31 @@
-import { useState, useRef, useEffect } from 'react';
-import { useAuth } from '../context/AuthContext';
-import { useNavigate } from 'react-router-dom';
-import PasswordField from '../components/PasswordField';
-import ConfirmModal from '../components/ConfirmModal';
 import {
-  CaretLeftIcon,
   CameraIcon,
-  TrashIcon,
+  CaretLeftIcon,
+  LockIcon,
   PencilIcon,
   SignOutIcon,
-  LockIcon,
+  TrashIcon,
 } from '@phosphor-icons/react';
-import {
-  updateMe,
-  deleteMe,
-  deletePhoto,
-  updateMyPassword,
-} from '../services/usersApi.ts';
+import { useEffect, useRef, useState } from 'react';
 import toast from 'react-hot-toast';
-import type { MovieSummary } from '../types';
+import { useNavigate } from 'react-router-dom';
+import { Avatar } from '../components/Avatar.tsx';
+import ConfirmModal from '../components/ConfirmModal';
+import MovieSection from '../components/movies/MovieSection.tsx';
+import PasswordField from '../components/PasswordField';
+import { Button } from '../components/ui/Button.tsx';
+import UserSearch from '../components/UserSearch';
+import { useAuth } from '../context/AuthContext';
 import { getUserActivity } from '../services/activitiesApi.ts';
 import { getFriends } from '../services/friendsApi.ts';
-import MovieSection from '../components/movies/MovieSection.tsx';
-import UserSearch from '../components/UserSearch';
-import type { Friend } from '../types';
-import { Button } from '../components/ui/Button.tsx';
+import {
+  deleteMe,
+  deletePhoto,
+  updateMe,
+  updateMyPassword,
+} from '../services/usersApi.ts';
+import type { Friend, MovieSummary } from '../types';
 import { minutesToStr } from '../utils.ts';
-import { Avatar } from '../components/Avatar.tsx';
 
 interface ActivityItem {
   movie: MovieSummary;
@@ -506,7 +505,7 @@ function ProfilePage() {
                 />
 
                 <div className='edit-actions-row'>
-                  <button type='submit' className='save-btn' disabled={loading}>
+                  <button type='submit' className='save-btn'>
                     {loading ? 'Оновлення...' : 'Оновити пароль'}
                   </button>
                   <button

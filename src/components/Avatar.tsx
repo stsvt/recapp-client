@@ -1,8 +1,9 @@
 import { useMemo } from 'react';
 import '../styles/avatar.css';
 
-const DICEBEAR_BASE = import.meta.env.VITE_DICEBEAR_URL;
-const USERS_IMAGES_BASE = import.meta.env.VITE_USERS_IMAGES_BASE;
+const DICEBEAR_BASE = import.meta.env.VITE_DICEBEAR_URL || 'https://api.dicebear.com/7.x/initials/svg';
+const USERS_IMAGES_BASE = import.meta.env.VITE_USERS_IMAGES_BASE || 
+  (import.meta.env.VITE_API_URL ? import.meta.env.VITE_API_URL.replace('/api/v1/', '/img/users/') : 'http://localhost:3000/img/users/');
 
 interface AvatarProps {
   userName: string;
