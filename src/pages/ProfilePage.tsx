@@ -100,7 +100,10 @@ function ProfilePage() {
       try {
         setLoading(true);
         const res: ActivityResponse = await getUserActivity();
-        const allMovies: MovieActivity[] = (res.data?.movies || []).map(
+        const validMovies = (res.data?.movies || []).filter(
+          (item) => item && item.movie
+        );
+        const allMovies: MovieActivity[] = validMovies.map(
           (item) => ({
             ...item.movie,
             tmdbId: item.movie.tmdbId,
@@ -127,7 +130,8 @@ function ProfilePage() {
       try {
         const res = await getFriends();
         if (res.status === 'success' && res.data?.friends) {
-          setFriends(res.data.friends);
+          const validFriends = (res.data.friends || []).filter((f: Friend) => f);
+          setFriends(validFriends);
         }
       } catch {
         toast.error('Помилка завантаження друзів');
