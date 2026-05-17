@@ -15,6 +15,7 @@ import GoogleCallbackPage from './pages/GoogleCallbackPage.tsx';
 import UserPage from './pages/UserPage';
 import FriendRequestsPage from './pages/FriendRequestsPage';
 import AdminPage from './pages/AdminPage';
+import NotFoundPage from './pages/NotFoundPage';
 import Layout from './components/ui/Layout.tsx';
 import AuthLayout from './components/ui/AuthLayout.tsx';
 
@@ -47,6 +48,8 @@ function App() {
             <Route path='/user/:userId' element={<UserPage />} />
             <Route path='/friends/requests' element={<FriendRequestsPage />} />
             <Route path='/admin' element={<AdminPage />} />
+            <Route path='/not-found' element={<NotFoundPage />} />
+            <Route path='*' element={<NotFoundPage />} />
           </Route>
         </Routes>
         <Toaster

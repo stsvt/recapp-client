@@ -36,11 +36,7 @@ function PersonPage() {
     window.scrollTo(0, 0);
   }, [id]);
 
-  const {
-    data: person,
-    isLoading,
-    isError,
-  } = useQuery<PersonData>({
+  const { data: person, isLoading } = useQuery<PersonData>({
     queryKey: ['person', id],
     queryFn: async () => {
       if (!id) throw new Error('ID is required');
@@ -72,12 +68,6 @@ function PersonPage() {
     enabled: Boolean(id),
     retry: false,
   });
-
-  useEffect(() => {
-    if (isError) {
-      navigate('/404', { replace: true });
-    }
-  }, [isError, navigate]);
 
   const displayMovies = useMemo((): MovieSummary[] => {
     if (!person?.displayWorks) return [];

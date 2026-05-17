@@ -2,7 +2,7 @@ import { BookmarkSimpleIcon, HeartIcon } from '@phosphor-icons/react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useEffect } from 'react';
 import toast from 'react-hot-toast';
-import { useParams } from 'react-router-dom';
+import { useParams, Navigate } from 'react-router-dom';
 import { MovieDetails } from '../components/movies/MovieDetails.tsx';
 import MovieSection from '../components/movies/MovieSection.tsx';
 import MovieStatusButton from '../components/movies/MovieStatusButton.tsx';
@@ -37,12 +37,13 @@ function MoviePage() {
   const queryClient = useQueryClient();
   const { id: movieId } = useParams<{ id: string }>();
 
-  const { data: movie, isLoading: isMovieLoading } = useQuery<Movie>({
+  const { data: movie, isLoading: isMovieLoading, isError: isMovieError } = useQuery<Movie>({
     queryKey: ['movie', movieId],
     queryFn: async () => {
       return await fetchMovieDetails(movieId!);
     },
     enabled: Boolean(movieId),
+    retry: false,
   });
 
   const { data: recommendations, isLoading: isRecsLoading } = useQuery({
@@ -65,8 +66,8 @@ function MoviePage() {
     return <Spinner />;
   }
 
-  if (!movie) {
-    return null;
+  if (isMovieError || !movie) {
+    return <Navigate to="/not-found" replace />;
   }
 
   const handleToggleActivity = async (type: 'liked' | 'watched') => {
