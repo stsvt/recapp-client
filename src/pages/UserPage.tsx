@@ -17,6 +17,7 @@ import {
   acceptFriendRequest,
   getFriends,
   getIncomingRequests,
+  getOutgoingRequests,
   rejectFriendRequest,
   removeFriend,
   sendFriendRequest,
@@ -63,15 +64,21 @@ const UserPage = () => {
 
       try {
         setLoading(true);
-        const [userRes, friendsRes, requestsRes] = await Promise.all([
+        const [userRes, friendsRes, requestsRes, outgoingRes] = await Promise.all([
           getUserById(userId),
           getFriends(),
           getIncomingRequests(),
+          getOutgoingRequests(),
         ]);
 
         setUserData(userRes);
         setMyFriends(friendsRes.data?.friends || []);
         setIncomingRequests(requestsRes.data?.requests || []);
+        
+        const outgoingIds = (outgoingRes.data?.requests || []).map((req: any) =>
+          typeof req.recipient === 'object' ? req.recipient._id : req.recipient
+        );
+        setSentRequests(outgoingIds);
       } catch (err) {
         console.error('Data loading error:', err);
         toast.error('Не вдалося завантажити дані користувача');
@@ -220,13 +227,6 @@ const UserPage = () => {
                         <ClockIcon size={24} />
                         <span>Запит надіслано</span>
                       </div>
-                      <button
-                        onClick={handleFriendshipAction}
-                        className='cancel-request-btn'
-                        disabled={isSubmitting}
-                      >
-                        Скасувати
-                      </button>
                     </>
                   )}
 

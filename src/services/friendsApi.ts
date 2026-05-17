@@ -79,6 +79,18 @@ export const getIncomingRequests = async () => {
   return data;
 };
 
+export const getOutgoingRequests = async () => {
+  const response = await fetch(`${BASE_URL}friends/outgoingRequests`, {
+    method: 'GET',
+    headers: getHeaders(),
+  });
+  const data = await response.json();
+  if (!response.ok) {
+    throw new Error(data.message || 'Помилка запиту');
+  }
+  return data;
+};
+
 export const getFriends = async () => {
   const response = await fetch(`${BASE_URL}friends`, {
     method: 'GET',
