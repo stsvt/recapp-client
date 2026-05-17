@@ -1,16 +1,16 @@
-import { useEffect, useState, useCallback } from 'react';
+import { CaretLeftIcon, CheckIcon, XIcon } from '@phosphor-icons/react';
+import { useCallback, useEffect, useState } from 'react';
+import toast from 'react-hot-toast';
+import { useNavigate } from 'react-router-dom';
+import { Avatar } from '../components/Avatar.tsx';
+import { Button } from '../components/ui/Button.tsx';
+import { useAuth } from '../context/AuthContext';
 import {
-  getIncomingRequests,
   acceptFriendRequest,
+  getIncomingRequests,
   rejectFriendRequest,
 } from '../services/friendsApi.ts';
-import { useAuth } from '../context/AuthContext';
-import { CheckIcon, XIcon, CaretLeftIcon } from '@phosphor-icons/react';
-import { useNavigate } from 'react-router-dom';
-import toast from 'react-hot-toast';
-import { Button } from '../components/ui/Button.tsx';
-import { Avatar } from '../components/Avatar.tsx';
-
+import '../styles/friend-requests.css';
 interface RequestItem {
   _id: string;
   requester: {
@@ -74,8 +74,8 @@ function FriendRequestsPage() {
         title='Назад'
       />
 
-      <div className='profile-container'>
-        <div className='profile-card requests-card'>
+      <div className='requests-container'>
+        <div className='requests-card'>
           <div className='card-header'>
             <h2>Запити у друзі</h2>
             <span className='request-badge'>{requests.length}</span>
