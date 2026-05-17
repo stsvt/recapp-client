@@ -1,17 +1,17 @@
-import { useState, useMemo, useEffect } from 'react';
-import { useParams, useNavigate, useLocation } from 'react-router-dom';
-import { useQuery } from '@tanstack/react-query';
 import { CaretLeftIcon } from '@phosphor-icons/react';
+import { useQuery } from '@tanstack/react-query';
+import { useEffect, useMemo, useState } from 'react';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import MovieSection from '../components/movies/MovieSection.tsx';
+import { Button } from '../components/ui/Button.tsx';
+import Spinner from '../components/ui/Spinner.tsx';
 import { getPersonContent, getPersonDetails } from '../services/personApi.ts';
 import type {
-  PersonDetails,
+  ActorMovie,
   BaseWork,
   MovieSummary,
-  ActorMovie,
+  PersonDetails,
 } from '../types';
-import MovieSection from '../components/movies/MovieSection.tsx';
-import Spinner from '../components/ui/Spinner.tsx';
-import { Button } from '../components/ui/Button.tsx';
 
 interface PersonData extends PersonDetails {
   isDirector: boolean;
@@ -201,17 +201,15 @@ function PersonPage() {
         )}
       </div>
 
-      {displayMovies.length > 0 && (
-        <>
-          <div className='content-wrapper'>
-            <h2 className='sub-section-title'>
-              {person?.isDirector
-                ? 'Фільми зняті режисером'
-                : 'Фільми за участю актора'}
-            </h2>
-          </div>
+      {displayMovies && displayMovies.length > 0 && (
+        <div className='content-wrapper'>
+          <h2 className='sub-section-title'>
+            {person?.isDirector
+              ? 'Фільми зняті режисером'
+              : 'Фільми за участю актора'}
+          </h2>
           <MovieSection title='' movies={displayMovies} loading={false} />
-        </>
+        </div>
       )}
     </>
   );
