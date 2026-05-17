@@ -1,16 +1,15 @@
 import { useQuery } from '@tanstack/react-query';
 import MovieSection from '../components/movies/MovieSection.tsx';
-import {
-  fetchTopRatedMovies,
-  fetchUpcomingMovies,
-  fetchNowPlayingMovies,
-  fetchTopRatedSeries,
-  fetchTopRatedAnimations,
-  fetchContentBasedRecommendations,
-  fetchUserBasedRecommendations,
-  fetchHybridRecommendations,
-} from '../services/moviesApi.ts';
 import { useAuth } from '../context/AuthContext.tsx';
+import {
+  fetchGuestRecommendations,
+  fetchHybridRecommendations,
+  fetchNowPlayingMovies,
+  fetchTopRatedAnimations,
+  fetchTopRatedMovies,
+  fetchTopRatedSeries,
+  fetchUpcomingMovies,
+} from '../services/moviesApi.ts';
 
 function MainPage() {
   const { user } = useAuth();
@@ -43,23 +42,28 @@ function MainPage() {
     staleTime: 1000 * 60 * 60 * 24 * 7, // 7 днів
   });
 
-  const { data: contentBasedRecs, isLoading: isContentLoading } = useQuery({
-    queryKey: ['recommendations-content'],
-    queryFn: fetchContentBasedRecommendations,
-    enabled: !!user,
-    // staleTime: 1000 * 60 * 60, // 1 hour
-  });
+  // const { data: contentBasedRecs, isLoading: isContentLoading } = useQuery({
+  //   queryKey: ['recommendations-content'],
+  //   queryFn: fetchContentBasedRecommendations,
+  //   enabled: !!user,
+  //   // staleTime: 1000 * 60 * 60, // 1 hour
+  // });
 
-  const { data: userBasedRecs, isLoading: isUserBasedLoading } = useQuery({
-    queryKey: ['recommendations-user', user?._id],
-    queryFn: () => fetchUserBasedRecommendations(user!._id),
-    enabled: !!user?._id,
-  });
+  // const { data: userBasedRecs, isLoading: isUserBasedLoading } = useQuery({
+  //   queryKey: ['recommendations-user', user?._id],
+  //   queryFn: () => fetchUserBasedRecommendations(user!._id),
+  //   enabled: !!user?._id,
+  // });
 
   const { data: hybridRecs, isLoading: isHybridLoading } = useQuery({
     queryKey: ['recommendations-hybrid', user?._id],
     queryFn: fetchHybridRecommendations,
     enabled: !!user?._id,
+  });
+
+  const { data: guestRecs, isLoading: isGuestRecsLoading } = useQuery({
+    queryKey: ['recommendations-guest'],
+    queryFn: fetchGuestRecommendations,
   });
 
   const safeSections = sections || {
@@ -82,22 +86,15 @@ function MainPage() {
           />
         )}
 
-        {user && userBasedRecs && userBasedRecs.length > 0 && (
+        {!user && (
           <MovieSection
-            id='user-based-recs'
-            title='Персонально для вас'
-            movies={userBasedRecs}
-            loading={isUserBasedLoading}
+            id='guest-recs'
+            title='Ваш може сподобатись'
+            movies={guestRecs}
+            loading={isGuestRecsLoading}
           />
         )}
-        {user && contentBasedRecs && contentBasedRecs.length > 0 && (
-          <MovieSection
-            id='content-based-recs'
-            title='Вам може сподобатись'
-            movies={contentBasedRecs}
-            loading={isContentLoading}
-          />
-        )}
+
         <MovieSection
           id='upcoming'
           title='Незабаром'

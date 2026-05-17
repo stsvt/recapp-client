@@ -14,6 +14,7 @@ import PersonPage from './pages/PersonPage';
 import GoogleCallbackPage from './pages/GoogleCallbackPage.tsx';
 import UserPage from './pages/UserPage';
 import FriendRequestsPage from './pages/FriendRequestsPage';
+import AdminPage from './pages/AdminPage';
 import Layout from './components/ui/Layout.tsx';
 import AuthLayout from './components/ui/AuthLayout.tsx';
 
@@ -45,6 +46,7 @@ function App() {
             <Route path='/person/:id' element={<PersonPage />} />
             <Route path='/user/:userId' element={<UserPage />} />
             <Route path='/friends/requests' element={<FriendRequestsPage />} />
+            <Route path='/admin' element={<AdminPage />} />
           </Route>
         </Routes>
         <Toaster

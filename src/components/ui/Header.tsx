@@ -69,6 +69,13 @@ function Header() {
               МУЛЬТФІЛЬМИ
             </Button>
           </li>
+          {user?.role === 'admin' && (
+            <li>
+              <Button variant='link' to='/admin' className='nav-link'>
+                АДМІНПАНЕЛЬ
+              </Button>
+            </li>
+          )}
         </nav>
         <div className='icons-wrapper'>
           <div className='icons'>

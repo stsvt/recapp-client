@@ -47,6 +47,9 @@ export const fetchMovieDetails = async (id: string) => {
   return result?.data?.movie || null;
 };
 
+export const fetchGuestRecommendations = () =>
+  getMoviesData(`${BASE_URL}tmdb/guestRecommendations`);
+
 export const fetchTopRatedMovies = () =>
   getMoviesData(`${BASE_URL}tmdb/topRated`);
 
