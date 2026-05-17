@@ -5,8 +5,8 @@ function Logo() {
     <Link to='/' className='logo-link'>
       <ul className='text-logo'>
         <li>RE</li>
-        <li>CC</li>
-        <li>AP</li>
+        <li>CA</li>
+        <li>PP</li>
       </ul>
     </Link>
   );
