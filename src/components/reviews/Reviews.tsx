@@ -1,10 +1,10 @@
-import AddReviewForm from './AddReviewForm.tsx';
-import type { Review } from '../../types';
+import { useQuery } from '@tanstack/react-query';
+import { useState } from 'react';
 import toast from 'react-hot-toast';
 import { deleteReview, fetchReviews } from '../../services/reviewsApi.ts';
-import { useState } from 'react';
-import { useQuery } from '@tanstack/react-query';
+import type { Review } from '../../types';
 import { Avatar } from '../Avatar.tsx';
+import AddReviewForm from './AddReviewForm.tsx';
 
 interface ReviewsProps {
   movieId: string | undefined;
@@ -117,7 +117,7 @@ export function Reviews({ movieId, userId }: ReviewsProps) {
                                 : undefined
                             }
                             size='sm'
-                            className='avatar'
+                            className='reviews-avatar'
                           />
                           <span className='username'>
                             {typeof rev.user === 'object' && rev.user !== null

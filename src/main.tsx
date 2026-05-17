@@ -2,7 +2,6 @@ import { createRoot } from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
 import App from './App.tsx';
 import './styles/auth.css';
-import './styles/avatar.css';
 import './styles/base.css';
 import './styles/button.css';
 import './styles/dashboard.css';

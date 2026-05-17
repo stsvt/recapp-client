@@ -1,6 +1,3 @@
-import { useState, useEffect, useMemo } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
-import toast from 'react-hot-toast';
 import {
   CaretLeftIcon,
   CheckCircleIcon,
@@ -8,21 +5,24 @@ import {
   UserMinusIcon,
   UserPlusIcon,
 } from '@phosphor-icons/react';
+import { useEffect, useMemo, useState } from 'react';
+import toast from 'react-hot-toast';
+import { useNavigate, useParams } from 'react-router-dom';
 
+import { Avatar } from '../components/Avatar.tsx';
+import { Button } from '../components/ui/Button.tsx';
 import UserSearch from '../components/UserSearch';
 import { useAuth } from '../context/AuthContext';
-import { getUserById } from '../services/usersApi.ts';
 import {
-  sendFriendRequest,
   acceptFriendRequest,
-  rejectFriendRequest,
-  removeFriend,
   getFriends,
   getIncomingRequests,
+  rejectFriendRequest,
+  removeFriend,
+  sendFriendRequest,
 } from '../services/friendsApi.ts';
+import { getUserById } from '../services/usersApi.ts';
 import type { Friend } from '../types/index.ts';
-import { Button } from '../components/ui/Button.tsx';
-import { Avatar } from '../components/Avatar.tsx';
 
 interface UserData {
   _id: string;
@@ -178,7 +178,7 @@ const UserPage = () => {
               className='profile-avatar'
             />
           </div>
-          <h2>{isOwnProfile ? currentUser?.name : userData?.name}</h2>r{' '}
+          <h2>{isOwnProfile ? currentUser?.name : userData?.name}</h2>
           <div className='user-info-actions-row'>
             <div className='profile-info'>
               <div className='info-row'>

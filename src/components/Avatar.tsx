@@ -1,4 +1,5 @@
 import { useMemo } from 'react';
+import '../styles/avatar.css';
 
 const DICEBEAR_BASE = import.meta.env.VITE_DICEBEAR_URL;
 const USERS_IMAGES_BASE = import.meta.env.VITE_USERS_IMAGES_BASE;
