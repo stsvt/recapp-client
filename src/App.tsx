@@ -1,23 +1,23 @@
-import { Routes, Route } from 'react-router-dom';
-import { QueryClientProvider, QueryClient } from '@tanstack/react-query';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { Toaster } from 'react-hot-toast';
+import { Route, Routes } from 'react-router-dom';
+import AuthLayout from './components/ui/AuthLayout.tsx';
+import Layout from './components/ui/Layout.tsx';
 import PageTransitionBar from './components/ui/PageTransitionBar.tsx';
 import { AuthProvider } from './context/AuthContext';
-import MainPage from './pages/MainPage';
-import RegisterPage from './pages/RegisterPage';
-import LoginPage from './pages/LoginPage';
-import ResetPasswordPage from './pages/ResetPasswordPage';
-import MoviePage from './pages/MoviePage';
-import ProfilePage from './pages/ProfilePage';
-import PersonPage from './pages/PersonPage';
-import GoogleCallbackPage from './pages/GoogleCallbackPage.tsx';
-import UserPage from './pages/UserPage';
-import FriendRequestsPage from './pages/FriendRequestsPage';
 import AdminPage from './pages/AdminPage';
+import FriendRequestsPage from './pages/FriendRequestsPage';
+import GoogleCallbackPage from './pages/GoogleCallbackPage.tsx';
+import LoginPage from './pages/LoginPage';
+import MainPage from './pages/MainPage';
+import MoviePage from './pages/MoviePage';
 import NotFoundPage from './pages/NotFoundPage';
-import Layout from './components/ui/Layout.tsx';
-import AuthLayout from './components/ui/AuthLayout.tsx';
+import PersonPage from './pages/PersonPage';
+import ProfilePage from './pages/ProfilePage';
+import RegisterPage from './pages/RegisterPage';
+import ResetPasswordPage from './pages/ResetPasswordPage';
+import UserPage from './pages/UserPage';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -46,9 +46,9 @@ function App() {
             <Route path='/movie/:id' element={<MoviePage />} />
             <Route path='/person/:id' element={<PersonPage />} />
             <Route path='/user/:userId' element={<UserPage />} />
-            <Route path='/friends/requests' element={<FriendRequestsPage />} />
             <Route path='/admin' element={<AdminPage />} />
             <Route path='/not-found' element={<NotFoundPage />} />
+            <Route path='/friends/requests' element={<FriendRequestsPage />} />
             <Route path='*' element={<NotFoundPage />} />
           </Route>
         </Routes>

@@ -49,7 +49,12 @@ function RegisterPage() {
         errorMessage = error.message;
       }
 
-      if (errorMessage.includes('E11000') || errorMessage.includes('duplicate key')) {
+      if (
+        errorMessage.includes('E11000') ||
+        errorMessage.includes('duplicate key') ||
+        errorMessage.includes('Duplicate field value') ||
+        errorMessage.includes('вже використовується')
+      ) {
         errorMessage = 'Користувач з такою поштою вже зареєстрований';
       }
 

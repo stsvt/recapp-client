@@ -6,7 +6,9 @@ export default function Layout() {
   return (
     <div className='full-screen'>
       <Header />
-      <Outlet />
+      <main style={{ flexGrow: 1 }}>
+        <Outlet />
+      </main>
       <Footer />
     </div>
   );
