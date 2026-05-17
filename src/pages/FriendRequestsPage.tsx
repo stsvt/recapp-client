@@ -31,8 +31,11 @@ function FriendRequestsPage() {
     try {
       const res = await getIncomingRequests();
       if (res.status === 'success') {
-        setRequests(res.data.requests);
-        setIncomingRequestsCount(res.results || 0);
+        const validRequests = (res.data.requests || []).filter(
+          (req: RequestItem) => req && req.requester
+        );
+        setRequests(validRequests);
+        setIncomingRequestsCount(validRequests.length);
       }
     } catch {
       toast.error('Не вдалося завантажити запити');
@@ -72,6 +75,7 @@ function FriendRequestsPage() {
         icon={<CaretLeftIcon size={28} />}
         onClick={() => navigate(-1)}
         title='Назад'
+        className='back-button'
       />
 
       <div className='requests-container'>

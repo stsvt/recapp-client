@@ -133,3 +133,46 @@ html {
     margin-top: 4px;
     font-size: 14px;
 }
+
+/* BELOW 1344px (Smaller desktops) */
+@media (max-width: 84em) {
+  .full-screen {
+    padding: 1rem 1.4rem;
+  }
+}
+
+/* BELOW 1200px (Landscape tablets) */
+@media (max-width: 75em) {
+  html {
+    /*9px*/
+    font-size: 56.25%;
+  }
+  .full-screen {
+    padding: 1rem 1.2rem;
+  }
+}
+
+/* BELOW 944px (Tablets) */
+@media (max-width: 59em) {
+  html {
+    /*8px*/
+    font-size: 50%;
+  }
+  .full-screen {
+    padding: 1rem;
+  }
+}
+
+/* BELOW 704px (Smaller tablets) */
+@media (max-width: 44em) {
+  .full-screen {
+    padding: 0.8rem;
+  }
+}
+
+/* BELOW 544px (Phones) */
+@media (max-width: 34em) {
+  .full-screen {
+    padding: 0.6rem;
+  }
+}

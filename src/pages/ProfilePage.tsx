@@ -296,6 +296,7 @@ function ProfilePage() {
         icon={<CaretLeftIcon size={28} />}
         onClick={() => navigate(-1)}
         title='Назад'
+        className='back-button'
       />
       <UserSearch />
 

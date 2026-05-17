@@ -241,3 +241,123 @@
 .actor-link-btn .cast-value {
   color: inherit;
 }
+
+/* ==========================================
+   RESPONSIVE MOVIE & PERSON PAGE
+   ========================================== */
+
+/* BELOW 944px (Tablets) */
+@media (max-width: 59em) {
+  .main-info-grid {
+    grid-template-columns: 1fr;
+    justify-items: center;
+    gap: 30px;
+    padding: 15px;
+  }
+
+  .info-column {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .stats-row {
+    justify-content: center;
+  }
+
+  .genres-row {
+    justify-content: center;
+  }
+
+  .cast-info {
+    width: 100%;
+    max-width: 600px;
+    margin: 20px auto 0;
+  }
+
+  .cast-row {
+    text-align: left;
+  }
+
+  .description-section {
+    text-align: center;
+    margin: 30px 0;
+    padding: 0 10px;
+  }
+
+  .sub-section-title {
+    text-align: center;
+    margin: 60px 0 20px 0;
+  }
+
+  .check-buttons {
+    gap: 35px;
+    margin: 40px 0;
+  }
+}
+
+/* BELOW 544px (Phones) */
+@media (max-width: 34em) {
+  .movie-header h1 {
+    font-size: 22px;
+    margin-top: 15px;
+  }
+
+  .movie-title-row {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .movie-title-row button {
+    position: static;
+    margin: 0;
+  }
+
+  .poster-column img {
+    width: 180px;
+    min-height: 270px;
+  }
+
+  .stats-row {
+    font-size: 14px;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+  }
+
+  .genre-pill {
+    padding: 4px 12px;
+    font-size: 12px;
+  }
+
+  .cast-label, .person-label {
+    min-width: 80px;
+    font-size: 13px;
+  }
+
+  .cast-value {
+    font-size: 13px;
+  }
+
+  .description-section {
+    font-size: 14px;
+    line-height: 1.6;
+  }
+
+  .check-buttons {
+    gap: 15px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .check-btn .icon-wrapper {
+    width: 42px;
+    height: 42px;
+  }
+
+  .check-btn .label {
+    font-size: 11px;
+  }
+}

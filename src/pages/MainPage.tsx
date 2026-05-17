@@ -46,11 +46,17 @@ function MainPage() {
     queryKey: ['recommendations-hybrid', user?._id],
     queryFn: fetchHybridRecommendations,
     enabled: !!user?._id,
+    staleTime: 1000 * 60 * 10,
+    retry: 1,
+    refetchOnWindowFocus: false,
   });
 
   const { data: guestRecs, isLoading: isGuestRecsLoading } = useQuery({
     queryKey: ['recommendations-guest'],
     queryFn: fetchGuestRecommendations,
+    staleTime: 1000 * 60 * 10,
+    retry: 1,
+    refetchOnWindowFocus: false,
   });
 
   const safeSections = sections || {

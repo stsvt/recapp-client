@@ -50,6 +50,9 @@ function MoviePage() {
     queryKey: ['similarMovies', movieId],
     queryFn: () => fetchSimilarMovies(movieId!),
     enabled: Boolean(movieId),
+    staleTime: 1000 * 60 * 15,
+    retry: 1,
+    refetchOnWindowFocus: false,
   });
 
   const { data: statusData } = useQuery({

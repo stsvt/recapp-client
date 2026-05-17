@@ -167,3 +167,19 @@
     flex: 1;
     border-bottom: 1px solid var(--color-text-secondary);
 }
+
+/* ==========================================
+   RESPONSIVE AUTH
+   ========================================== */
+
+/* BELOW 544px (Phones) */
+@media (max-width: 34em) {
+  .auth-container {
+    padding: 10px;
+    min-height: calc(100vh - 60px);
+  }
+
+  .auth-box {
+    padding: 20px 25px;
+  }
+}

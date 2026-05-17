@@ -437,3 +437,70 @@
     opacity: 1;
   }
 }
+
+/* ==========================================
+   RESPONSIVE HOMEPAGE & MOVIES
+   ========================================== */
+
+/* BELOW 1344px (Smaller desktops) */
+@media (max-width: 84em) {
+  .slider-wrapper {
+    mask-image: none;
+  }
+}
+
+/* BELOW 944px (Tablets) */
+@media (max-width: 59em) {
+  .filter-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+
+  .genres-list {
+    width: 100%;
+  }
+
+  .nav-btn {
+    display: none !important; /* Hide navigation buttons on touch screens */
+  }
+
+  .section-title {
+    font-size: 16px;
+    padding-left: 1rem;
+  }
+}
+
+/* BELOW 544px (Phones) */
+@media (max-width: 34em) {
+  .filter-overlay {
+    width: 95%;
+    max-width: 400px;
+  }
+
+  .filter-container {
+    padding: 20px;
+  }
+
+  .filter-grid {
+    grid-template-columns: 1fr;
+    gap: 15px;
+  }
+
+  .movie-card {
+    width: 170px;
+  }
+
+  .image-container {
+    height: 105px;
+  }
+
+  .section-title {
+    font-size: 14px;
+    padding-left: 0.8rem;
+    margin-bottom: 10px;
+  }
+
+  .recommendation-sections {
+    gap: 25px;
+  }
+}

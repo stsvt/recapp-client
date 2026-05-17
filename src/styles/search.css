@@ -106,8 +106,27 @@
     font-size: 18px;
 }
 
-@media (max-width: 768px) {
+/* BELOW 944px (Tablets) */
+@media (max-width: 59em) {
+    .search-container {
+        padding: 20px;
+    }
+    .search-results-area {
+        margin-top: 20px;
+        max-height: calc(100vh - 120px);
+    }
+}
+
+/* BELOW 544px (Phones) */
+@media (max-width: 34em) {
     .close-search {
         display: none;
+    }
+    .tags-row {
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+    .search-header input {
+        font-size: 16px;
     }
 }

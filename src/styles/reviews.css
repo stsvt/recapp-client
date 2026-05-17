@@ -188,3 +188,68 @@
 .form-actions .cancel-btn:hover {
   border-color: var(--color-text-dark-55);
 }
+
+/* ==========================================
+   RESPONSIVE REVIEWS
+   ========================================== */
+
+/* BELOW 944px (Tablets) */
+@media (max-width: 59em) {
+  .reviews-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 15px;
+  }
+}
+
+/* BELOW 544px (Phones) */
+@media (max-width: 34em) {
+  .comment-card {
+    padding: 15px;
+  }
+
+  .comment-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .comment-date {
+    font-size: 11px;
+  }
+
+  .comment-text {
+    font-size: 13px;
+  }
+
+  .comment-footer {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .admin-actions {
+    width: 100%;
+    justify-content: flex-end;
+  }
+
+  .add-review-container {
+    padding: 15px;
+  }
+
+  .add-review-container h3 {
+    font-size: 16px;
+  }
+
+  .form-actions {
+    width: 100%;
+  }
+
+  .form-actions button[type='submit'],
+  .form-actions .cancel-btn {
+    flex: 1;
+    text-align: center;
+    padding: 10px 12px;
+    font-size: 12px;
+  }
+}

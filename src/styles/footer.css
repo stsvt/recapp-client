@@ -27,10 +27,12 @@
 }
 
 /* Responsive Design */
-@media (max-width: 768px) {
+@media (max-width: 44em) {
   .footer {
-    padding: 40px 16px 20px;
-    margin-top: 60px;
+    flex-direction: column;
+    gap: 15px;
+    margin-top: 40px;
+    padding: 30px 16px 20px;
   }
 
   .footer-container {
@@ -57,10 +59,10 @@
   }
 }
 
-@media (max-width: 480px) {
+@media (max-width: 34em) {
   .footer {
-    padding: 30px 12px 15px;
-    margin-top: 40px;
+    padding: 20px 12px 15px;
+    margin-top: 30px;
   }
 
   .footer-container {

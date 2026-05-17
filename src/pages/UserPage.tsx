@@ -79,10 +79,17 @@ const UserPage = () => {
         ]);
 
         setUserData(userRes);
-        setMyFriends(friendsRes.data?.friends || []);
-        setIncomingRequests(requestsRes.data?.requests || []);
+        setMyFriends((friendsRes.data?.friends || []).filter((f: Friend) => f));
         
-        const outgoingIds = (outgoingRes.data?.requests || []).map((req: OutgoingRequest) =>
+        const validIncoming = (requestsRes.data?.requests || []).filter(
+          (req: FriendRequest) => req && req.requester
+        );
+        setIncomingRequests(validIncoming);
+        
+        const validOutgoing = (outgoingRes.data?.requests || []).filter(
+          (req: OutgoingRequest) => req && req.recipient
+        );
+        const outgoingIds = validOutgoing.map((req: OutgoingRequest) =>
           typeof req.recipient === 'object' ? req.recipient._id : req.recipient
         );
         setSentRequests(outgoingIds);
@@ -104,6 +111,7 @@ const UserPage = () => {
     if (myFriends.some((f) => f._id === userId)) return 'friends';
 
     const hasReceivedRequest = incomingRequests.some((req) => {
+      if (!req || !req.requester) return false;
       const reqId =
         typeof req.requester === 'object' ? req.requester._id : req.requester;
       return reqId === userId;
@@ -190,6 +198,7 @@ const UserPage = () => {
         icon={<CaretLeftIcon size={28} />}
         onClick={() => navigate(-1)}
         title='Назад'
+        className='back-button'
       />
 
       <UserSearch />

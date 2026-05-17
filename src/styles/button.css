@@ -406,3 +406,26 @@
   opacity: 0.6;
   cursor: not-allowed;
 }
+
+/* ==========================================
+   RESPONSIVE BACK BUTTON
+   ========================================== */
+
+/* BELOW 944px (Tablets) */
+@media (max-width: 59em) {
+  .back-button {
+    position: relative !important;
+    left: auto !important;
+    top: auto !important;
+    margin: 15px 0 10px 10px !important;
+    display: inline-flex !important;
+    z-index: 100 !important;
+  }
+}
+
+/* BELOW 544px (Phones) */
+@media (max-width: 34em) {
+  .back-button {
+    margin: 10px 0 5px 5px !important;
+  }
+}
