@@ -37,6 +37,11 @@ interface FriendRequest {
   requester: { _id: string; name: string } | string;
 }
 
+interface OutgoingRequest {
+  _id: string;
+  recipient: { _id: string; name: string } | string;
+}
+
 const UserPage = () => {
   const { user: currentUser } = useAuth();
   const { userId } = useParams<{ userId: string }>();
@@ -75,7 +80,7 @@ const UserPage = () => {
         setMyFriends(friendsRes.data?.friends || []);
         setIncomingRequests(requestsRes.data?.requests || []);
         
-        const outgoingIds = (outgoingRes.data?.requests || []).map((req: any) =>
+        const outgoingIds = (outgoingRes.data?.requests || []).map((req: OutgoingRequest) =>
           typeof req.recipient === 'object' ? req.recipient._id : req.recipient
         );
         setSentRequests(outgoingIds);
